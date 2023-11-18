@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_vector_relational.hpp" />

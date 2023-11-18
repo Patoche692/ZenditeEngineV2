@@ -1,39 +1,13 @@
 // #define GLEW_STATIC //Can be done here or in the VS properties preprocessor definitions
 
-#include <GL/glew.h>
+#include "utils.h"
 #include <GLFW/glfw3.h>
+
+#include "Shader.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw_gl3.h>
 
-#include <iostream>
-
-//Basic Error Checking
-#define ASSERT(x) if (!(x)) __debugbreak();
-#define GLCALL(x) GLClearError();\
-	x;\
-	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
-
-static void GLClearError()
-{
-	while (glGetError() != GL_NO_ERROR);
-}
-
-static bool GLLogCall(const char* function, const char* file, int line)
-{
-	while (GLenum error = glGetError())
-	{
-		std::cout << "[OpenGL Error] (" << error << ") \nFunction: "
-			<< function << "\nFile: "
-			<< file << "\nLine: "
-			<< line << "\n"
-			<< std::endl;
-
-		return false;
-	}
-
-	return true;
-}
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -84,10 +58,10 @@ int main(void)
 	std::cout << glGetString(GL_VERSION);
 
 	//Setup Shaders:
-	unsigned int vShader = glCreateShader(GL_VERTEX_SHADER);
+	Shader shader_1(vertexShaderSource, fragmentShaderSource);
+	unsigned int shaderProg = shader_1.getShaderHandle();
 
 
-	
 	//IMGUI setup:
 	ImGui::CreateContext();
 	ImGui_ImplGlfwGL3_Init(window, true);
