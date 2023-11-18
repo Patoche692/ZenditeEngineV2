@@ -448,7 +448,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\fs_Basic.glsl" />
+    <None Include="res\shaders\fs_Texture.glsl" />
     <None Include="res\shaders\vs_Basic.glsl" />
+    <None Include="res\shaders\vs_Texture.glsl" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
     <None Include="src\vendor\glm\detail\func_exponential.inl" />
