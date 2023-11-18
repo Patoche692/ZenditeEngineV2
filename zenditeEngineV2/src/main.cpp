@@ -30,11 +30,10 @@ int main(void)
 {
 	GLFWwindow* window;
 
-	/* Initialize the library */
-	if (!glfwInit())
+	if (!glfwInit()) {
 		return -1;
+	}
 
-	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
 	if (!window)
 	{
@@ -42,7 +41,6 @@ int main(void)
 		return -1;
 	}
 
-	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
 	//Sets the frames to be drawn equal my machines refresh rate (which is likely 60Hz - screen refreshes 60 times a second)
@@ -59,19 +57,55 @@ int main(void)
 
 	//Setup Shaders:
 	Shader shader_1(vertexShaderSource, fragmentShaderSource);
-	unsigned int shaderProg = shader_1.getShaderHandle();
 
+	//Object Data Setup:
+	float vertices[] = {
+		 0.5f,  0.5f, 0.0f,  // top right
+		 0.5f, -0.5f, 0.0f,  // bottom right
+		-0.5f, -0.5f, 0.0f,  // bottom left
+		-0.5f,  0.5f, 0.0f   // top left 
+	};
+	unsigned int indices[] = {  // note that we start from 0!
+		0, 1, 3,  // first Triangle
+		1, 2, 3   // second Triangle
+	};
+
+	unsigned int VAO_Square;
+	unsigned int VBO_Square;
+	unsigned int EBO_Square;
+
+	GLCALL(glGenVertexArrays(1, &VAO_Square));
+	GLCALL(glBindVertexArray(VAO_Square));
+
+	GLCALL(glGenBuffers(1, &VBO_Square));
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, VBO_Square));
+	GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+
+	GLCALL(glGenBuffers(1, &EBO_Square));
+	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_Square));
+	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
+
+	GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float)*3, (void*)0));
+	GLCALL(glEnableVertexAttribArray(0));
+
+	GLCALL(glBindVertexArray(0));
+
+	GLCALL(glUseProgram(shader_1.getShaderHandle()));
 
 	//IMGUI setup:
 	ImGui::CreateContext();
 	ImGui_ImplGlfwGL3_Init(window, true);
 	ImGui::StyleColorsDark();
 
-	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Render here */
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		//Draw Call HERE
+		GLCALL(glBindVertexArray(VAO_Square));
+		GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 
 		ImGui_ImplGlfwGL3_NewFrame();
 
@@ -89,13 +123,8 @@ int main(void)
 		ImGui::Render();
 		ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
 
-		//Draw Call HERE
-		
-
-		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 
-		/* Poll for and process events */
 		glfwPollEvents();
 	}
 
