@@ -26,7 +26,7 @@ public:
 	void readShaderCodeFromFile(const char* vs_path, const char* fs_path);
 
 	void setUniform4f(std::string name, float v1, float v2, float v3, float v4) const;
-	void setUniformTextureUnit(std::string name, int x);
+	void setUniformTextureUnit(std::string name, unsigned int x);
 
 	void bindProgram() const;
 };
