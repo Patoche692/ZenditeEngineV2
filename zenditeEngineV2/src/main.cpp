@@ -42,6 +42,10 @@ int main(void)
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/fs_Texture.glsl");
 	shader_2.bindProgram();
 
+	Shader shader_Transform("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/vs_Transform.glsl",
+		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/fs_Transform.glsl");
+	shader_2.bindProgram();
+
 	unsigned int VAO_Square;
 	unsigned int VBO_Square;
 	unsigned int EBO_Square;
@@ -64,6 +68,16 @@ int main(void)
 
 	shader_2.setUniformTextureUnit("colorTexture2", faceTexture.getTexUnit());
 
+	//Transform Matrix setup:
+	shader_Transform.bindProgram();
+	shader_Transform.setUniformTextureUnit("colorTexture1", wallTexture.getTexUnit());
+	shader_Transform.setUniformTextureUnit("colorTexture2", faceTexture.getTexUnit());
+
+	glm::mat4 modelMat = glm::mat4(1.0f);
+	modelMat = glm::rotate(modelMat, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	shader_Transform.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
+
 	//IMGUI setup:
 	imGuiSetup(window);
 
@@ -76,7 +90,7 @@ int main(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		shader_2.bindProgram();
+		shader_Transform.bindProgram();
 		float timeValue = glfwGetTime();
 		//float greenValue = sin(timeValue) / 2.0f + 0.5f;
 		//shader_1.setUniform4f("ourColor", 0.1f, greenValue, 0.1f, 1.0f);

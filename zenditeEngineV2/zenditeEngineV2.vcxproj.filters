@@ -1349,5 +1349,7 @@
     <None Include="res\shaders\fs_Basic.glsl" />
     <None Include="res\shaders\vs_Texture.glsl" />
     <None Include="res\shaders\fs_Texture.glsl" />
+    <None Include="res\shaders\vs_Transform.glsl" />
+    <None Include="res\shaders\fs_Transform.glsl" />
   </ItemGroup>
 </Project>
