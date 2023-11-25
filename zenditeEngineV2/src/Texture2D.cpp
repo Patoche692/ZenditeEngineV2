@@ -23,8 +23,8 @@ void Texture2D::setupTextureJPG(unsigned int unit, const char* texfilepath)
 	changeTexUnit(unit);
 
 	//Set default texture parameters.
-	setTexParameteri(GL_TEXTURE_WRAP_S, GL_REPEAT);
-	setTexParameteri(GL_TEXTURE_WRAP_T, GL_REPEAT);
+	setTexParameteri(GL_TEXTURE_WRAP_S, GL_REPEAT); //GL_CLAMP_TO_EDGE
+	setTexParameteri(GL_TEXTURE_WRAP_T, GL_REPEAT); //GL_CLAMP_TO_EDGE
 	setTexParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	setTexParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -35,7 +35,6 @@ void Texture2D::setupTextureJPG(unsigned int unit, const char* texfilepath)
 
 void Texture2D::setupTexturePNG(unsigned int unit, const char* texfilepath)
 {
-	
 	texUnit = unit;
 	changeTexUnit(unit);
 

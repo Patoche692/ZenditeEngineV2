@@ -57,10 +57,12 @@ int main(void)
 	Texture2D wallTexture;
 	wallTexture.setupTextureJPG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/wall.jpg");
 
-	shader_2.setUniformTextureUnit("colorTexture", wallTexture.getTexUnit());
+	shader_2.setUniformTextureUnit("colorTexture1", wallTexture.getTexUnit());
 
 	Texture2D faceTexture;
 	faceTexture.setupTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/awesomeface.png");
+
+	shader_2.setUniformTextureUnit("colorTexture2", faceTexture.getTexUnit());
 
 	//IMGUI setup:
 	imGuiSetup(window);
@@ -79,21 +81,32 @@ int main(void)
 		//float greenValue = sin(timeValue) / 2.0f + 0.5f;
 		//shader_1.setUniform4f("ourColor", 0.1f, greenValue, 0.1f, 1.0f);
 
-		if (count > 360)
-		{
-			shader_2.setUniformTextureUnit("colorTexture", wallTexture.getTexUnit());
-		}
-		else
-		{
-			shader_2.setUniformTextureUnit("colorTexture", faceTexture.getTexUnit());
-		}
+		
 		//Draw Call HERE
 		GLCALL(glBindVertexArray(VAO_TexTri));
 		
 		GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 
 		//Create IMGUI menu:
-		genMenu_1();
+		//genMenu_1();
+
+		ImGui_ImplGlfwGL3_NewFrame();
+
+		ImGui::Begin("Test");
+
+		ImGui::Text("Dear ImGui, %s", ImGui::GetVersion());
+		ImGui::Separator();
+		if (ImGui::Button("Wall")) 
+		{
+			//shader_2.setUniformTextureUnit("colorTexture1", wallTexture.getTexUnit());
+		}
+		if (ImGui::Button("Face"))
+		{
+			//shader_2.setUniformTextureUnit("colorTexture1", faceTexture.getTexUnit());
+		}
+		ImGui::End();
+		ImGui::Render();
+		ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
 
 		glfwSwapBuffers(window);
 
