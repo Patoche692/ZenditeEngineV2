@@ -28,15 +28,6 @@ bool firstMouse = true;
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
-struct objPos
-{
-	glm::vec3 pos;
-	float xRot;
-	float yRot;
-	float zRot;
-	float scale;
-};
-
 int main(void)
 {
 	GLFWwindow* window;
@@ -83,53 +74,27 @@ int main(void)
 	};
 
 	//Setup Shaders:
-	Shader shader_1("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/vs_Basic.glsl", 
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/fs_Basic.glsl");
-	shader_1.bindProgram();
-	shader_1.setUniform4f("ourColor", 0.0f, 0.5f, 0.0f, 1.0f);
-
-	Shader shader_2("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/vs_Texture.glsl",
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/fs_Texture.glsl");
-	shader_2.bindProgram();
-
-	Shader shader_Transform("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/vs_Transform.glsl",
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/fs_Transform.glsl");
-	shader_2.bindProgram();
-
-	unsigned int VAO_Square;
-	unsigned int VBO_Square;
-	unsigned int EBO_Square;
-	GenerateBasicSquareVAO(VAO_Square, VBO_Square, EBO_Square);
-
-	unsigned int VAO_TexTri;
-	unsigned int VBO_TexTri;
-	unsigned int EBO_TexTri;
-	GenerateTexTriVAO(VAO_TexTri, VBO_TexTri, EBO_TexTri);
-	//bindVao(VAO_TexTri);
+	Shader shader_basicLight("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_BasicLight.glsl",
+		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_BasicLight.glsl");
+	shader_basicLight.bindProgram();
 
 	unsigned int VAO_Cube;
 	unsigned int VBO_Cube;
 	GenerateCubeNoEBO(VAO_Cube, VBO_Cube);
-	//GLCALL(glBindVertexArray(VAO_Cube));
 	bindVao(VAO_Cube);
 
 	//Setup Texture1
 	Texture2D wallTexture;
 	wallTexture.setupTextureJPG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/wall.jpg");
 
-	shader_2.setUniformTextureUnit("colorTexture1", wallTexture.getTexUnit());
-
+	//Setup Texture2
 	Texture2D faceTexture;
 	faceTexture.setupTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/awesomeface.png");
 
-	shader_2.setUniformTextureUnit("colorTexture2", faceTexture.getTexUnit());
-
-	//Transform Matrix setup:
-	shader_Transform.bindProgram();
-	shader_Transform.setUniformTextureUnit("colorTexture1", wallTexture.getTexUnit());
-	shader_Transform.setUniformTextureUnit("colorTexture2", faceTexture.getTexUnit());
-
-	objPos square;
+	//Set Texture Uniforms
+	shader_basicLight.bindProgram();
+	shader_basicLight.setUniformTextureUnit("colorTexture1", wallTexture.getTexUnit());
+	shader_basicLight.setUniformTextureUnit("colorTexture2", faceTexture.getTexUnit());
 
 	//IMGUI setup:
 	imGuiSetup(window);
@@ -145,34 +110,23 @@ int main(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		shader_Transform.bindProgram();
+		shader_basicLight.bindProgram();
 
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
 		//Set up Transform Matrices each frame -- START --
-		square.pos = glm::vec3(0.0f, 0.0f, 0.0f);
-		square.xRot = -55.0f;
-		square.yRot = 0.0f;
-		square.zRot = 0.0f;
-		square.scale = 1.0f;
 
 		glm::mat4 modelMat = glm::mat4(1.0f);
-		//modelMat = glm::translate(modelMat, square.pos);
-		//modelMat = glm::rotate(modelMat, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-		//modelMat = glm::rotate(modelMat, glm::radians(square.xRot), glm::vec3(1.0f, 0.0f, 0.0f));
-		//modelMat = glm::rotate(modelMat, glm::radians(square.yRot), glm::vec3(0.0f, 1.0f, 0.0f));
-		//modelMat = glm::rotate(modelMat, glm::radians(square.zRot), glm::vec3(0.0f, 0.0f, 1.0f));
-		//modelMat = glm::scale(modelMat, glm::vec3(square.scale, square.scale, square.scale));
 
 		glm::mat4 viewMat = camera.GetViewMatrix();
 
 		glm::mat4 projMat = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
 		//shader_Transform.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
-		shader_Transform.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
-		shader_Transform.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
+		shader_basicLight.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
+		shader_basicLight.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
 
 		// -- END --
 		
@@ -185,18 +139,13 @@ int main(void)
 			modelMat = glm::translate(modelMat, cubePositions[i]);
 			float angle = 20.0f * i;
 			modelMat = glm::rotate(modelMat, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			shader_Transform.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
+			shader_basicLight.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
 
 			GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 
 		}
 
-		
-		//GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
-
 		//Create IMGUI menu:
-		//genMenu_1();
-
 		ImGui_ImplGlfwGL3_NewFrame();
 
 		ImGui::Begin("Test");

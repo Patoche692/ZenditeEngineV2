@@ -1348,11 +1348,13 @@
     <None Include="src\vendor\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="res\shaders\vs_Basic.glsl" />
-    <None Include="res\shaders\fs_Basic.glsl" />
-    <None Include="res\shaders\vs_Texture.glsl" />
-    <None Include="res\shaders\fs_Texture.glsl" />
-    <None Include="res\shaders\vs_Transform.glsl" />
-    <None Include="res\shaders\fs_Transform.glsl" />
+    <None Include="res\shaders\BasicShaders\vs_Basic.glsl" />
+    <None Include="res\shaders\BasicShaders\fs_Basic.glsl" />
+    <None Include="res\shaders\BasicShaders\vs_Texture.glsl" />
+    <None Include="res\shaders\BasicShaders\fs_Texture.glsl" />
+    <None Include="res\shaders\BasicShaders\vs_Transform.glsl" />
+    <None Include="res\shaders\BasicShaders\fs_Transform.glsl" />
+    <None Include="res\shaders\LightingShaders\fs_BasicLight.glsl" />
+    <None Include="res\shaders\LightingShaders\vs_BasicLight.glsl" />
   </ItemGroup>
 </Project>
