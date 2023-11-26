@@ -59,25 +59,17 @@ int main(void)
 
 	std::cout <<glGetString(GL_VERSION) << "\n";
 
-	glm::vec3 cubePositions[] = 
-	{
-		glm::vec3(0.0f,  0.0f,  0.0f),
-		glm::vec3(2.0f,  5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f,  3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f,  2.0f, -2.5f),
-		glm::vec3(1.5f,  0.2f, -1.5f),
-		glm::vec3(-1.3f,  1.0f, -1.5f)
-	};
-
 	//Setup Shaders:
 	Shader shader_basicLight("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_BasicLight.glsl",
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_BasicLight.glsl");
 	shader_basicLight.bindProgram();
 
+	//Create out light source cube:
+	unsigned int VAO_LightCube;
+	unsigned int VBO_LightCube;
+	GenerateCubeNoEBO(VAO_LightCube, VBO_LightCube);
+
+	//Create our regular cube VAO
 	unsigned int VAO_Cube;
 	unsigned int VBO_Cube;
 	GenerateCubeNoEBO(VAO_Cube, VBO_Cube);
@@ -90,11 +82,6 @@ int main(void)
 	//Setup Texture2
 	Texture2D faceTexture;
 	faceTexture.setupTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/awesomeface.png");
-
-	//Set Texture Uniforms
-	shader_basicLight.bindProgram();
-	shader_basicLight.setUniformTextureUnit("colorTexture1", wallTexture.getTexUnit());
-	shader_basicLight.setUniformTextureUnit("colorTexture2", faceTexture.getTexUnit());
 
 	//IMGUI setup:
 	imGuiSetup(window);
@@ -119,14 +106,16 @@ int main(void)
 		//Set up Transform Matrices each frame -- START --
 
 		glm::mat4 modelMat = glm::mat4(1.0f);
-
 		glm::mat4 viewMat = camera.GetViewMatrix();
-
 		glm::mat4 projMat = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
 		//shader_Transform.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
 		shader_basicLight.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
 		shader_basicLight.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
+
+		//Set fragment uniforms:
+		shader_basicLight.setUniform3fv("objectColor", 1.0f, 0.5f, 0.31f);
+		shader_basicLight.setUniform3fv("lightColor", 1.0f, 1.0f, 1.0f);
 
 		// -- END --
 		
