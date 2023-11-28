@@ -68,15 +68,22 @@ int main(void)
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_BasicLight.glsl");
 	shader_basicLight.bindProgram();
 
-	//Create out light source cube:
-	unsigned int VAO_LightCube;
-	unsigned int VBO_LightCube;
-	GenerateCubeNoEBO(VAO_LightCube, VBO_LightCube);
-
 	//Create our regular cube VAO
 	unsigned int VAO_Cube;
 	unsigned int VBO_Cube;
 	GenerateCubeNoEBO(VAO_Cube, VBO_Cube);
+	bindVao(VAO_Cube);
+
+	//Create out light source cube: (uses the same VBO as the regular cube object, which improves data reuse)
+	unsigned int VAO_LightCube;
+
+	glGenVertexArrays(1, &VAO_LightCube);
+	glBindVertexArray(VAO_LightCube);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_Cube);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
 	bindVao(VAO_Cube);
 
 	//Setup Texture1

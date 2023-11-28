@@ -7,6 +7,8 @@ void GenerateTexTriVAO(unsigned int &VAO_TexTri, unsigned int &VBO_TexTri, unsig
 
 void GenerateCubeNoEBO(unsigned int& VAO_Cube, unsigned int& VBO_Cube);
 
+void GenerateCubeNoEBONoNormals(unsigned int& VAO_Cube, unsigned int& VBO_Cube);
+
 void bindVao(unsigned int VAO);
 
 void unbindVao();
