@@ -100,6 +100,8 @@ int main(void)
 	int count = 0;
 	bool rotation = false;
 	float rotationSpeed = 30.0f;
+	float specularStrength = 0.5f;
+	int specularIntensity = 32;
 
 	float angle = 1.0f;
 
@@ -128,7 +130,7 @@ int main(void)
 		glm::mat4 viewMat = camera.GetViewMatrix();
 		glm::mat4 projMat = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
-		glm::vec3 lightCenter(0.0f, 0.5f, 0.0f);
+		glm::vec3 lightCenter(0.0f, 1.0f, 0.0f);
 		glm::vec4 lightRotation(1.5f, 0.0f, 0.0f, 0.0f);
 
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -165,14 +167,14 @@ int main(void)
 		shader_basicLight.setUniform3fv("objectColor", 1.0f, 0.5f, 0.31f);
 		shader_basicLight.setUniform3fv("lightColor", 1.0f, 1.0f, 1.0f);
 
-		// -- END --
-		
-		//Draw Call HERE
+		//Draw Regular Cube
 		bindVao(VAO_Cube);
-
-		//modelMat = glm::rotate(modelMat, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::vec3 cameraPos = camera.getPosition();
 		shader_basicLight.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
 		shader_basicLight.setUniform3fv("lightWorldPos", lightPos);
+		shader_basicLight.setUniform3fv("cameraWorldPos", cameraPos);
+		shader_basicLight.setUniformFloat("specularStrength", specularStrength);
+		shader_basicLight.setUniformInt("specularIntensity", specularIntensity);
 
 		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 
@@ -188,6 +190,9 @@ int main(void)
 			shader_LightSource.recompile();
 			shader_basicLight.recompile();
 		}
+		//diffuseIntensity
+		ImGui::SliderInt("Specular Intensity", &specularIntensity, 1, 64);
+		ImGui::SliderFloat("Specular Strength", &specularStrength, 0.0, 5.0);
 		if (ImGui::Button("Toggle Rotation"))
 		{
 			if (rotation)
