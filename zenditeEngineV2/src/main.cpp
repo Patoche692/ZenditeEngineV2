@@ -34,7 +34,7 @@ int main(void)
 	if (!glfwInit()) {
 		return -1;
 	}
-	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello World", NULL, NULL);
 	if (!window){
 		glfwTerminate();
 		return -1;
@@ -91,27 +91,64 @@ int main(void)
 	imGuiSetup(window);
 
 	int count = 0;
+	bool rotation = false;
+	float rotationSpeed = 30.0f;
+
+	float angle = 1.0f;
 
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
 
-		count++;
-		/* Render here */
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		shader_basicLight.bindProgram();
-
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		//Set up Transform Matrices each frame -- START --
+		count++;
+		/* Render here */
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		if (rotation)
+		{
+			angle = angle + rotationSpeed * deltaTime;
+		}
+
+		glm::vec3 cubePositions(0.0f, 0.0f, 0.0f);
 
 		glm::mat4 modelMat = glm::mat4(1.0f);
+		modelMat = glm::translate(modelMat, cubePositions);
 		glm::mat4 viewMat = camera.GetViewMatrix();
 		glm::mat4 projMat = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+		glm::vec3 lightCenter(0.0f, 0.5f, 0.0f);
+		glm::vec4 lightRotation(1.5f, 0.0f, 0.0f, 0.0f);
+
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+
+		lightRotation = rotationMatrix * lightRotation;
+
+		glm::vec3 lightPos = glm::vec3(lightRotation) + lightCenter;
+
+		//Draw LightCube:
+		shader_LightSource.bindProgram();
+		bindVao(VAO_LightCube);
+
+		glm::mat4 LC_modelMat = glm::mat4(1.0f);
+
+		LC_modelMat = glm::translate(LC_modelMat, lightPos);
+		LC_modelMat = glm::scale(LC_modelMat, glm::vec3(0.2f));
+
+		shader_LightSource.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
+		shader_LightSource.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
+		shader_LightSource.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(LC_modelMat));
+
+
+		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+
+
+		shader_basicLight.bindProgram();
+
 
 		//shader_Transform.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
 		shader_basicLight.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
@@ -126,27 +163,9 @@ int main(void)
 		//Draw Call HERE
 		bindVao(VAO_Cube);
 
-		glm::vec3 cubePositions(0.0f, 0.0f, 0.0f);
-		glm::vec3 lightPos(1.4f, 1.0f, -1.5f);
-
-		modelMat = glm::mat4(1.0f);
-		modelMat = glm::translate(modelMat, cubePositions);
-		float angle = 20.0f;
 		//modelMat = glm::rotate(modelMat, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
 		shader_basicLight.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
-
-		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
-
-		//Draw LightCube:
-		shader_LightSource.bindProgram();
-		bindVao(VAO_LightCube);
-		glm::mat4 LC_modelMat = glm::mat4(1.0f);
-		LC_modelMat = glm::translate(LC_modelMat, lightPos);
-		LC_modelMat = glm::scale(LC_modelMat, glm::vec3(0.2f));
-
-		shader_LightSource.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
-		shader_LightSource.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
-		shader_LightSource.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(LC_modelMat));
+		shader_basicLight.setUniform3fv("lightWorldPos", lightPos);
 
 		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 
@@ -162,6 +181,18 @@ int main(void)
 			shader_LightSource.recompile();
 			shader_basicLight.recompile();
 		}
+		if (ImGui::Button("Toggle Rotation"))
+		{
+			if (rotation)
+			{
+				rotation = false;
+			}
+			else
+			{
+				rotation = true;
+			}
+		}
+		ImGui::SliderFloat("Rotation Speed per frame", &rotationSpeed, 10.0f, 180.0f);
 		if(ImGui::Button("Toggle Depth Test"))
 		{
 			if (toggle)
