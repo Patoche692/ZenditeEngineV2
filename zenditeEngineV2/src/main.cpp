@@ -60,6 +60,10 @@ int main(void)
 	std::cout <<glGetString(GL_VERSION) << "\n";
 
 	//Setup Shaders:
+	Shader shader_LightSource("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_LightSource.glsl",
+		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_LightSource.glsl");
+	//shader_LightSource.bindProgram();
+
 	Shader shader_basicLight("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_BasicLight.glsl",
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_BasicLight.glsl");
 	shader_basicLight.bindProgram();
@@ -122,17 +126,29 @@ int main(void)
 		//Draw Call HERE
 		bindVao(VAO_Cube);
 
-		for (unsigned int i = 0; i < 10; i++)
-		{
-			modelMat = glm::mat4(1.0f);
-			modelMat = glm::translate(modelMat, cubePositions[i]);
-			float angle = 20.0f * i;
-			modelMat = glm::rotate(modelMat, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			shader_basicLight.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
+		glm::vec3 cubePositions(0.0f, 0.0f, 0.0f);
+		glm::vec3 lightPos(1.4f, 1.0f, -1.5f);
 
-			GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+		modelMat = glm::mat4(1.0f);
+		modelMat = glm::translate(modelMat, cubePositions);
+		float angle = 20.0f;
+		//modelMat = glm::rotate(modelMat, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+		shader_basicLight.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
 
-		}
+		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+
+		//Draw LightCube:
+		shader_LightSource.bindProgram();
+		bindVao(VAO_LightCube);
+		glm::mat4 LC_modelMat = glm::mat4(1.0f);
+		LC_modelMat = glm::translate(LC_modelMat, lightPos);
+		LC_modelMat = glm::scale(LC_modelMat, glm::vec3(0.2f));
+
+		shader_LightSource.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
+		shader_LightSource.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
+		shader_LightSource.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(LC_modelMat));
+
+		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 
 		//Create IMGUI menu:
 		ImGui_ImplGlfwGL3_NewFrame();
@@ -141,13 +157,10 @@ int main(void)
 
 		ImGui::Text("Dear ImGui, %s", ImGui::GetVersion());
 		ImGui::Separator();
-		if (ImGui::Button("Wall")) 
+		if (ImGui::Button("Recompile Shaders")) 
 		{
-			//shader_2.setUniformTextureUnit("colorTexture1", wallTexture.getTexUnit());
-		}
-		if (ImGui::Button("Face"))
-		{
-			//shader_2.setUniformTextureUnit("colorTexture1", faceTexture.getTexUnit());
+			shader_LightSource.recompile();
+			shader_basicLight.recompile();
 		}
 		if(ImGui::Button("Toggle Depth Test"))
 		{
@@ -188,6 +201,10 @@ void processInput(GLFWwindow* window)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		camera.ProcessKeyboard(UP, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		camera.ProcessKeyboard(DOWN, deltaTime);
 
 	if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{

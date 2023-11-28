@@ -1356,5 +1356,7 @@
     <None Include="res\shaders\BasicShaders\fs_Transform.glsl" />
     <None Include="res\shaders\LightingShaders\fs_BasicLight.glsl" />
     <None Include="res\shaders\LightingShaders\vs_BasicLight.glsl" />
+    <None Include="res\shaders\LightingShaders\vs_lightSource.glsl" />
+    <None Include="res\shaders\LightingShaders\fs_lightSource.glsl" />
   </ItemGroup>
 </Project>

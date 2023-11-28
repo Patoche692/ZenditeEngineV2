@@ -1,8 +1,16 @@
 #include "Shader.h"
 
-Shader::Shader(const char* vs, const char* fs)
+Shader::Shader(const char* vs, const char* fs) : vs_filePath(vs), fs_filePath(fs)
 {
-	readShaderCodeFromFile(vs, fs);
+	readShaderCodeFromFile(vs_filePath, fs_filePath);
+	createAndCompileVertShader();
+	createAndCompileFragShader();
+	linkShaderPrograms();
+}
+
+void Shader::recompile()
+{
+	readShaderCodeFromFile(vs_filePath, fs_filePath);
 	createAndCompileVertShader();
 	createAndCompileFragShader();
 	linkShaderPrograms();
@@ -14,10 +22,10 @@ unsigned int Shader::getShaderHandle() const
 }
 
 
+
+
 void Shader::readShaderCodeFromFile(const char* vs_path, const char* fs_path)
 {
-	vs_string;
-	fs_string;
 
 	std::ifstream vsFile;
 	std::ifstream fsFile;

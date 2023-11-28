@@ -13,6 +13,8 @@ private:
 	unsigned int fShader;
 	std::string vs_string;
 	std::string fs_string;
+	const char* vs_filePath;
+	const char* fs_filePath;
 
 	void createAndCompileVertShader();
 	void createAndCompileFragShader();
@@ -20,7 +22,9 @@ private:
 
 
 public:
-	Shader(const char* vs_path, const char* fs_path);
+	Shader(const char* vs, const char* fs);
+
+	void recompile();
 
 	unsigned int getShaderHandle() const;
 	void readShaderCodeFromFile(const char* vs_path, const char* fs_path);
