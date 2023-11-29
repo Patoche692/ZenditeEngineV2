@@ -9,6 +9,21 @@
 #include "menu.h"
 #include "Camera.h"
 
+struct Material
+{
+	glm::vec3 ambientColor;
+	glm::vec3 diffuseColor;
+	glm::vec3 specularColor;
+	float shininess; //AKA: specularStrength
+};
+
+struct Light
+{
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+};
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -55,7 +70,18 @@ int main(void)
 	}
 
 	glEnable(GL_DEPTH_TEST);
+
 	bool toggle = true;
+	Material material;
+	material.ambientColor = glm::vec3(1.0f, 0.5f, 0.31f);
+	material.diffuseColor = glm::vec3(1.0f, 0.5f, 0.31f);
+	material.specularColor = glm::vec3(0.5f, 0.5f, 0.5f);
+	material.shininess = 32.0f;
+
+	Light light;
+	light.ambient = glm::vec3(0.1f, 0.1f, 0.1f);
+	light.diffuse = glm::vec3(1.0f);
+	light.specular = glm::vec3(1.0f);
 
 	std::cout <<glGetString(GL_VERSION) << "\n";
 
@@ -64,9 +90,9 @@ int main(void)
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_LightSource.glsl");
 	//shader_LightSource.bindProgram();
 
-	Shader shader_basicLight("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_BasicLight.glsl",
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_BasicLight.glsl");
-	shader_basicLight.bindProgram();
+	Shader shader_blMaterial("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_blMaterial.glsl",
+		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_blMaterial.glsl");
+	shader_blMaterial.bindProgram();
 
 	//Create our regular cube VAO
 	unsigned int VAO_Cube;
@@ -156,25 +182,33 @@ int main(void)
 		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 
 
-		shader_basicLight.bindProgram();
+		shader_blMaterial.bindProgram();
 
 
 		//shader_Transform.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
-		shader_basicLight.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
-		shader_basicLight.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
+		shader_blMaterial.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
+		shader_blMaterial.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
 
 		//Set fragment uniforms:
-		shader_basicLight.setUniform3fv("objectColor", 1.0f, 0.5f, 0.31f);
-		shader_basicLight.setUniform3fv("lightColor", 1.0f, 1.0f, 1.0f);
+		shader_blMaterial.setUniform3fv("lightColor", 1.0f, 1.0f, 1.0f);
 
 		//Draw Regular Cube
 		bindVao(VAO_Cube);
 		glm::vec3 cameraPos = camera.getPosition();
-		shader_basicLight.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
-		shader_basicLight.setUniform3fv("lightWorldPos", lightPos);
-		shader_basicLight.setUniform3fv("cameraWorldPos", cameraPos);
-		shader_basicLight.setUniformFloat("specularStrength", specularStrength);
-		shader_basicLight.setUniformInt("specularIntensity", specularIntensity);
+		shader_blMaterial.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
+		shader_blMaterial.setUniform3fv("lightWorldPos", lightPos);
+		shader_blMaterial.setUniform3fv("cameraWorldPos", cameraPos);
+		shader_blMaterial.setUniform3fv("material.ambientColor", material.ambientColor);
+		shader_blMaterial.setUniform3fv("material.diffuseColor", material.diffuseColor);
+		shader_blMaterial.setUniform3fv("material.specularColor", material.specularColor);
+		shader_blMaterial.setUniformFloat("material.shininess", material.shininess);
+
+		shader_blMaterial.setUniform3fv("light.ambient", light.ambient);
+		shader_blMaterial.setUniform3fv("light.diffuse", light.diffuse);
+		shader_blMaterial.setUniform3fv("light.specular", light.specular);
+		// ambientColor
+		// diffuseColor
+		// specularColor
 
 		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 
@@ -188,11 +222,19 @@ int main(void)
 		if (ImGui::Button("Recompile Shaders")) 
 		{
 			shader_LightSource.recompile();
-			shader_basicLight.recompile();
+			shader_blMaterial.recompile();
 		}
+		ImGui::NewLine();
 		//diffuseIntensity
-		ImGui::SliderInt("Specular Intensity", &specularIntensity, 1, 64);
-		ImGui::SliderFloat("Specular Strength", &specularStrength, 0.0, 5.0);
+		ImGui::InputFloat3("ambient Color", &(material.ambientColor)[0]);
+		ImGui::InputFloat3("diffuse Color", &(material.diffuseColor)[0]);
+		ImGui::InputFloat3("specular Color", &(material.specularColor)[0]);
+		ImGui::NewLine();
+		ImGui::InputFloat3("ambient light", &(light.ambient)[0]);
+		ImGui::InputFloat3("diffuse Color", &(light.diffuse)[0]);
+		ImGui::InputFloat3("specular Color", &(light.specular)[0]);
+		ImGui::NewLine();
+		ImGui::SliderFloat("Specular Shininess", &material.shininess, 1.0, 64.0);
 		if (ImGui::Button("Toggle Rotation"))
 		{
 			if (rotation)
