@@ -1,15 +1,15 @@
 #version 420 core
 
+//Instead of setting the material color we need to sample from a texture.
 struct Material
 {
-    vec3 ambientColor;
-    vec3 diffuseColor;
-    vec3 specularColor;
+    sampler2D diffuse;
+    sampler2D specular;
     float shininess; //AKA: specularStrength
 };
 
-struct Light {
-
+struct Light 
+{
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -17,6 +17,7 @@ struct Light {
 
 in vec3 fragPos;
 in vec3 Normal;
+in vec2 texCoords;
 
 out vec4 FragColor;
 
@@ -34,19 +35,19 @@ void main()
     vec3 norm = normalize(Normal);
 
     //ambient light:
-    vec3 ambientLight = light.ambient * material.ambientColor;
+    vec3 ambient = light.ambient * texture(material.diffuse, texCoords).rgb;
 
     //diffuse Light:
-    float lightIntensity = max(dot(norm, lightDir), 0.0);
-    vec3 diffuseLight = (lightIntensity * material.diffuseColor) * light.diffuse;
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = diff * light.diffuse * texture(material.diffuse, texCoords).rgb;
 
     //Specular Light:
     vec3 reflection = normalize(2 * (dot(norm, lightDir)) * norm - lightDir);
     vec3 viewDir = normalize(cameraWorldPos - fragPos);
-    float shineVal = pow(max(dot(reflection, viewDir), 0.0), material.shininess);
-    vec3 specularLight = light.specular * (shineVal * material.specularColor);
+    float spec = pow(max(dot(reflection, viewDir), 0.0), material.shininess);
+    vec3 specular = light.specular * spec * texture(material.specular, texCoords).rgb;
 
-    vec3 result = ambientLight + diffuseLight + specularLight;
+    vec3 result = ambient + diffuse + specular;
 
     FragColor = vec4(result, 1.0);
 }

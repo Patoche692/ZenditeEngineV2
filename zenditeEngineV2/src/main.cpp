@@ -113,12 +113,12 @@ int main(void)
 	bindVao(VAO_Cube);
 
 	//Setup Texture1
-	Texture2D wallTexture;
-	wallTexture.setupTextureJPG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/wall.jpg");
+	Texture2D diffuseMap;
+	diffuseMap.setupTexturePNG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2.png");
 
 	//Setup Texture2
-	Texture2D faceTexture;
-	faceTexture.setupTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/awesomeface.png");
+	Texture2D specularMap;
+	specularMap.setupTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2_specular.png");
 
 	//IMGUI setup:
 	imGuiSetup(window);
@@ -198,7 +198,6 @@ int main(void)
 		shader_blMaterial.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
 		shader_blMaterial.setUniform3fv("lightWorldPos", lightPos);
 		shader_blMaterial.setUniform3fv("cameraWorldPos", cameraPos);
-		shader_blMaterial.setUniform3fv("material.ambientColor", material.ambientColor);
 		shader_blMaterial.setUniform3fv("material.diffuseColor", material.diffuseColor);
 		shader_blMaterial.setUniform3fv("material.specularColor", material.specularColor);
 		shader_blMaterial.setUniformFloat("material.shininess", material.shininess);
@@ -206,6 +205,9 @@ int main(void)
 		shader_blMaterial.setUniform3fv("light.ambient", light.ambient);
 		shader_blMaterial.setUniform3fv("light.diffuse", light.diffuse);
 		shader_blMaterial.setUniform3fv("light.specular", light.specular);
+
+		shader_blMaterial.setUniformTextureUnit("material.diffuse", diffuseMap.getTexUnit());
+		shader_blMaterial.setUniformTextureUnit("material.specular", specularMap.getTexUnit());
 		// ambientColor
 		// diffuseColor
 		// specularColor
@@ -226,7 +228,6 @@ int main(void)
 		}
 		ImGui::NewLine();
 		//diffuseIntensity
-		ImGui::InputFloat3("ambient Color", &(material.ambientColor)[0]);
 		ImGui::InputFloat3("diffuse Color", &(material.diffuseColor)[0]);
 		ImGui::InputFloat3("specular Color", &(material.specularColor)[0]);
 		ImGui::NewLine();
