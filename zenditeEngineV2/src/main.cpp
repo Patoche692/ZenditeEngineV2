@@ -80,8 +80,8 @@ int main(void)
 
 	Light light;
 	light.ambient = glm::vec3(0.1f, 0.1f, 0.1f);
-	light.diffuse = glm::vec3(1.0f);
-	light.specular = glm::vec3(1.0f);
+	light.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+	light.specular = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	std::cout <<glGetString(GL_VERSION) << "\n";
 
@@ -231,8 +231,8 @@ int main(void)
 		ImGui::InputFloat3("specular Color", &(material.specularColor)[0]);
 		ImGui::NewLine();
 		ImGui::InputFloat3("ambient light", &(light.ambient)[0]);
-		ImGui::InputFloat3("diffuse Color", &(light.diffuse)[0]);
-		ImGui::InputFloat3("specular Color", &(light.specular)[0]);
+		ImGui::InputFloat3("diffuse light", &(light.diffuse)[0]);
+		ImGui::InputFloat3("specular light", &(light.specular)[0]);
 		ImGui::NewLine();
 		ImGui::SliderFloat("Specular Shininess", &material.shininess, 1.0, 64.0);
 		if (ImGui::Button("Toggle Rotation"))
