@@ -107,7 +107,7 @@ int main(void)
 	glBindVertexArray(VAO_LightCube);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_Cube);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	bindVao(VAO_Cube);
