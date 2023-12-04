@@ -11,7 +11,7 @@ private:
 	int imgHeight;
 	int nrChannels;
 	unsigned char* imgData;
-
+	
 	unsigned int texUnit;
 
 public:

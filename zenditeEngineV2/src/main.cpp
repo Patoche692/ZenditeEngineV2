@@ -19,6 +19,8 @@ struct Material
 
 struct Light
 {
+	glm::vec3 direction;
+
 	glm::vec3 ambient;
 	glm::vec3 diffuse;
 	glm::vec3 specular;
@@ -28,6 +30,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+
+//void castDirectionalLight(glm::vec3 lightDir, )
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -82,6 +86,7 @@ int main(void)
 	light.ambient = glm::vec3(0.1f, 0.1f, 0.1f);
 	light.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
 	light.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+	light.direction = glm::vec3(1.0f, -1.0f, 1.0f);
 
 	std::cout <<glGetString(GL_VERSION) << "\n";
 
@@ -93,6 +98,10 @@ int main(void)
 	Shader shader_blMaterial("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_blMaterial.glsl",
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_blMaterial.glsl");
 	shader_blMaterial.bindProgram();
+
+	Shader shader_DirLight("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_DirLight.glsl",
+		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_DirLight.glsl");
+	//shader_DirLight.bindProgram();
 
 	//Create our regular cube VAO
 	unsigned int VAO_Cube;
@@ -195,6 +204,8 @@ int main(void)
 		//Draw Regular Cube
 		bindVao(VAO_Cube);
 		glm::vec3 cameraPos = camera.getPosition();
+		
+
 		shader_blMaterial.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
 		shader_blMaterial.setUniform3fv("lightWorldPos", lightPos);
 		shader_blMaterial.setUniform3fv("cameraWorldPos", cameraPos);
@@ -205,9 +216,11 @@ int main(void)
 		shader_blMaterial.setUniform3fv("light.ambient", light.ambient);
 		shader_blMaterial.setUniform3fv("light.diffuse", light.diffuse);
 		shader_blMaterial.setUniform3fv("light.specular", light.specular);
+		shader_blMaterial.setUniform3fv("light.direction", light.direction);
 
 		shader_blMaterial.setUniformTextureUnit("material.diffuse", diffuseMap.getTexUnit());
 		shader_blMaterial.setUniformTextureUnit("material.specular", specularMap.getTexUnit());
+		
 		// ambientColor
 		// diffuseColor
 		// specularColor

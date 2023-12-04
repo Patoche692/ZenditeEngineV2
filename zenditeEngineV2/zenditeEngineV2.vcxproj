@@ -459,8 +459,10 @@
     <None Include="res\shaders\BasicShaders\vs_Texture.glsl" />
     <None Include="res\shaders\BasicShaders\vs_Transform.glsl" />
     <None Include="res\shaders\LightingShaders\fs_BasicLight.glsl" />
+    <None Include="res\shaders\LightingShaders\fs_DirLight.glsl" />
     <None Include="res\shaders\LightingShaders\fs_lightSource.glsl" />
     <None Include="res\shaders\LightingShaders\vs_BasicLight.glsl" />
+    <None Include="res\shaders\LightingShaders\vs_DirLight.glsl" />
     <None Include="res\shaders\LightingShaders\vs_lightSource.glsl" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
