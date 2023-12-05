@@ -114,8 +114,9 @@ int main(void)
 		(pointLight[x]).linear = 0.09f;
 		(pointLight[x]).quadratic = 0.032f;
 	}
-
-	pointLight[0].position = glm::vec3(0.7f, 0.2f, 2.0f);
+	(pointLight[0]).linear = 0.7f;
+	(pointLight[0]).quadratic = 1.832f;
+	//pointLight[0].position = glm::vec3(0.7f, 0.2f, 2.0f);
 	pointLight[1].position = glm::vec3(2.3f, -3.3f, -4.0f);
 	pointLight[2].position = glm::vec3(-4.0f, 2.0f, -12.0f);
 	pointLight[3].position = glm::vec3(0.0f, 0.0f, -3.0f);
@@ -204,7 +205,7 @@ int main(void)
 
 		lightRotation = rotationMatrix * lightRotation;
 
-		glm::vec3 lightPos = glm::vec3(lightRotation) + lightCenter;
+		pointLight[0].position = glm::vec3(lightRotation) + lightCenter;
 
 		//Draw LightCube:
 		shader_LightSource.bindProgram();
@@ -212,10 +213,21 @@ int main(void)
 
 		for (int i = 0; i < sizeof(pointLight) / sizeof(pointLight[0]); i++)
 		{
-			glm::mat4 translation = glm::translate(glm::mat4(1.0f), (pointLight[i]).position);
-			glm::mat4 LC_modelMat = glm::mat4(1.0f) * translation;
+			glm::mat4 LC_modelMat(1.0f);
+			glm::mat4 translation(1.0f);
+			
+			if (i != 0)
+			{
+				translation = glm::translate(glm::mat4(1.0f), (pointLight[i]).position);
+				LC_modelMat = glm::mat4(1.0f) * translation;
+			}
+			//LC_modelMat = glm::translate(LC_modelMat, lightPos);
 
-			LC_modelMat = glm::translate(LC_modelMat, lightPos);
+			if(i == 0)
+			{
+				LC_modelMat = glm::translate(LC_modelMat, pointLight[0].position);
+			}
+
 			LC_modelMat = glm::scale(LC_modelMat, glm::vec3(0.2f));
 
 			shader_LightSource.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
@@ -249,6 +261,7 @@ int main(void)
 		sh_multiLight.setUniform3fv("dirLight.diffuse", dirLight.diffuse);
 		sh_multiLight.setUniform3fv("dirLight.specular", dirLight.specular);
 
+		/*
 		for (int i = 0; i < sizeof(pointLight) / sizeof(pointLight[0]); i++)
 		{
 			std::string pointLightStr = "pointLight[" + std::to_string(i) + "]";
@@ -264,6 +277,49 @@ int main(void)
 			sh_multiLight.setUniformFloat((pointLightStr + ".constant"), (pointLight[i]).constant);
 
 		}
+		*/
+
+		sh_multiLight.setUniform3fv("pointLight[0].position", (pointLight[0]).position);
+
+		sh_multiLight.setUniform3fv("pointLight[0].ambient", (pointLight[0]).ambient);
+		sh_multiLight.setUniform3fv("pointLight[0].diffuse", (pointLight[0]).diffuse);
+		sh_multiLight.setUniform3fv("pointLight[0].specular", (pointLight[0]).specular);
+
+		sh_multiLight.setUniformFloat("pointLight[0].linear", (pointLight[0]).linear);
+		sh_multiLight.setUniformFloat("pointLight[0].quadratic", (pointLight[0]).quadratic);
+		sh_multiLight.setUniformFloat("pointLight[0].constant", (pointLight[0]).constant);
+
+		sh_multiLight.setUniform3fv("pointLight[1].position", (pointLight[1]).position);
+
+		sh_multiLight.setUniform3fv("pointLight[1].ambient", (pointLight[1]).ambient);
+		sh_multiLight.setUniform3fv("pointLight[1].diffuse", (pointLight[1]).diffuse);
+		sh_multiLight.setUniform3fv("pointLight[1].specular", (pointLight[1]).specular);
+
+		sh_multiLight.setUniformFloat("pointLight[1].linear", (pointLight[1]).linear);
+		sh_multiLight.setUniformFloat("pointLight[1].quadratic", (pointLight[1]).quadratic);
+		sh_multiLight.setUniformFloat("pointLight[1].constant", (pointLight[1]).constant);
+
+		sh_multiLight.setUniform3fv("pointLight[2].position", (pointLight[2]).position);
+
+		sh_multiLight.setUniform3fv("pointLight[2].ambient", (pointLight[2]).ambient);
+		sh_multiLight.setUniform3fv("pointLight[2].diffuse", (pointLight[2]).diffuse);
+		sh_multiLight.setUniform3fv("pointLight[2].specular", (pointLight[2]).specular);
+
+		sh_multiLight.setUniformFloat("pointLight[2].linear", (pointLight[2]).linear);
+		sh_multiLight.setUniformFloat("pointLight[2].quadratic", (pointLight[2]).quadratic);
+		sh_multiLight.setUniformFloat("pointLight[2].constant", (pointLight[2]).constant);
+
+		//
+
+		sh_multiLight.setUniform3fv("pointLight[3].position", (pointLight[3]).position);
+												
+		sh_multiLight.setUniform3fv("pointLight[3].ambient", (pointLight[3]).ambient);
+		sh_multiLight.setUniform3fv("pointLight[3].diffuse", (pointLight[3]).diffuse);
+		sh_multiLight.setUniform3fv("pointLight[3].specular", (pointLight[3]).specular);
+
+		sh_multiLight.setUniformFloat("pointLight[3].linear", (pointLight[3]).linear);
+		sh_multiLight.setUniformFloat("pointLight[3].quadratic", (pointLight[3]).quadratic);
+		sh_multiLight.setUniformFloat("pointLight[3].constant", (pointLight[3]).constant);
 
 		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 

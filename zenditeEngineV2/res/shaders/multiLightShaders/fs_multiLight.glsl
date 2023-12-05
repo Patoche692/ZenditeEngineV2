@@ -60,7 +60,7 @@ void main()
     }
     
 
-    vec3 result = totalPointLight + totalDirLight;
+    vec3 result = totalPointLight;// +totalDirLight;
 
     FragColor = vec4(result, 1.0);
 }
