@@ -17,9 +17,9 @@ struct Material
 	float shininess; //AKA: specularStrength
 };
 
-struct Light
+struct PointLight
 {
-	glm::vec3 direction;
+	glm::vec3 position;
 
 	glm::vec3 ambient;
 	glm::vec3 diffuse;
@@ -28,6 +28,15 @@ struct Light
 	float constant;
 	float linear;
 	float quadratic;
+};
+
+struct DirLight
+{
+	glm::vec3 direction;
+
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
 };
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -57,7 +66,7 @@ int main(void)
 	if (!glfwInit()) {
 		return -1;
 	}
-	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello GRAPHICS", NULL, NULL);
 	if (!window){
 		glfwTerminate();
 		return -1;
@@ -86,15 +95,30 @@ int main(void)
 	material.specularColor = glm::vec3(0.5f, 0.5f, 0.5f);
 	material.shininess = 32.0f;
 
-	Light light;
-	light.ambient = glm::vec3(0.1f, 0.1f, 0.1f);
-	light.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
-	light.specular = glm::vec3(1.0f, 1.0f, 1.0f);
-	light.direction = glm::vec3(1.0f, -1.0f, 1.0f);
+	DirLight dirLight;
 
-	light.constant = 1.0f;
-	light.linear = 0.09f;
-	light.quadratic = 0.032f;
+	dirLight.ambient = glm::vec3(0.1f, 0.1f, 0.1f);
+	dirLight.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+	dirLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+	dirLight.direction = glm::vec3(1.0f, -1.0f, 1.0f);
+
+	PointLight pointLight[4];
+	
+	for (int x = 0; x < 4; x++)
+	{
+		(pointLight[x]).ambient = glm::vec3(0.1f, 0.1f, 0.1f);
+		(pointLight[x]).diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+		(pointLight[x]).specular = glm::vec3(1.0f, 1.0f, 1.0f);
+
+		(pointLight[x]).constant = 1.0f;
+		(pointLight[x]).linear = 0.09f;
+		(pointLight[x]).quadratic = 0.032f;
+	}
+
+	pointLight[0].position = glm::vec3(0.7f, 0.2f, 2.0f);
+	pointLight[1].position = glm::vec3(2.3f, -3.3f, -4.0f);
+	pointLight[2].position = glm::vec3(-4.0f, 2.0f, -12.0f);
+	pointLight[3].position = glm::vec3(0.0f, 0.0f, -3.0f);
 
 	std::cout <<glGetString(GL_VERSION) << "\n";
 
@@ -186,17 +210,20 @@ int main(void)
 		shader_LightSource.bindProgram();
 		bindVao(VAO_LightCube);
 
-		glm::mat4 LC_modelMat = glm::mat4(1.0f);
+		for (int i = 0; i < sizeof(pointLight) / sizeof(pointLight[0]); i++)
+		{
+			glm::mat4 translation = glm::translate(glm::mat4(1.0f), (pointLight[i]).position);
+			glm::mat4 LC_modelMat = glm::mat4(1.0f) * translation;
 
-		LC_modelMat = glm::translate(LC_modelMat, lightPos);
-		LC_modelMat = glm::scale(LC_modelMat, glm::vec3(0.2f));
+			LC_modelMat = glm::translate(LC_modelMat, lightPos);
+			LC_modelMat = glm::scale(LC_modelMat, glm::vec3(0.2f));
 
-		shader_LightSource.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
-		shader_LightSource.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
-		shader_LightSource.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(LC_modelMat));
+			shader_LightSource.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
+			shader_LightSource.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
+			shader_LightSource.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(LC_modelMat));
 
-
-		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+			GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+		}
 
 		//Draw Regular Cube
 		bindVao(VAO_Cube);
@@ -208,30 +235,35 @@ int main(void)
 		sh_multiLight.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
 
 		//Set fragment uniforms:
-		sh_multiLight.setUniform3fv("lightColor", 1.0f, 1.0f, 1.0f);
 
 		glm::vec3 cameraPos = camera.getPosition();
-		
-		sh_multiLight.setUniform3fv("lightWorldPos", lightPos);
 		sh_multiLight.setUniform3fv("cameraWorldPos", cameraPos);
-		sh_multiLight.setUniform3fv("material.diffuseColor", material.diffuseColor);
-		sh_multiLight.setUniform3fv("material.specularColor", material.specularColor);
+
 		sh_multiLight.setUniformFloat("material.shininess", material.shininess);
-
-		sh_multiLight.setUniform3fv("light.ambient", light.ambient);
-		sh_multiLight.setUniform3fv("light.diffuse", light.diffuse);
-		sh_multiLight.setUniform3fv("light.specular", light.specular);
-		//sh_multiLight.setUniform3fv("light.direction", light.direction);
-		sh_multiLight.setUniform3fv("light.specular", light.specular);
-		sh_multiLight.setUniformFloat("light.linear", light.linear);
-		sh_multiLight.setUniformFloat("light.quadratic", light.quadratic);
-
 		sh_multiLight.setUniformTextureUnit("material.diffuse", diffuseMap.getTexUnit());
 		sh_multiLight.setUniformTextureUnit("material.specular", specularMap.getTexUnit());
 		
-		// ambientColor
-		// diffuseColor
-		// specularColor
+		sh_multiLight.setUniform3fv("dirLight.direction", dirLight.direction);
+		
+		sh_multiLight.setUniform3fv("dirLight.ambient", dirLight.ambient);
+		sh_multiLight.setUniform3fv("dirLight.diffuse", dirLight.diffuse);
+		sh_multiLight.setUniform3fv("dirLight.specular", dirLight.specular);
+
+		for (int i = 0; i < sizeof(pointLight) / sizeof(pointLight[0]); i++)
+		{
+			std::string pointLightStr = "pointLight[" + std::to_string(i) + "]";
+
+			sh_multiLight.setUniform3fv((pointLightStr + ".position"), (pointLight[i]).position);
+
+			sh_multiLight.setUniform3fv((pointLightStr + ".ambient"), (pointLight[i]).ambient);
+			sh_multiLight.setUniform3fv((pointLightStr + ".diffuse"), (pointLight[i]).diffuse);
+			sh_multiLight.setUniform3fv((pointLightStr + ".specular"), (pointLight[i]).specular);
+
+			sh_multiLight.setUniformFloat((pointLightStr + ".linear"), (pointLight[i]).linear);
+			sh_multiLight.setUniformFloat((pointLightStr + ".quadratic"), (pointLight[i]).quadratic);
+			sh_multiLight.setUniformFloat((pointLightStr + ".constant"), (pointLight[i]).constant);
+
+		}
 
 		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 
@@ -252,9 +284,9 @@ int main(void)
 		ImGui::InputFloat3("diffuse Color", &(material.diffuseColor)[0]);
 		ImGui::InputFloat3("specular Color", &(material.specularColor)[0]);
 		ImGui::NewLine();
-		ImGui::InputFloat3("ambient light", &(light.ambient)[0]);
-		ImGui::InputFloat3("diffuse light", &(light.diffuse)[0]);
-		ImGui::InputFloat3("specular light", &(light.specular)[0]);
+		//ImGui::InputFloat3("ambient light", &(light.ambient)[0]);
+		//ImGui::InputFloat3("diffuse light", &(light.diffuse)[0]);
+		//ImGui::InputFloat3("specular light", &(light.specular)[0]);
 		ImGui::NewLine();
 		ImGui::SliderFloat("Specular Shininess", &material.shininess, 1.0, 64.0);
 		if (ImGui::Button("Toggle Rotation"))
@@ -283,8 +315,8 @@ int main(void)
 			}
 		}
 		ImGui::NewLine();
-		ImGui::InputFloat("linear Light Val", &(light.linear));
-		ImGui::InputFloat("quadratic Light Val", &(light.quadratic));
+		//ImGui::InputFloat("linear Light Val", &(light.linear));
+		//ImGui::InputFloat("quadratic Light Val", &(light.quadratic));
 
 		ImGui::End();
 		ImGui::Render();
