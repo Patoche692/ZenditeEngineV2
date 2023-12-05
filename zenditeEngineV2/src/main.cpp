@@ -107,7 +107,7 @@ int main(void)
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_blMaterial.glsl");
 	shader_blMaterial.bindProgram();
 
-	Shader sh_multiLight("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/multiLightShaders/fs_multiLight.glsl",
+	Shader sh_multiLight("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/multiLightShaders/vs_multiLight.glsl",
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/multiLightShaders/fs_multiLight.glsl");
 	//shader_DirLight.bindProgram();
 
@@ -200,34 +200,34 @@ int main(void)
 
 		//Draw Regular Cube
 		bindVao(VAO_Cube);
-		shader_blMaterial.bindProgram();
+		sh_multiLight.bindProgram();
 
 		//shader_Transform.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
-		shader_blMaterial.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
-		shader_blMaterial.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
-		shader_blMaterial.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
+		sh_multiLight.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
+		sh_multiLight.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
+		sh_multiLight.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
 
 		//Set fragment uniforms:
-		shader_blMaterial.setUniform3fv("lightColor", 1.0f, 1.0f, 1.0f);
+		sh_multiLight.setUniform3fv("lightColor", 1.0f, 1.0f, 1.0f);
 
 		glm::vec3 cameraPos = camera.getPosition();
 		
-		shader_blMaterial.setUniform3fv("lightWorldPos", lightPos);
-		shader_blMaterial.setUniform3fv("cameraWorldPos", cameraPos);
-		shader_blMaterial.setUniform3fv("material.diffuseColor", material.diffuseColor);
-		shader_blMaterial.setUniform3fv("material.specularColor", material.specularColor);
-		shader_blMaterial.setUniformFloat("material.shininess", material.shininess);
+		sh_multiLight.setUniform3fv("lightWorldPos", lightPos);
+		sh_multiLight.setUniform3fv("cameraWorldPos", cameraPos);
+		sh_multiLight.setUniform3fv("material.diffuseColor", material.diffuseColor);
+		sh_multiLight.setUniform3fv("material.specularColor", material.specularColor);
+		sh_multiLight.setUniformFloat("material.shininess", material.shininess);
 
-		shader_blMaterial.setUniform3fv("light.ambient", light.ambient);
-		shader_blMaterial.setUniform3fv("light.diffuse", light.diffuse);
-		shader_blMaterial.setUniform3fv("light.specular", light.specular);
-		//shader_blMaterial.setUniform3fv("light.direction", light.direction);
-		shader_blMaterial.setUniform3fv("light.specular", light.specular);
-		shader_blMaterial.setUniformFloat("light.linear", light.linear);
-		shader_blMaterial.setUniformFloat("light.quadratic", light.quadratic);
+		sh_multiLight.setUniform3fv("light.ambient", light.ambient);
+		sh_multiLight.setUniform3fv("light.diffuse", light.diffuse);
+		sh_multiLight.setUniform3fv("light.specular", light.specular);
+		//sh_multiLight.setUniform3fv("light.direction", light.direction);
+		sh_multiLight.setUniform3fv("light.specular", light.specular);
+		sh_multiLight.setUniformFloat("light.linear", light.linear);
+		sh_multiLight.setUniformFloat("light.quadratic", light.quadratic);
 
-		shader_blMaterial.setUniformTextureUnit("material.diffuse", diffuseMap.getTexUnit());
-		shader_blMaterial.setUniformTextureUnit("material.specular", specularMap.getTexUnit());
+		sh_multiLight.setUniformTextureUnit("material.diffuse", diffuseMap.getTexUnit());
+		sh_multiLight.setUniformTextureUnit("material.specular", specularMap.getTexUnit());
 		
 		// ambientColor
 		// diffuseColor
