@@ -309,8 +309,6 @@ int main(void)
 		sh_multiLight.setUniformFloat("pointLight[2].quadratic", (pointLight[2]).quadratic);
 		sh_multiLight.setUniformFloat("pointLight[2].constant", (pointLight[2]).constant);
 
-		//
-
 		sh_multiLight.setUniform3fv("pointLight[3].position", (pointLight[3]).position);
 												
 		sh_multiLight.setUniform3fv("pointLight[3].ambient", (pointLight[3]).ambient);
