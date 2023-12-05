@@ -191,10 +191,23 @@ int main(void)
 			angle = angle + rotationSpeed * deltaTime;
 		}
 
-		glm::vec3 cubePositions(0.0f, 0.0f, 0.0f);
+		glm::vec3 cubePosition(0.0f, 0.0f, 0.0f);
+		
+		glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+		};
 
 		glm::mat4 modelMat = glm::mat4(1.0f);
-		modelMat = glm::translate(modelMat, cubePositions);
+		modelMat = glm::translate(modelMat, cubePosition);
 		glm::mat4 viewMat = camera.GetViewMatrix();
 		glm::mat4 projMat = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
@@ -318,6 +331,19 @@ int main(void)
 		sh_multiLight.setUniformFloat("pointLight[3].linear", (pointLight[3]).linear);
 		sh_multiLight.setUniformFloat("pointLight[3].quadratic", (pointLight[3]).quadratic);
 		sh_multiLight.setUniformFloat("pointLight[3].constant", (pointLight[3]).constant);
+
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			// calculate the model matrix for each object and pass it to shader before drawing
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, cubePositions[i]);
+			float angle = 20.0f * i;
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+
+			sh_multiLight.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(model));
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 
 		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 

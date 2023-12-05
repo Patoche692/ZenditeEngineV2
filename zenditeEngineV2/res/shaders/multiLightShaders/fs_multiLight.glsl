@@ -33,6 +33,7 @@ struct PointLight
 
 vec3 CalcDirLight(DirLight dirLight, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight pointLight, vec3 normal, vec3 fragPos, vec3 viewDir);
+vec3 CalcPointLightNoAtten(PointLight pointLight, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 in vec3 fragPos;
 in vec3 Normal;
@@ -54,7 +55,9 @@ void main()
     vec3 totalDirLight = CalcDirLight(dirLight, norm, viewDir);
     vec3 totalPointLight = vec3(0.0, 0.0, 0.0);
 
-    for (int i = 0; i < NR_POINT_LIGHTS; i++)
+    totalPointLight = totalPointLight + CalcPointLightNoAtten(pointLight[0], norm, fragPos, viewDir);
+
+    for (int i = 1; i < NR_POINT_LIGHTS; i++)
     {
         totalPointLight = totalPointLight + CalcPointLight(pointLight[i], norm, fragPos, viewDir);
     }
@@ -105,6 +108,28 @@ vec3 CalcPointLight(PointLight pointLight, vec3 normal, vec3 fragPos, vec3 viewD
     float spec = pow(max(dot(reflection, viewDir), 0.0), material.shininess);
     vec3 specular = pointLight.specular * spec * texture(material.specular, texCoords).rgb;
     specular = specular * lightAttenuation;
+
+    return (ambient + diffuse + specular);
+}
+
+vec3 CalcPointLightNoAtten(PointLight pointLight, vec3 normal, vec3 fragPos, vec3 viewDir)
+{
+    vec3 lightDir = normalize(pointLight.position - fragPos);
+    float distance = length(pointLight.position - fragPos);
+    float lightAttenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * (distance * distance));
+
+    //ambient light:
+    vec3 ambient = pointLight.ambient * texture(material.diffuse, texCoords).rgb;
+    ambient = ambient * lightAttenuation;
+    //diffuse Light:
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 diffuse = diff * pointLight.diffuse * texture(material.diffuse, texCoords).rgb;
+
+
+    //Specular Light:
+    vec3 reflection = normalize(2 * (dot(normal, lightDir)) * normal - lightDir);
+    float spec = pow(max(dot(reflection, viewDir), 0.0), material.shininess);
+    vec3 specular = pointLight.specular * spec * texture(material.specular, texCoords).rgb;
 
     return (ambient + diffuse + specular);
 }
