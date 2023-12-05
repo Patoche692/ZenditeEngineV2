@@ -935,6 +935,15 @@
     <ClInclude Include="src\Texture2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="res\shaders\LightingShaders\vs_blMaterial.glsl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="res\shaders\LightingShaders\fs_blMaterial.glsl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vendor\glm\detail\func_common.inl">
@@ -1345,9 +1354,17 @@
     <None Include="src\vendor\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="res\shaders\vs_Basic.glsl" />
-    <None Include="res\shaders\fs_Basic.glsl" />
-    <None Include="res\shaders\vs_Texture.glsl" />
-    <None Include="res\shaders\fs_Texture.glsl" />
+    <None Include="res\shaders\BasicShaders\vs_Basic.glsl" />
+    <None Include="res\shaders\BasicShaders\fs_Basic.glsl" />
+    <None Include="res\shaders\BasicShaders\vs_Texture.glsl" />
+    <None Include="res\shaders\BasicShaders\fs_Texture.glsl" />
+    <None Include="res\shaders\BasicShaders\vs_Transform.glsl" />
+    <None Include="res\shaders\BasicShaders\fs_Transform.glsl" />
+    <None Include="res\shaders\LightingShaders\fs_BasicLight.glsl" />
+    <None Include="res\shaders\LightingShaders\vs_BasicLight.glsl" />
+    <None Include="res\shaders\LightingShaders\vs_lightSource.glsl" />
+    <None Include="res\shaders\LightingShaders\fs_lightSource.glsl" />
+    <None Include="res\shaders\LightingShaders\vs_DirLight.glsl" />
+    <None Include="res\shaders\LightingShaders\fs_DirLight.glsl" />
   </ItemGroup>
 </Project>

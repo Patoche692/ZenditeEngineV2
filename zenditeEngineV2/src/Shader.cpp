@@ -1,8 +1,16 @@
 #include "Shader.h"
 
-Shader::Shader(const char* vs, const char* fs)
+Shader::Shader(const char* vs, const char* fs) : vs_filePath(vs), fs_filePath(fs)
 {
-	readShaderCodeFromFile(vs, fs);
+	readShaderCodeFromFile(vs_filePath, fs_filePath);
+	createAndCompileVertShader();
+	createAndCompileFragShader();
+	linkShaderPrograms();
+}
+
+void Shader::recompile()
+{
+	readShaderCodeFromFile(vs_filePath, fs_filePath);
 	createAndCompileVertShader();
 	createAndCompileFragShader();
 	linkShaderPrograms();
@@ -14,10 +22,10 @@ unsigned int Shader::getShaderHandle() const
 }
 
 
+
+
 void Shader::readShaderCodeFromFile(const char* vs_path, const char* fs_path)
 {
-	vs_string;
-	fs_string;
 
 	std::ifstream vsFile;
 	std::ifstream fsFile;
@@ -55,10 +63,40 @@ void Shader::setUniform4f(std::string name, float v1, float v2, float v3, float 
 	GLCALL(glUniform4f(glGetUniformLocation(shaderProgHandle, n), v1, v2, v3, v4));
 }
 
+void Shader::setUniform3fv(std::string name, glm::vec3& vec) const
+{
+	const char* n = name.c_str();
+	GLCALL(glUniform3fv(glGetUniformLocation(shaderProgHandle, n), 1, &vec[0]));
+}
+
+void Shader::setUniform3fv(std::string name, float v1, float v2, float v3) const
+{
+	const char* n = name.c_str();
+	GLCALL(glUniform3f(glGetUniformLocation(shaderProgHandle, n), v1, v2, v3));
+}
+
+void Shader::setUniformFloat(std::string name, float val) const
+{
+	const char* n = name.c_str();
+	GLCALL(glUniform1f(glGetUniformLocation(shaderProgHandle, n), val));
+}
+
+void Shader::setUniformInt(std::string name, int val) const
+{
+	const char* n = name.c_str();
+	GLCALL(glUniform1i(glGetUniformLocation(shaderProgHandle, n), val));
+}
+
 void Shader::setUniformTextureUnit(std::string name, unsigned int x)
 {
 	const char* n = name.c_str();
 	GLCALL(glUniform1i(glGetUniformLocation(shaderProgHandle, n), x));
+}
+
+void Shader::setUniformMat4(std::string name, GLboolean transpose, const GLfloat* mat)
+{
+	const char* n = name.c_str();
+	GLCALL(glUniformMatrix4fv(glGetUniformLocation(shaderProgHandle, n), 1, transpose, mat));
 }
 
 void Shader::bindProgram() const
