@@ -24,6 +24,10 @@ struct Light
 	glm::vec3 ambient;
 	glm::vec3 diffuse;
 	glm::vec3 specular;
+
+	float constant;
+	float linear;
+	float quadratic;
 };
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -87,6 +91,10 @@ int main(void)
 	light.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
 	light.specular = glm::vec3(1.0f, 1.0f, 1.0f);
 	light.direction = glm::vec3(1.0f, -1.0f, 1.0f);
+
+	light.constant = 1.0f;
+	light.linear = 0.09f;
+	light.quadratic = 0.032f;
 
 	std::cout <<glGetString(GL_VERSION) << "\n";
 
@@ -190,23 +198,20 @@ int main(void)
 
 		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 
-
+		//Draw Regular Cube
+		bindVao(VAO_Cube);
 		shader_blMaterial.bindProgram();
 
-
 		//shader_Transform.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
+		shader_blMaterial.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
 		shader_blMaterial.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
 		shader_blMaterial.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
 
 		//Set fragment uniforms:
 		shader_blMaterial.setUniform3fv("lightColor", 1.0f, 1.0f, 1.0f);
 
-		//Draw Regular Cube
-		bindVao(VAO_Cube);
 		glm::vec3 cameraPos = camera.getPosition();
 		
-
-		shader_blMaterial.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
 		shader_blMaterial.setUniform3fv("lightWorldPos", lightPos);
 		shader_blMaterial.setUniform3fv("cameraWorldPos", cameraPos);
 		shader_blMaterial.setUniform3fv("material.diffuseColor", material.diffuseColor);
@@ -216,7 +221,10 @@ int main(void)
 		shader_blMaterial.setUniform3fv("light.ambient", light.ambient);
 		shader_blMaterial.setUniform3fv("light.diffuse", light.diffuse);
 		shader_blMaterial.setUniform3fv("light.specular", light.specular);
-		shader_blMaterial.setUniform3fv("light.direction", light.direction);
+		//shader_blMaterial.setUniform3fv("light.direction", light.direction);
+		shader_blMaterial.setUniform3fv("light.specular", light.specular);
+		shader_blMaterial.setUniformFloat("light.linear", light.linear);
+		shader_blMaterial.setUniformFloat("light.quadratic", light.quadratic);
 
 		shader_blMaterial.setUniformTextureUnit("material.diffuse", diffuseMap.getTexUnit());
 		shader_blMaterial.setUniformTextureUnit("material.specular", specularMap.getTexUnit());
@@ -274,6 +282,10 @@ int main(void)
 				toggle = true;
 			}
 		}
+		ImGui::NewLine();
+		ImGui::InputFloat("linear Light Val", &(light.linear));
+		ImGui::InputFloat("quadratic Light Val", &(light.quadratic));
+
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());

@@ -27,7 +27,7 @@ uniform Material material;
 uniform Light light;
 
 uniform vec3 lightColor;
-
+uniform vec3 lightWorldPos;
 uniform vec3 cameraWorldPos;
 
 void main()
