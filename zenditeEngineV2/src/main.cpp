@@ -107,8 +107,8 @@ int main(void)
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_blMaterial.glsl");
 	shader_blMaterial.bindProgram();
 
-	Shader shader_DirLight("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_DirLight.glsl",
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_DirLight.glsl");
+	Shader sh_multiLight("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/multiLightShaders/fs_multiLight.glsl",
+		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/multiLightShaders/fs_multiLight.glsl");
 	//shader_DirLight.bindProgram();
 
 	//Create our regular cube VAO

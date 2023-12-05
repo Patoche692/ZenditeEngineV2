@@ -1366,5 +1366,7 @@
     <None Include="res\shaders\LightingShaders\fs_lightSource.glsl" />
     <None Include="res\shaders\LightingShaders\vs_DirLight.glsl" />
     <None Include="res\shaders\LightingShaders\fs_DirLight.glsl" />
+    <None Include="res\shaders\multiLightShaders\fs_multiLight.glsl" />
+    <None Include="res\shaders\multiLightShaders\vs_multiLight.glsl" />
   </ItemGroup>
 </Project>
