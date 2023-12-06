@@ -468,6 +468,8 @@
     <None Include="res\shaders\LightingShaders\vs_BasicLight.glsl" />
     <None Include="res\shaders\LightingShaders\vs_DirLight.glsl" />
     <None Include="res\shaders\LightingShaders\vs_lightSource.glsl" />
+    <None Include="res\shaders\modelLoading\fs_model_loading.glsl" />
+    <None Include="res\shaders\modelLoading\vs_model_loading.glsl" />
     <None Include="res\shaders\multiLightShaders\fs_multiLight.glsl" />
     <None Include="res\shaders\multiLightShaders\vs_multiLight.glsl" />
     <None Include="src\vendor\glm\detail\func_common.inl" />

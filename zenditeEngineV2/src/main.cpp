@@ -139,6 +139,9 @@ int main(void)
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/multiLightShaders/fs_multiLight.glsl");
 	//shader_DirLight.bindProgram();
 
+	Shader sh_modelLoading("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/vs_model_loading.glsl",
+		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/fs_model_loading.glsl");
+
 	//Create our regular cube VAO
 	unsigned int VAO_Cube;
 	unsigned int VBO_Cube;
@@ -175,6 +178,8 @@ int main(void)
 	int specularIntensity = 32;
 
 	float angle = 1.0f;
+
+	Model ourModel("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/models/backpack/backpack.obj");
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -351,6 +356,16 @@ int main(void)
 		}
 
 		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+
+		//Model Loading Drawing:
+		// render the loaded model
+		sh_modelLoading.bindProgram();
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		sh_modelLoading.setUniformMat4("model", GL_FALSE, glm::value_ptr(model));
+		ourModel.Draw(sh_modelLoading);
 
 		//Create IMGUI menu:
 		ImGui_ImplGlfwGL3_NewFrame();
