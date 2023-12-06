@@ -4,8 +4,12 @@
 //Instead of setting the material color we need to sample from a texture.
 struct Material
 {
-    sampler2D diffuse;
-    sampler2D specular;
+    sampler2D texture_diffuse1;
+    sampler2D texture_specular1;
+    sampler2D texture_diffuse2;
+    sampler2D texture_specular2;
+    sampler2D texture_diffuse3;
+    sampler2D texture_specular3;
     float shininess; //AKA: specularStrength
 };
 
@@ -73,16 +77,16 @@ vec3 CalcDirLight(DirLight dirLight, vec3 normal, vec3 viewDir)
     vec3 lightDir = normalize(-dirLight.direction); //we want the negative as the lighting calculations want the vector to point towards no from the light source
 
     //Ambient
-    vec3 ambient = dirLight.ambient * texture(material.diffuse, texCoords).rgb;
+    vec3 ambient = dirLight.ambient * texture(material.texture_diffuse1, texCoords).rgb;
 
     //Diffuse
     float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuse = diff * dirLight.diffuse * texture(material.diffuse, texCoords).rgb;
+    vec3 diffuse = diff * dirLight.diffuse * texture(material.texture_diffuse1, texCoords).rgb;
 
     //Specular
     vec3 reflection = normalize(2 * (dot(normal, lightDir)) * normal - lightDir);
     float spec = pow(max(dot(reflection, viewDir), 0.0), material.shininess);
-    vec3 specular = dirLight.specular * spec * texture(material.specular, texCoords).rgb;
+    vec3 specular = dirLight.specular * spec * texture(material.texture_specular1, texCoords).rgb;
 
     return (specular + diffuse + ambient);
 }
@@ -95,18 +99,18 @@ vec3 CalcPointLight(PointLight pointLight, vec3 normal, vec3 fragPos, vec3 viewD
     float lightAttenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * (distance * distance));
 
     //ambient light:
-    vec3 ambient = pointLight.ambient * texture(material.diffuse, texCoords).rgb;
+    vec3 ambient = pointLight.ambient * texture(material.texture_diffuse1, texCoords).rgb;
     ambient = ambient * lightAttenuation;
 
     //diffuse Light:
     float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuse = diff * pointLight.diffuse * texture(material.diffuse, texCoords).rgb;
+    vec3 diffuse = diff * pointLight.diffuse * texture(material.texture_diffuse1, texCoords).rgb;
     diffuse = diffuse * lightAttenuation;
 
     //Specular Light:
     vec3 reflection = normalize(2 * (dot(normal, lightDir)) * normal - lightDir);
     float spec = pow(max(dot(reflection, viewDir), 0.0), material.shininess);
-    vec3 specular = pointLight.specular * spec * texture(material.specular, texCoords).rgb;
+    vec3 specular = pointLight.specular * spec * texture(material.texture_specular1, texCoords).rgb;
     specular = specular * lightAttenuation;
 
     return (ambient + diffuse + specular);
@@ -119,17 +123,17 @@ vec3 CalcPointLightNoAtten(PointLight pointLight, vec3 normal, vec3 fragPos, vec
     float lightAttenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * (distance * distance));
 
     //ambient light:
-    vec3 ambient = pointLight.ambient * texture(material.diffuse, texCoords).rgb;
+    vec3 ambient = pointLight.ambient * texture(material.texture_diffuse1, texCoords).rgb;
     ambient = ambient * lightAttenuation;
     //diffuse Light:
     float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuse = diff * pointLight.diffuse * texture(material.diffuse, texCoords).rgb;
+    vec3 diffuse = diff * pointLight.diffuse * texture(material.texture_diffuse1, texCoords).rgb;
 
 
     //Specular Light:
     vec3 reflection = normalize(2 * (dot(normal, lightDir)) * normal - lightDir);
     float spec = pow(max(dot(reflection, viewDir), 0.0), material.shininess);
-    vec3 specular = pointLight.specular * spec * texture(material.specular, texCoords).rgb;
+    vec3 specular = pointLight.specular * spec * texture(material.texture_specular1, texCoords).rgb;
 
     return (ambient + diffuse + specular);
 }

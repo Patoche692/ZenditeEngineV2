@@ -10,6 +10,8 @@
 #include "menu.h"
 #include "Camera.h"
 
+#include "Helper/Model.h"
+
 struct Material
 {
 	glm::vec3 ambientColor;
@@ -156,11 +158,11 @@ int main(void)
 	bindVao(VAO_Cube);
 
 	//Setup Texture1
-	Texture2D diffuseMap;
+	Texture2D diffuseMap("texture_diffuse");
 	diffuseMap.setupTexturePNG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2.png");
 
 	//Setup Texture2
-	Texture2D specularMap;
+	Texture2D specularMap("texture_specular");
 	specularMap.setupTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2_specular.png");
 
 	//IMGUI setup:
@@ -181,7 +183,7 @@ int main(void)
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-
+		
 		count++;
 		/* Render here */
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -266,14 +268,16 @@ int main(void)
 		sh_multiLight.setUniform3fv("cameraWorldPos", cameraPos);
 
 		sh_multiLight.setUniformFloat("material.shininess", material.shininess);
-		sh_multiLight.setUniformTextureUnit("material.diffuse", diffuseMap.getTexUnit());
-		sh_multiLight.setUniformTextureUnit("material.specular", specularMap.getTexUnit());
+		sh_multiLight.setUniformTextureUnit("material.texture_diffuse1", diffuseMap.getTexUnit());
+		sh_multiLight.setUniformTextureUnit("material.texture_specular1", specularMap.getTexUnit());
 		
 		sh_multiLight.setUniform3fv("dirLight.direction", dirLight.direction);
 		
 		sh_multiLight.setUniform3fv("dirLight.ambient", dirLight.ambient);
 		sh_multiLight.setUniform3fv("dirLight.diffuse", dirLight.diffuse);
 		sh_multiLight.setUniform3fv("dirLight.specular", dirLight.specular);
+
+
 
 		/*
 		for (int i = 0; i < sizeof(pointLight) / sizeof(pointLight[0]); i++)
