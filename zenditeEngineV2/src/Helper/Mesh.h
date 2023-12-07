@@ -3,7 +3,14 @@
 #include <vector>
 
 class Shader;
-class Texture2D;
+//class Texture2D;
+
+struct Texture 
+{
+	unsigned int id; //texture handle
+	std::string type;
+	std::string path;
+};
 
 struct Vertex
 {
@@ -11,7 +18,6 @@ struct Vertex
 	glm::vec3 Normal;
 	glm::vec2 TexCoords;
 };
-
 
 class Mesh
 {
@@ -25,10 +31,10 @@ private:
 public:
 	std::vector<Vertex> vertex;
 	std::vector<unsigned int> index;
-	std::vector<Texture2D> texture;
+	std::vector<Texture> texture;
 
 	//Constructor
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture2D> textures);
+	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
 	void Draw(Shader& shader);
 
 };

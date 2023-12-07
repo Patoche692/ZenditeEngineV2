@@ -1,8 +1,8 @@
 #include "Mesh.h"
 #include "../Shader.h"
-#include "../Texture2D.h"
+//#include "../Texture2D.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture2D> textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {
 	this->vertex = vertices;
 	this->index = indices;
@@ -48,17 +48,17 @@ void Mesh::Draw(Shader& shader)
 
 	for(unsigned int i = 0; i < texture.size(); i++)
 	{
-		texture[i].changeTexUnit(GL_TEXTURE0 + i); // activate proper texture unit before binding
+		glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
 		// retrieve texture number (the N in diffuse_textureN)
 		std::string number;
-		std::string name = texture[i].getType();
+		std::string name = texture[i].type;
 		if (name == "texture_diffuse")
 			number = std::to_string(diffuseNr++);
 		else if (name == "texture_specular")
 			number = std::to_string(specularNr++);
 
-		shader.setUniformTextureUnit(("material." + name + number), i);
-		texture[i].bindTexture();
+		shader.setUniformTextureUnit(("material." + name + number).c_str(), i);
+		glBindTexture(GL_TEXTURE_2D, texture[i].id);
 	}
 	glActiveTexture(GL_TEXTURE0);
 

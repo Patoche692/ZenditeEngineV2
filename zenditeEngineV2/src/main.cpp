@@ -137,7 +137,7 @@ int main(void)
 
 	Shader sh_multiLight("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/multiLightShaders/vs_multiLight.glsl",
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/multiLightShaders/fs_multiLight.glsl");
-	//shader_DirLight.bindProgram();
+	sh_multiLight.bindProgram();
 
 	Shader sh_modelLoading("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/vs_model_loading.glsl",
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/fs_model_loading.glsl");
@@ -180,6 +180,8 @@ int main(void)
 	float angle = 1.0f;
 
 	Model ourModel("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/models/backpack/backpack.obj");
+
+	bool wireframe = false;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -271,6 +273,9 @@ int main(void)
 
 		glm::vec3 cameraPos = camera.getPosition();
 		sh_multiLight.setUniform3fv("cameraWorldPos", cameraPos);
+		
+		specularMap.changeTexUnit(0);
+		diffuseMap.changeTexUnit(1);
 
 		sh_multiLight.setUniformFloat("material.shininess", material.shininess);
 		sh_multiLight.setUniformTextureUnit("material.texture_diffuse1", diffuseMap.getTexUnit());
@@ -281,8 +286,6 @@ int main(void)
 		sh_multiLight.setUniform3fv("dirLight.ambient", dirLight.ambient);
 		sh_multiLight.setUniform3fv("dirLight.diffuse", dirLight.diffuse);
 		sh_multiLight.setUniform3fv("dirLight.specular", dirLight.specular);
-
-
 
 		/*
 		for (int i = 0; i < sizeof(pointLight) / sizeof(pointLight[0]); i++)
@@ -361,11 +364,25 @@ int main(void)
 		// render the loaded model
 		sh_modelLoading.bindProgram();
 
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		sh_modelLoading.setUniformMat4("projection", GL_FALSE, glm::value_ptr(projection));
+		sh_modelLoading.setUniformMat4("view", GL_FALSE, glm::value_ptr(view));
+
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -4.0f)); // translate it down so it's at the center of the scene
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
 		sh_modelLoading.setUniformMat4("model", GL_FALSE, glm::value_ptr(model));
 		ourModel.Draw(sh_modelLoading);
+
+		if(wireframe)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+		else
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
 
 		//Create IMGUI menu:
 		ImGui_ImplGlfwGL3_NewFrame();
@@ -378,6 +395,17 @@ int main(void)
 		{
 			shader_LightSource.recompile();
 			shader_blMaterial.recompile();
+		}
+		if (ImGui::Button("Toggle Wireframe"))
+		{
+			if(wireframe == false)
+			{
+				wireframe = true;
+			}
+			else
+			{
+				wireframe = false;
+			}
 		}
 		ImGui::NewLine();
 		//diffuseIntensity

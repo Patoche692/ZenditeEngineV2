@@ -152,6 +152,46 @@ void Texture2D::changeTexUnit(unsigned int unit)
 		glActiveTexture(GL_TEXTURE6);
 		GLCALL(glBindTexture(GL_TEXTURE_2D, texHandle));
 	}
+	else if (unit == 7)
+	{
+		glActiveTexture(GL_TEXTURE7);
+		GLCALL(glBindTexture(GL_TEXTURE_2D, texHandle));
+	}
+	else if (unit == 8)
+	{
+		glActiveTexture(GL_TEXTURE8);
+		GLCALL(glBindTexture(GL_TEXTURE_2D, texHandle));
+	}
+	else if (unit == 9)
+	{
+		glActiveTexture(GL_TEXTURE9);
+		GLCALL(glBindTexture(GL_TEXTURE_2D, texHandle));
+	}
+	else if (unit == 10)
+	{
+		glActiveTexture(GL_TEXTURE10);
+		GLCALL(glBindTexture(GL_TEXTURE_2D, texHandle));
+	}
+	else if (unit == 11)
+	{
+		glActiveTexture(GL_TEXTURE11);
+		GLCALL(glBindTexture(GL_TEXTURE_2D, texHandle));
+	}
+	else if (unit == 12)
+	{
+		glActiveTexture(GL_TEXTURE12);
+		GLCALL(glBindTexture(GL_TEXTURE_2D, texHandle));
+	}
+	else if (unit == 13)
+	{
+		glActiveTexture(GL_TEXTURE13);
+		GLCALL(glBindTexture(GL_TEXTURE_2D, texHandle));
+	}
+	else if (unit == 14)
+	{
+		glActiveTexture(GL_TEXTURE14);
+		GLCALL(glBindTexture(GL_TEXTURE_2D, texHandle));
+	}
 	else
 	{
 		std::cout << "\n --- Invalid texture unit value ---\n Must be between 0 - 3\n";
