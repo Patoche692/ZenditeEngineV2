@@ -6,15 +6,10 @@
 
 #include <memory>
 
-class Shader;
-class Node;
+#include "../Shader.h"
 
-struct Texture
-{
-	unsigned int texHandle;
-	std::string type; //diffuse, specular, etc.
-	std::string fullPath;
-};
+#include "Node.h"
+#include "Texture.h"
 
 class Model
 {
@@ -26,17 +21,19 @@ private:
 
 	//Smart ptr version of: Node* rootNode;
 	std::unique_ptr<Node> rootNode;
+	Shader* shaderHandle;
 
 public:
-	Model(const char* modelFilePath)
-	{
-		filePath = modelFilePath;
-	}
+	Model(const char* modelFilePath, Shader shader);
 	void Draw(Shader shaderHandle);
 
 	const std::vector<Texture>& getLoadedTexRef() const;
 	std::string getObjFilePath() const;
 	void addLoadedTexture(Texture newTexture);
 
-	~Model(); //Delete rootNode if not using a smart pointer. Otherwise, delte importer maybe;
+	//Each model uses a single shader for now.
+	
+
+
+	//~Model(); //Delete rootNode if not using a smart pointer. Otherwise, delte importer maybe;
 };

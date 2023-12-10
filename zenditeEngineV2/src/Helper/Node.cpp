@@ -1,4 +1,11 @@
-#include "Node.h"
+//#include "Node.h"
+#include "Model.h"
+#include "Mesh.h"
+
+Node::Node(std::shared_ptr<Model> model) : modelRef(model)
+{
+
+}
 
 Mesh Node::ProcessMesh(aiMesh* assimpMesh, aiScene* scene)
 {
@@ -28,9 +35,17 @@ void Node::ProcessNodeHierarchy(aiNode* node, aiScene* scene)
 }
 
 
-void Node::RenderNodeHierarchy()
+void Node::RenderNodeHierarchy(Shader* shader)
 {
+	for(unsigned int i = 0; i < meshes.size(); i++) //for each mesh in node
+	{
+		meshes[i].DrawMesh(shader);
+	}
 
+	for(unsigned int i = 0; i < childNodes.size(); i++)
+	{
+		childNodes[i].RenderNodeHierarchy(shader);
+	}
 }
 
 

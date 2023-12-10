@@ -1,9 +1,72 @@
 #include "Mesh.h"
-#include "../vendor/stb_image/stb_image.h"
+#include "Model.h"
 
-void Mesh::processMesh()
+Mesh::Mesh(aiMesh* mesh, aiScene* scene, std::shared_ptr<Model> model) : modelRef(model) //scene is needed when you want to retrieve the textures from the material.
 {
+	//Store input data:
+	assimpMesh = mesh;
+	assimpScene = scene;
 
+	//Collect vertex data:
+	processVertices();
+
+	//Collect Indices:
+	processIndices();
+
+	//Collect Textures from materials;
+	processTextures();
+
+	//After calling these 3 functions, we should have stored all the data into the relevant data structures in mesh.
+	//Texture is already assigned to a texture object referenced by texHandle in the Texture object defined in Model.h
+	//Now, assign that data to VAO, VBO and EBO so it can be stored in the VRAM and accessed by openGL
+	processDataForOpenGl();
+}
+
+//***NOTE***: Potential Error here: If my shader has lets say 3 slots for specular textures, then mesh 1 assigns 3 but mesh 2 only assigns one
+//		because they all use they same shader, mesh 2 will still use the specular textures assigned from mesh 1, which could result in some strange effects.
+//		It's worth looking into a solution for this later:
+//		At present this only works if all meshes have an equal number of textures (both diffuse and specular) or each subsequent mesh has more or = textures from the previosu mesh.
+void Mesh::DrawMesh(Shader* shader)
+{
+	unsigned int No_diffuse = 1;
+	unsigned int No_specular = 1;
+
+	unsigned int texUnit = GL_TEXTURE0;
+	//Shader* theShader = &shader;
+
+
+
+	//Assign the texture units for this mesh:
+	for(unsigned int i = 0; i < diffuseTextures.size(); i++)
+	{
+		GLCALL(glActiveTexture(texUnit));
+
+		std::string number = std::to_string(No_diffuse++);
+		
+		//GLCALL(glUniform1i(glGetUniformLocation(shader.getShaderHandle(), ("texture_diffuse" + number).c_str()), texUnit));
+		shader->setUniformTextureUnit(("texture_diffuse" + number), texUnit);
+		
+		texUnit++;
+	}
+
+	for (unsigned int i = 0; i < specularTextures.size(); i++)
+	{
+		GLCALL(glActiveTexture(texUnit));
+
+		std::string number = std::to_string(No_specular++);
+
+		//GLCALL(glUniform1i(glGetUniformLocation(shader.getShaderHandle(), ("texture_specular" + number).c_str()), texUnit));
+		shader->setUniformTextureUnit(("texture_specular" + number), texUnit);
+
+		texUnit++;
+	}
+
+	GLCALL(glBindVertexArray(VAO));
+	GLCALL(glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0));
+
+	// Unbind everything for safety
+	GLCALL(glBindVertexArray(0));
+	GLCALL(glActiveTexture(GL_TEXTURE0));
 }
 
 void Mesh::processVertices()
@@ -33,24 +96,6 @@ void Mesh::processIndices()
 	}
 }
 
-void Mesh::processTextures()
-{
-
-	//Get diffuse textures from the mesh:
-	assimpMaterial = assimpScene->mMaterials[assimpMesh->mMaterialIndex];
-	
-	diffuseTextures = loadSpecularTextureFromMaterial();
-	specularTextures = loadDiffuseTextureFromMaterial();
-
-}
-
-struct Texture
-{
-	unsigned int texHandle;
-	std::string type; //diffuse, specular, etc.
-	std::string fullPath;
-};
-
 std::vector<Texture> Mesh::loadSpecularTextureFromMaterial()
 {
 	std::vector<Texture> specularTextures;
@@ -78,7 +123,7 @@ std::vector<Texture> Mesh::loadSpecularTextureFromMaterial()
 				break;
 			}
 		}
-		if(!skip)
+		if (!skip)
 		{
 			Texture texture;
 			texture.fullPath = fullFilePath;
@@ -133,6 +178,17 @@ std::vector<Texture> Mesh::loadDiffuseTextureFromMaterial()
 	return diffuseTextures;
 }
 
+void Mesh::processTextures()
+{
+
+	//Get diffuse textures from the mesh:
+	assimpMaterial = assimpScene->mMaterials[assimpMesh->mMaterialIndex];
+	
+	diffuseTextures = loadSpecularTextureFromMaterial();
+	specularTextures = loadDiffuseTextureFromMaterial();
+
+}
+
 unsigned int Mesh::createGLTextureBuffer(const char* filePath)
 {
 	unsigned int texHandle;
@@ -168,7 +224,33 @@ unsigned int Mesh::createGLTextureBuffer(const char* filePath)
 		ASSERT(false);
 		stbi_image_free(data);
 	}
+	return texHandle;
+}
 
+void Mesh::processDataForOpenGl()
+{
+	GLCALL(glGenVertexArrays(1, &VAO));
+	GLCALL(glGenBuffers(1, &VBO));
+	GLCALL(glGenBuffers(1, &EBO));
+
+	GLCALL(glBindVertexArray(VAO));
+
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
+	GLCALL(glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW));
+
+	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO));
+	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW));
+
+
+	GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0));
+	GLCALL(glEnableVertexAttribArray(0));
+	GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, norm)));
+	GLCALL(glEnableVertexAttribArray(1));
+	GLCALL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCord)));
+	GLCALL(glEnableVertexAttribArray(2));
+
+
+	GLCALL(glBindVertexArray(0)); //Unbind the current VAO (for safety purposes)
 }
 
 void Mesh::processVertPositionData(Vertex* vert, unsigned int i)

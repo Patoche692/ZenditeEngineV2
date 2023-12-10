@@ -161,6 +161,7 @@
     <ClInclude Include="src\Helper\Mesh.h" />
     <ClInclude Include="src\Helper\Model.h" />
     <ClInclude Include="src\Helper\Node.h" />
+    <ClInclude Include="src\Helper\Texture.h" />
     <ClInclude Include="src\menu.h" />
     <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\Shader.h" />

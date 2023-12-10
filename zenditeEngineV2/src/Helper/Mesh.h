@@ -6,9 +6,13 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "../vendor/stb_image/stb_image.h"
 
-#include "Model.h"
+#include "../Shader.h"
+#include "Texture.h"
 
+//#include "Model.h"
+class Model;
 
 struct Vertex
 {
@@ -42,6 +46,7 @@ private:
 	unsigned int VAO;
 	unsigned int VBO;
 	unsigned int EBO;
+	//Tex handle is stored in the texture structure.
 
 	void processVertPositionData(Vertex* vert, unsigned int i);
 	void processVertNormalData(Vertex* vert, unsigned int i);
@@ -53,28 +58,15 @@ private:
 	void processTextures();
 
 	std::vector<Texture> loadSpecularTextureFromMaterial();
+
 	std::vector<Texture> loadDiffuseTextureFromMaterial();
 
 	unsigned int createGLTextureBuffer(const char* filePath);
 
+	void processDataForOpenGl();
+
 public:
-	Mesh(aiMesh* mesh, aiScene* scene, std::shared_ptr<Model> model) : modelRef(model) //scene is needed when you want to retrieve the textures from the material.
-	{
-		//Store input data:
-		assimpMesh = mesh;
-		assimpScene = scene;
-		
-		//Collect vertex data:
-		processVertices();
+	Mesh(aiMesh* mesh, aiScene* scene, std::shared_ptr<Model> model); //scene is needed when you want to retrieve the textures from the material.
 
-		//Collect Indices:
-		processIndices();
-
-		//Collect Textures from materials;
-		processTextures();
-
-		//Assign data to VAO, VBO and EBO and store data in VRAM for later usage;
-	}
-
-	void processMesh();
+	void DrawMesh(Shader* shader);
 };

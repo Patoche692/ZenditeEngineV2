@@ -98,7 +98,7 @@ int main(void)
 	Shader sh_modelLoading("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/vs_model_loading.glsl",
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/fs_model_loading.glsl");
 
-	Model ourModel("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/models/backpack/backpack.obj");
+	Model ourModel("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/models/backpack/backpack.obj", sh_modelLoading);
 
 	//IMGUI setup:
 	imGuiSetup(window);

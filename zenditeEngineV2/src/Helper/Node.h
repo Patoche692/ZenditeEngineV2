@@ -1,6 +1,10 @@
 #pragma once
 
-#include "Mesh.h"
+//#include "Mesh.h"
+#include "../Shader.h"
+
+class Mesh;
+class Model;
 
 class Node
 {
@@ -15,12 +19,10 @@ private:
 	std::shared_ptr<Model> modelRef;
 
 public:
-	Node(std::shared_ptr<Model> model) : modelRef(model)
-	{
-		
-	}
+	Node(std::shared_ptr<Model> model);
+
 	void ProcessNodeHierarchy(aiNode* node, aiScene* scene);
-	void RenderNodeHierarchy();
+	void RenderNodeHierarchy(Shader *shader);
 
 
 };
