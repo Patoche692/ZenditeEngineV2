@@ -1,11 +1,10 @@
 #include "Mesh.h"
 #include "Model.h"
 
-Mesh::Mesh(aiMesh* mesh, aiScene* scene, std::shared_ptr<Model> model) : modelRef(model) //scene is needed when you want to retrieve the textures from the material.
+Mesh::Mesh(aiMesh* mesh, const aiScene* scene, Model* model) : modelRef(model), assimpScene(scene) //scene is needed when you want to retrieve the textures from the material.
 {
 	//Store input data:
 	assimpMesh = mesh;
-	assimpScene = scene;
 
 	//Collect vertex data:
 	processVertices();
@@ -31,34 +30,37 @@ void Mesh::DrawMesh(Shader* shader)
 	unsigned int No_diffuse = 1;
 	unsigned int No_specular = 1;
 
-	unsigned int texUnit = GL_TEXTURE0;
+	unsigned int texUnit = 0;
 	//Shader* theShader = &shader;
 
-
-
 	//Assign the texture units for this mesh:
-	for(unsigned int i = 0; i < diffuseTextures.size(); i++)
+	unsigned int i = 0;
+	for(i; i < diffuseTextures.size(); i++)
 	{
-		GLCALL(glActiveTexture(texUnit));
+		GLCALL(glActiveTexture(GL_TEXTURE0 + i));
 
 		std::string number = std::to_string(No_diffuse++);
 		
 		//GLCALL(glUniform1i(glGetUniformLocation(shader.getShaderHandle(), ("texture_diffuse" + number).c_str()), texUnit));
-		shader->setUniformTextureUnit(("texture_diffuse" + number), texUnit);
-		
-		texUnit++;
+		std::string name = "texture_diffuse" + number;
+		shader->setUniformTextureUnit(name, i);
+		glBindTexture(GL_TEXTURE_2D, diffuseTextures[i].texHandle);
+		//texUnit++;
 	}
 
-	for (unsigned int i = 0; i < specularTextures.size(); i++)
+	int size = i;
+
+	for (i; i < specularTextures.size() + size; i++)
 	{
-		GLCALL(glActiveTexture(texUnit));
+		GLCALL(glActiveTexture(GL_TEXTURE0 + i));
 
 		std::string number = std::to_string(No_specular++);
 
 		//GLCALL(glUniform1i(glGetUniformLocation(shader.getShaderHandle(), ("texture_specular" + number).c_str()), texUnit));
-		shader->setUniformTextureUnit(("texture_specular" + number), texUnit);
-
-		texUnit++;
+		std::string name = "texture_specular" + number;
+		shader->setUniformTextureUnit(name, i);
+		glBindTexture(GL_TEXTURE_2D, specularTextures[i - size].texHandle);
+		//texUnit++;
 	}
 
 	GLCALL(glBindVertexArray(VAO));
@@ -100,6 +102,7 @@ std::vector<Texture> Mesh::loadSpecularTextureFromMaterial()
 {
 	std::vector<Texture> specularTextures;
 	std::string directory = modelRef->getObjFilePath();
+	directory = directory.substr(0, directory.find_last_of('/'));
 
 	for (unsigned int i = 0; i < assimpMaterial->GetTextureCount(aiTextureType_SPECULAR); i++)
 	{
@@ -141,6 +144,7 @@ std::vector<Texture> Mesh::loadDiffuseTextureFromMaterial()
 {
 	std::vector<Texture> diffuseTextures;
 	std::string directory = modelRef->getObjFilePath();
+	directory = directory.substr(0, directory.find_last_of('/'));
 
 	for (unsigned int i = 0; i < assimpMaterial->GetTextureCount(aiTextureType_DIFFUSE); i++)
 	{
@@ -199,7 +203,7 @@ unsigned int Mesh::createGLTextureBuffer(const char* filePath)
 
 	if(data) // if data != nullptr
 	{
-		GLenum format;
+		GLenum format = GL_RGBA;
 		if (nrComponents == 1)
 			format = GL_RED;
 		else if (nrComponents == 3)

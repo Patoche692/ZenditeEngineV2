@@ -3,7 +3,8 @@
 //#include "Mesh.h"
 #include "../Shader.h"
 
-class Mesh;
+#include "Mesh.h"
+
 class Model;
 
 class Node
@@ -14,14 +15,14 @@ private:
 
 	std::vector<Node> childNodes;
 
-	Mesh ProcessMesh(aiMesh* assimpMesh, aiScene* scene);
+	Mesh ProcessMesh(aiMesh* assimpMesh, const aiScene* scene);
 
-	std::shared_ptr<Model> modelRef;
+	Model* modelRef;
 
 public:
-	Node(std::shared_ptr<Model> model);
+	Node(Model* model);
 
-	void ProcessNodeHierarchy(aiNode* node, aiScene* scene);
+	void ProcessNodeHierarchy(aiNode* node, const aiScene* scene);
 	void RenderNodeHierarchy(Shader *shader);
 
 

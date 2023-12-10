@@ -8,19 +8,21 @@
 
 #include "../Shader.h"
 
-#include "Node.h"
+//#include "Node.h"
 #include "Texture.h"
+
+class Node;
 
 class Model
 {
 private:
 	std::string filePath;
 	Assimp::Importer importer;
-	aiScene* assimpSceneObj;
+	//aiScene* assimpSceneObj;
 	std::vector<Texture> loaded_textures;
 
 	//Smart ptr version of: Node* rootNode;
-	std::unique_ptr<Node> rootNode;
+	Node* rootNode;
 	Shader* shaderHandle;
 
 public:

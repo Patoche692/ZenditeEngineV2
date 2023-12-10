@@ -1,13 +1,13 @@
-//#include "Node.h"
+#include "Node.h"
 #include "Model.h"
-#include "Mesh.h"
+//#include "Mesh.h"
 
-Node::Node(std::shared_ptr<Model> model) : modelRef(model)
+Node::Node(Model* model) : modelRef(model)
 {
 
 }
 
-Mesh Node::ProcessMesh(aiMesh* assimpMesh, aiScene* scene)
+Mesh Node::ProcessMesh(aiMesh* assimpMesh, const aiScene* scene)
 {
 	Mesh meshObj(assimpMesh, scene, modelRef); //Mesh can handle its own creation
 	
@@ -16,7 +16,7 @@ Mesh Node::ProcessMesh(aiMesh* assimpMesh, aiScene* scene)
 	return meshObj;
 }
 
-void Node::ProcessNodeHierarchy(aiNode* node, aiScene* scene)
+void Node::ProcessNodeHierarchy(aiNode* node, const aiScene* scene)
 {
 	for (unsigned int i = 0; i < node->mNumMeshes; i++) // for each mesh in the node
 	{

@@ -8,7 +8,11 @@ Model::Model(const char* modelFilePath, Shader shader)
 	
 	filePath = modelFilePath;
 	shaderHandle = &shader; //shallow copy
-	
+	const aiScene* assimpSceneObj = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+
+	rootNode = new Node(this);
+
+	rootNode->ProcessNodeHierarchy(assimpSceneObj->mRootNode, assimpSceneObj);
 }
 
 void Model::Draw(Shader shader)

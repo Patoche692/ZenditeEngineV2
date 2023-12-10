@@ -31,11 +31,11 @@ struct Vertex
 class Mesh
 {
 private:
-	std::shared_ptr<Model> modelRef;
+	Model* modelRef;
 
 	aiMaterial* assimpMaterial;
 	aiMesh* assimpMesh;
-	aiScene* assimpScene;
+	const aiScene* assimpScene;
 
 	std::vector<Texture> diffuseTextures;
 	std::vector<Texture> specularTextures;
@@ -66,7 +66,7 @@ private:
 	void processDataForOpenGl();
 
 public:
-	Mesh(aiMesh* mesh, aiScene* scene, std::shared_ptr<Model> model); //scene is needed when you want to retrieve the textures from the material.
+	Mesh(aiMesh* mesh, const aiScene* scene, Model* model); //scene is needed when you want to retrieve the textures from the material.
 
 	void DrawMesh(Shader* shader);
 };
