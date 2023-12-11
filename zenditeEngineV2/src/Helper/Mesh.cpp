@@ -27,10 +27,12 @@ Mesh::Mesh(aiMesh* mesh, const aiScene* scene, Model* model) : modelRef(model), 
 //		At present this only works if all meshes have an equal number of textures (both diffuse and specular) or each subsequent mesh has more or = textures from the previosu mesh.
 void Mesh::DrawMesh(Shader* shader)
 {
+	shader->bindProgram();
+
 	unsigned int No_diffuse = 1;
 	unsigned int No_specular = 1;
 
-	unsigned int texUnit = 0;
+	
 	//Shader* theShader = &shader;
 
 	//Assign the texture units for this mesh:
@@ -188,8 +190,8 @@ void Mesh::processTextures()
 	//Get diffuse textures from the mesh:
 	assimpMaterial = assimpScene->mMaterials[assimpMesh->mMaterialIndex];
 	
-	diffuseTextures = loadSpecularTextureFromMaterial();
-	specularTextures = loadDiffuseTextureFromMaterial();
+	diffuseTextures = loadDiffuseTextureFromMaterial();
+	specularTextures = loadSpecularTextureFromMaterial();
 
 }
 
@@ -250,7 +252,7 @@ void Mesh::processDataForOpenGl()
 	GLCALL(glEnableVertexAttribArray(0));
 	GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, norm)));
 	GLCALL(glEnableVertexAttribArray(1));
-	GLCALL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCord)));
+	GLCALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCord)));
 	GLCALL(glEnableVertexAttribArray(2));
 
 
