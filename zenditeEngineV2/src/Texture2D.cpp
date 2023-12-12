@@ -70,6 +70,25 @@ void Texture2D::setupTexturePNG(unsigned int unit, const char* texfilepath)
 	stbi_image_free(imgData);
 }
 
+void Texture2D::setupHeightMapTexturePNG(unsigned int unit, const char* texfilepath)
+{
+	this->filePath = texfilepath;
+	texUnit = unit;
+	changeTexUnit(unit);
+
+	stbi_set_flip_vertically_on_load(true);
+	imgData = stbi_load(texfilepath, &imgWidth, &imgHeight, &nrChannels, 0);
+
+	if (!imgData)
+	{
+		std::cout << "\n --- Failed to load texture --- \n";
+		ASSERT(false);
+	}
+
+
+
+}
+
 void Texture2D::setupTexture(const char* texfilepath)
 {
 	this->filePath = texfilepath;
@@ -81,6 +100,8 @@ void Texture2D::setupTexture(const char* texfilepath)
 		std::cout << "\n --- Failed to load texture --- \n";
 		ASSERT(false);
 	}
+
+	std::cout << "NR Channels = " << nrChannels << std::endl;
 
 	GLenum format = GL_RGBA;
 	if (nrChannels == 1)

@@ -467,6 +467,8 @@
     <None Include="res\shaders\BasicShaders\vs_cubeWnormANDtex.glsl" />
     <None Include="res\shaders\BasicShaders\vs_Texture.glsl" />
     <None Include="res\shaders\BasicShaders\vs_Transform.glsl" />
+    <None Include="res\shaders\HeightMap\fs_basicHeightMap.glsl" />
+    <None Include="res\shaders\HeightMap\vs_basicHeightMap.glsl" />
     <None Include="res\shaders\LightingShaders\fs_BasicLight.glsl" />
     <None Include="res\shaders\LightingShaders\fs_DirLight.glsl" />
     <None Include="res\shaders\LightingShaders\fs_lightSource.glsl" />

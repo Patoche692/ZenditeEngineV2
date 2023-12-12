@@ -20,6 +20,7 @@ public:
 	Texture2D(std::string typeName); //Generate a texture handle
 	void setupTextureJPG(unsigned int unit, const char* texfilepath);
 	void setupTexturePNG(unsigned int unit, const char* texfilepath);
+	void setupHeightMapTexturePNG(unsigned int unit, const char* texfilepath);
 	void setupTexture(const char* texfilepath);
 	void setTexParameteri(GLenum pname, GLint param) const;
 
