@@ -2,12 +2,15 @@
 #include <GLFW/glfw3.h>
 
 #include "vendor/stb_image/stb_image.h"
+#include "assimp/Importer.hpp"
 
 #include "Shader.h"
 #include "Texture2D.h"
 #include "geometrySetup.h"
 #include "menu.h"
 #include "Camera.h"
+
+#include "Helper/Model.h"
 
 struct Material
 {
@@ -17,9 +20,9 @@ struct Material
 	float shininess; //AKA: specularStrength
 };
 
-struct Light
+struct PointLight
 {
-	glm::vec3 direction;
+	glm::vec3 position;
 
 	glm::vec3 ambient;
 	glm::vec3 diffuse;
@@ -30,12 +33,19 @@ struct Light
 	float quadratic;
 };
 
+struct DirLight
+{
+	glm::vec3 direction;
+
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+};
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
-
-//void castDirectionalLight(glm::vec3 lightDir, )
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -51,13 +61,17 @@ bool firstMouse = true;
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
+//GUI Menu Toggles
+bool toggle = true;
+bool wireframe = false;
+
 int main(void)
 {
 	GLFWwindow* window;
 	if (!glfwInit()) {
 		return -1;
 	}
-	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello GRAPHICS", NULL, NULL);
 	if (!window){
 		glfwTerminate();
 		return -1;
@@ -77,76 +91,19 @@ int main(void)
 		std::cout << "I'm am not GLEW_OK, I'm GLEW_SAD :(\n";
 	}
 
+	stbi_set_flip_vertically_on_load(true); //#### THIS NEEDS TO BE ACTIVE ### or else image texture will be upside down.
+
 	glEnable(GL_DEPTH_TEST);
-
-	bool toggle = true;
-	Material material;
-	material.ambientColor = glm::vec3(1.0f, 0.5f, 0.31f);
-	material.diffuseColor = glm::vec3(1.0f, 0.5f, 0.31f);
-	material.specularColor = glm::vec3(0.5f, 0.5f, 0.5f);
-	material.shininess = 32.0f;
-
-	Light light;
-	light.ambient = glm::vec3(0.1f, 0.1f, 0.1f);
-	light.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
-	light.specular = glm::vec3(1.0f, 1.0f, 1.0f);
-	light.direction = glm::vec3(1.0f, -1.0f, 1.0f);
-
-	light.constant = 1.0f;
-	light.linear = 0.09f;
-	light.quadratic = 0.032f;
 
 	std::cout <<glGetString(GL_VERSION) << "\n";
 
-	//Setup Shaders:
-	Shader shader_LightSource("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_LightSource.glsl",
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_LightSource.glsl");
-	//shader_LightSource.bindProgram();
+	Shader sh_modelLoading("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/vs_model_loading.glsl",
+		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/fs_model_loading.glsl");
 
-	Shader shader_blMaterial("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_blMaterial.glsl",
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_blMaterial.glsl");
-	shader_blMaterial.bindProgram();
-
-	Shader shader_DirLight("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_DirLight.glsl",
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_DirLight.glsl");
-	//shader_DirLight.bindProgram();
-
-	//Create our regular cube VAO
-	unsigned int VAO_Cube;
-	unsigned int VBO_Cube;
-	GenerateCubeNoEBO(VAO_Cube, VBO_Cube);
-	bindVao(VAO_Cube);
-
-	//Create out light source cube: (uses the same VBO as the regular cube object, which improves data reuse)
-	unsigned int VAO_LightCube;
-
-	glGenVertexArrays(1, &VAO_LightCube);
-	glBindVertexArray(VAO_LightCube);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_Cube);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	bindVao(VAO_Cube);
-
-	//Setup Texture1
-	Texture2D diffuseMap;
-	diffuseMap.setupTexturePNG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2.png");
-
-	//Setup Texture2
-	Texture2D specularMap;
-	specularMap.setupTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2_specular.png");
+	Model ourModel("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/models/backpack/backpack.obj", sh_modelLoading);
 
 	//IMGUI setup:
 	imGuiSetup(window);
-
-	int count = 0;
-	bool rotation = false;
-	float rotationSpeed = 30.0f;
-	float specularStrength = 0.5f;
-	int specularIntensity = 32;
-
-	float angle = 1.0f;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -155,120 +112,51 @@ int main(void)
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-
-		count++;
+		
 		/* Render here */
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		if (rotation)
+		//Model Loading Drawing:
+		sh_modelLoading.bindProgram();
+
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		sh_modelLoading.setUniformMat4("projection", GL_FALSE, glm::value_ptr(projection));
+		sh_modelLoading.setUniformMat4("view", GL_FALSE, glm::value_ptr(view));
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -4.0f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		sh_modelLoading.setUniformMat4("model", GL_FALSE, glm::value_ptr(model));
+		ourModel.Draw(sh_modelLoading);
+
+		if(wireframe)
 		{
-			angle = angle + rotationSpeed * deltaTime;
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
-
-		glm::vec3 cubePositions(0.0f, 0.0f, 0.0f);
-
-		glm::mat4 modelMat = glm::mat4(1.0f);
-		modelMat = glm::translate(modelMat, cubePositions);
-		glm::mat4 viewMat = camera.GetViewMatrix();
-		glm::mat4 projMat = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-
-		glm::vec3 lightCenter(0.0f, 1.0f, 0.0f);
-		glm::vec4 lightRotation(1.5f, 0.0f, 0.0f, 0.0f);
-
-		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
-
-		lightRotation = rotationMatrix * lightRotation;
-
-		glm::vec3 lightPos = glm::vec3(lightRotation) + lightCenter;
-
-		//Draw LightCube:
-		shader_LightSource.bindProgram();
-		bindVao(VAO_LightCube);
-
-		glm::mat4 LC_modelMat = glm::mat4(1.0f);
-
-		LC_modelMat = glm::translate(LC_modelMat, lightPos);
-		LC_modelMat = glm::scale(LC_modelMat, glm::vec3(0.2f));
-
-		shader_LightSource.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
-		shader_LightSource.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
-		shader_LightSource.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(LC_modelMat));
-
-
-		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
-
-		//Draw Regular Cube
-		bindVao(VAO_Cube);
-		shader_blMaterial.bindProgram();
-
-		//shader_Transform.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
-		shader_blMaterial.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(modelMat));
-		shader_blMaterial.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
-		shader_blMaterial.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
-
-		//Set fragment uniforms:
-		shader_blMaterial.setUniform3fv("lightColor", 1.0f, 1.0f, 1.0f);
-
-		glm::vec3 cameraPos = camera.getPosition();
-		
-		shader_blMaterial.setUniform3fv("lightWorldPos", lightPos);
-		shader_blMaterial.setUniform3fv("cameraWorldPos", cameraPos);
-		shader_blMaterial.setUniform3fv("material.diffuseColor", material.diffuseColor);
-		shader_blMaterial.setUniform3fv("material.specularColor", material.specularColor);
-		shader_blMaterial.setUniformFloat("material.shininess", material.shininess);
-
-		shader_blMaterial.setUniform3fv("light.ambient", light.ambient);
-		shader_blMaterial.setUniform3fv("light.diffuse", light.diffuse);
-		shader_blMaterial.setUniform3fv("light.specular", light.specular);
-		//shader_blMaterial.setUniform3fv("light.direction", light.direction);
-		shader_blMaterial.setUniform3fv("light.specular", light.specular);
-		shader_blMaterial.setUniformFloat("light.linear", light.linear);
-		shader_blMaterial.setUniformFloat("light.quadratic", light.quadratic);
-
-		shader_blMaterial.setUniformTextureUnit("material.diffuse", diffuseMap.getTexUnit());
-		shader_blMaterial.setUniformTextureUnit("material.specular", specularMap.getTexUnit());
-		
-		// ambientColor
-		// diffuseColor
-		// specularColor
-
-		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+		else
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
 
 		//Create IMGUI menu:
 		ImGui_ImplGlfwGL3_NewFrame();
 
-		ImGui::Begin("Test");
-
-		ImGui::Text("Dear ImGui, %s", ImGui::GetVersion());
+		ImGui::Begin("GUI");
 		ImGui::Separator();
-		if (ImGui::Button("Recompile Shaders")) 
+		if (ImGui::Button("Toggle Wireframe"))
 		{
-			shader_LightSource.recompile();
-			shader_blMaterial.recompile();
-		}
-		ImGui::NewLine();
-		//diffuseIntensity
-		ImGui::InputFloat3("diffuse Color", &(material.diffuseColor)[0]);
-		ImGui::InputFloat3("specular Color", &(material.specularColor)[0]);
-		ImGui::NewLine();
-		ImGui::InputFloat3("ambient light", &(light.ambient)[0]);
-		ImGui::InputFloat3("diffuse light", &(light.diffuse)[0]);
-		ImGui::InputFloat3("specular light", &(light.specular)[0]);
-		ImGui::NewLine();
-		ImGui::SliderFloat("Specular Shininess", &material.shininess, 1.0, 64.0);
-		if (ImGui::Button("Toggle Rotation"))
-		{
-			if (rotation)
+			if(wireframe == false)
 			{
-				rotation = false;
+				wireframe = true;
 			}
 			else
 			{
-				rotation = true;
+				wireframe = false;
 			}
 		}
-		ImGui::SliderFloat("Rotation Speed per frame", &rotationSpeed, 10.0f, 180.0f);
+		ImGui::NewLine();
 		if(ImGui::Button("Toggle Depth Test"))
 		{
 			if (toggle)
@@ -283,8 +171,6 @@ int main(void)
 			}
 		}
 		ImGui::NewLine();
-		ImGui::InputFloat("linear Light Val", &(light.linear));
-		ImGui::InputFloat("quadratic Light Val", &(light.quadratic));
 
 		ImGui::End();
 		ImGui::Render();
@@ -298,6 +184,7 @@ int main(void)
 	glfwTerminate();
 	return 0;
 }
+
 
 void processInput(GLFWwindow* window)
 {

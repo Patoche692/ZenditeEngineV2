@@ -9,6 +9,8 @@ void GenerateCubeNoEBO(unsigned int& VAO_Cube, unsigned int& VBO_Cube);
 
 void GenerateCubeNoEBONoNormals(unsigned int& VAO_Cube, unsigned int& VBO_Cube);
 
+void GenerateHeightmapPlane(unsigned int& VAO_HeightPlane, unsigned int& VBO_HeightPlane);
+
 void bindVao(unsigned int VAO);
 
 void unbindVao();

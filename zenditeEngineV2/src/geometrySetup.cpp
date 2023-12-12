@@ -67,6 +67,11 @@ void GenerateTexTriVAO(unsigned int& VAO_TexTri, unsigned int& VBO_TexTri, unsig
 
 }
 
+void GenerateHeightmapPlane(unsigned int& VAO_HeightPlane, unsigned int& VBO_HeightPlane)
+{
+	//
+}
+
 void GenerateCubeNoEBO(unsigned int& VAO_Cube, unsigned int& VBO_Cube)
 {
 	float vertices[] = {

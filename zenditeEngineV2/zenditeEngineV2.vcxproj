@@ -76,13 +76,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\GLEW\include;$(SolutionDir)dep\GLFW\include;C:\Code\Chalmers\myGraphicsCode\zenditeEngineV2\zenditeEngineV2\src\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Code\Chalmers\myGraphicsCode\Libs\assimp\include;$(SolutionDir)dep\GLEW\include;$(SolutionDir)dep\GLFW\include;C:\Code\Chalmers\myGraphicsCode\zenditeEngineV2\zenditeEngineV2\src\vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dep\GLEW\lib\Release\x64;$(SolutionDir)dep\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Code\Chalmers\myGraphicsCode\Libs\assimp\lib\Debug;$(SolutionDir)dep\GLEW\lib\Release\x64;$(SolutionDir)dep\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;opengl32.lib;glew32s.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -93,15 +93,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\GLEW\include;$(SolutionDir)dep\GLFW\include;C:\Code\Chalmers\myGraphicsCode\zenditeEngineV2\zenditeEngineV2\src\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Code\Chalmers\myGraphicsCode\Libs\assimp\include;$(SolutionDir)dep\GLEW\include;$(SolutionDir)dep\GLFW\include;C:\Code\Chalmers\myGraphicsCode\zenditeEngineV2\zenditeEngineV2\src\vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dep\GLEW\lib\Release\x64;$(SolutionDir)dep\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Code\Chalmers\myGraphicsCode\Libs\assimp\lib\Debug;$(SolutionDir)dep\GLEW\lib\Release\x64;$(SolutionDir)dep\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;opengl32.lib;glew32s.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -110,13 +110,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\GLEW\include;$(SolutionDir)dep\GLFW\include;C:\Code\Chalmers\myGraphicsCode\zenditeEngineV2\zenditeEngineV2\src\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Code\Chalmers\myGraphicsCode\Libs\assimp\include;$(SolutionDir)dep\GLEW\include;$(SolutionDir)dep\GLFW\include;C:\Code\Chalmers\myGraphicsCode\zenditeEngineV2\zenditeEngineV2\src\vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dep\GLEW\lib\Release\x64;$(SolutionDir)dep\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Code\Chalmers\myGraphicsCode\Libs\assimp\lib\Debug;$(SolutionDir)dep\GLEW\lib\Release\x64;$(SolutionDir)dep\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;opengl32.lib;glew32s.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -127,19 +127,22 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\GLEW\include;$(SolutionDir)dep\GLFW\include;C:\Code\Chalmers\myGraphicsCode\zenditeEngineV2\zenditeEngineV2\src\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Code\Chalmers\myGraphicsCode\Libs\assimp\include;$(SolutionDir)dep\GLEW\include;$(SolutionDir)dep\GLFW\include;C:\Code\Chalmers\myGraphicsCode\zenditeEngineV2\zenditeEngineV2\src\vendor</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dep\GLEW\lib\Release\x64;$(SolutionDir)dep\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Code\Chalmers\myGraphicsCode\Libs\assimp\lib\Debug;$(SolutionDir)dep\GLEW\lib\Release\x64;$(SolutionDir)dep\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;opengl32.lib;glew32s.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\geometrySetup.cpp" />
+    <ClCompile Include="src\Helper\Mesh.cpp" />
+    <ClCompile Include="src\Helper\Model.cpp" />
+    <ClCompile Include="src\Helper\Node.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
@@ -155,6 +158,10 @@
     <ClInclude Include="res\shaders\LightingShaders\vs_blMaterial.glsl" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\geometrySetup.h" />
+    <ClInclude Include="src\Helper\Mesh.h" />
+    <ClInclude Include="src\Helper\Model.h" />
+    <ClInclude Include="src\Helper\Node.h" />
+    <ClInclude Include="src\Helper\Texture.h" />
     <ClInclude Include="src\menu.h" />
     <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\Shader.h" />
@@ -464,6 +471,10 @@
     <None Include="res\shaders\LightingShaders\vs_BasicLight.glsl" />
     <None Include="res\shaders\LightingShaders\vs_DirLight.glsl" />
     <None Include="res\shaders\LightingShaders\vs_lightSource.glsl" />
+    <None Include="res\shaders\modelLoading\fs_model_loading.glsl" />
+    <None Include="res\shaders\modelLoading\vs_model_loading.glsl" />
+    <None Include="res\shaders\multiLightShaders\fs_multiLight.glsl" />
+    <None Include="res\shaders\multiLightShaders\vs_multiLight.glsl" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
     <None Include="src\vendor\glm\detail\func_exponential.inl" />
