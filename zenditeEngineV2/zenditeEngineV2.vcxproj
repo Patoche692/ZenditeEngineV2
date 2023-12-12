@@ -460,9 +460,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\BasicShaders\fs_Basic.glsl" />
+    <None Include="res\shaders\BasicShaders\fs_cubeWnormANDtex.glsl" />
     <None Include="res\shaders\BasicShaders\fs_Texture.glsl" />
     <None Include="res\shaders\BasicShaders\fs_Transform.glsl" />
     <None Include="res\shaders\BasicShaders\vs_Basic.glsl" />
+    <None Include="res\shaders\BasicShaders\vs_cubeWnormANDtex.glsl" />
     <None Include="res\shaders\BasicShaders\vs_Texture.glsl" />
     <None Include="res\shaders\BasicShaders\vs_Transform.glsl" />
     <None Include="res\shaders\LightingShaders\fs_BasicLight.glsl" />

@@ -99,8 +99,18 @@ int main(void)
 
 	std::cout <<glGetString(GL_VERSION) << "\n";
 
+	Shader sh_basicWithTex("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
+		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
+
 	Shader sh_modelLoading("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/vs_model_loading.glsl",
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/fs_model_loading.glsl");
+
+	unsigned int CubeVAO;
+	unsigned int CubeVBO;
+	
+	GenerateCubeNoEBO(CubeVAO, CubeVBO);
+	Texture2D cubeTex("diffuse");
+	cubeTex.setupTexturePNG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2.png");
 
 	Model ourModel("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/models/backpack/backpack.obj", sh_modelLoading);
 
@@ -118,8 +128,29 @@ int main(void)
 		/* Render here */
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+		//Old Rendering:
+
+		sh_modelLoading.bindProgram();
+
+		glm::mat4 cubeProjection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 cubeView = camera.GetViewMatrix();
+		sh_basicWithTex.setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
+		sh_basicWithTex.setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
+
+		glm::mat4 cubeModel = glm::mat4(1.0f);
+		cubeModel = glm::translate(cubeModel, glm::vec3(0.0f, 0.0f, -6.0f)); 
+		cubeModel = glm::scale(cubeModel, glm::vec3(1.0f, 1.0f, 1.0f));	
+		sh_basicWithTex.setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
+
+		cubeTex.changeTexUnit(0);
+
+		sh_basicWithTex.setUniformTextureUnit("colorTexture", 0);
+
+		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 		
-		//Model Loading Drawing:
+		//Model Rendering:
 		sh_modelLoading.bindProgram();
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
