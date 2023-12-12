@@ -100,9 +100,9 @@ void Mesh::processIndices()
 	}
 }
 
-std::vector<Texture> Mesh::loadSpecularTextureFromMaterial()
+void Mesh::loadSpecularTextureFromMaterial()
 {
-	std::vector<Texture> specularTextures;
+	//std::vector<Texture> specularTextures;
 	std::string directory = modelRef->getObjFilePath();
 	directory = directory.substr(0, directory.find_last_of('/'));
 
@@ -139,12 +139,12 @@ std::vector<Texture> Mesh::loadSpecularTextureFromMaterial()
 			modelRef->addLoadedTexture(texture);
 		}
 	}
-	return specularTextures;
+	//return specularTextures;
 }
 
-std::vector<Texture> Mesh::loadDiffuseTextureFromMaterial()
+void Mesh::loadDiffuseTextureFromMaterial()
 {
-	std::vector<Texture> diffuseTextures;
+	//std::vector<Texture> diffuseTextures;
 	std::string directory = modelRef->getObjFilePath();
 	directory = directory.substr(0, directory.find_last_of('/'));
 
@@ -181,8 +181,9 @@ std::vector<Texture> Mesh::loadDiffuseTextureFromMaterial()
 			modelRef->addLoadedTexture(texture);
 		}
 	}
-	return diffuseTextures;
+	//return diffuseTextures;
 }
+
 
 void Mesh::processTextures()
 {
@@ -190,8 +191,8 @@ void Mesh::processTextures()
 	//Get diffuse textures from the mesh:
 	assimpMaterial = assimpScene->mMaterials[assimpMesh->mMaterialIndex];
 	
-	diffuseTextures = loadDiffuseTextureFromMaterial();
-	specularTextures = loadSpecularTextureFromMaterial();
+	loadDiffuseTextureFromMaterial();
+	loadSpecularTextureFromMaterial();
 
 }
 

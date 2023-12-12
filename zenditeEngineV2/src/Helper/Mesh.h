@@ -39,6 +39,7 @@ private:
 
 	std::vector<Texture> diffuseTextures;
 	std::vector<Texture> specularTextures;
+	std::vector<Texture> textures;
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -57,9 +58,11 @@ private:
 
 	void processTextures();
 
-	std::vector<Texture> loadSpecularTextureFromMaterial();
+	void loadSpecularTextureFromMaterial();
 
-	std::vector<Texture> loadDiffuseTextureFromMaterial();
+	void loadDiffuseTextureFromMaterial();
+
+	//std::vector<Texture> loadTextureFromMaterial();
 
 	unsigned int createGLTextureBuffer(const char* filePath);
 
