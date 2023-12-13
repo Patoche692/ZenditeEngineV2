@@ -180,13 +180,13 @@ int main(void)
 	{
 		for(unsigned int ii = 0; ii < (hmWidth-1)*6; ii = ii + 6)
 		{
-			hmIndices.push_back(i* hmWidth + ii);
-			hmIndices.push_back((i + 1) * hmWidth + ii);
-			hmIndices.push_back(((i + 1) * hmWidth + ii) + 1);
+			hmIndices.push_back(i* hmWidth + ii/6);
+			hmIndices.push_back((i + 1) * hmWidth + ii/6);
+			hmIndices.push_back(((i + 1) * hmWidth + ii/6) + 1);
 			
-			hmIndices.push_back(i* hmWidth + ii);
-			hmIndices.push_back(((i + 1)* hmWidth + ii) + 1);
-			hmIndices.push_back((i* hmWidth + ii) + 1);
+			hmIndices.push_back(i* hmWidth + ii/6);
+			hmIndices.push_back(((i + 1)* hmWidth + ii/6) + 1);
+			hmIndices.push_back((i* hmWidth + ii/6) + 1);
 		}
 	}
 
@@ -251,8 +251,8 @@ int main(void)
 		sh_HeightMap.setUniformMat4("view", GL_FALSE, glm::value_ptr(hmView));
 
 		glm::mat4 hmModel = glm::mat4(1.0f);
-		//hmModel = glm::translate(hmModel, glm::vec3(1.5f, 0.0f, -1.2f));
-		//hmModel = glm::scale(hmModel, glm::vec3(1.0f, 1.0f, 1.0f));
+		hmModel = glm::translate(hmModel, glm::vec3(0.0f, -3.0f, -1.0f));
+		hmModel = glm::scale(hmModel, glm::vec3(0.01f, 0.01f, 0.01f));
 		sh_HeightMap.setUniformMat4("model", GL_FALSE, glm::value_ptr(hmModel));
 
 		//hmTex.changeTexUnit(0);
