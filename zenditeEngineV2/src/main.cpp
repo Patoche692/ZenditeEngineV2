@@ -126,6 +126,7 @@ int main(void)
 	int hmHeight;
 	int hmNrChannels;
 
+	//"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/heightmap.png"
 	unsigned char* hmTexData = stbi_load("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/heightmap.png", &hmWidth, &hmHeight, &hmNrChannels, 0);
 
 	if (!hmTexData)
