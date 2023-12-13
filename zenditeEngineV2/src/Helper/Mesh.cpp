@@ -248,14 +248,12 @@ void Mesh::processDataForOpenGl()
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO));
 	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW));
 
-
 	GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0));
 	GLCALL(glEnableVertexAttribArray(0));
 	GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, norm)));
 	GLCALL(glEnableVertexAttribArray(1));
 	GLCALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCord)));
 	GLCALL(glEnableVertexAttribArray(2));
-
 
 	GLCALL(glBindVertexArray(0)); //Unbind the current VAO (for safety purposes)
 }

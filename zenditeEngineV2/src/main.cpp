@@ -12,6 +12,16 @@
 
 #include "Helper/Model.h"
 
+struct Vert
+{
+	//Position
+	glm::vec3 pos;
+
+	//TexCoords
+	glm::vec2 texCord;
+
+};
+
 struct Material
 {
 	glm::vec3 ambientColor;
@@ -111,14 +121,97 @@ int main(void)
 	Shader sh_HeightMap("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/HeightMap/vs_basicHeightMap.glsl",
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/HeightMap/fs_basicHeightMap.glsl");
 
-	unsigned int heightMapVAO;
-	unsigned int heightMapVBO;
+	//Get height map texture data:
+	int hmWidth;
+	int hmHeight;
+	int hmNrChannels;
+
+	unsigned char* hmTexData = stbi_load("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/heightmap.png", &hmWidth, &hmHeight, &hmNrChannels, 0);
+
+	if (!hmTexData)
+	{
+		std::cout << "\n --- Failed to load texture --- \n";
+		ASSERT(false);
+	}
 
 	//Set up height map VAO, VBO and EBO (if needed)
+	unsigned int heightMapVAO;
+	unsigned int heightMapVBO;
+	unsigned int heightMapEBO;
 
-	Texture2D heightMapTex("diffuse");
-	heightMapTex.setupHeightMapTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/mt_fuji.png");
+	std::vector<Vert> hmVerts;
+	std::vector<unsigned int> hmIndices;
 
+	//Load in vertex data to the heightMapVBO Data (using the hmTexData for the y axis Data):
+
+	float yScale = 64.0f / 256.0f; 
+	float yShift = 16.0f;
+
+	float x_texPoint = 1.0f / hmWidth;
+	float y_texPoint = 1.0f / hmHeight;
+
+	for(unsigned int z = 0; z < hmHeight; z++)
+	{
+		for(unsigned int x = 0; x < hmWidth; x++)
+		{
+			Vert vert;
+			unsigned char* texel = hmTexData + (x + hmWidth * z) * hmNrChannels;
+			unsigned char y = texel[0];
+
+			glm::vec3 vec;
+			vec.x = x;
+			vec.y = (int)y * yScale - yShift;
+			vec.z = z;
+
+			vert.pos = vec;
+
+			glm::vec2 texCoord;
+			texCoord.x = x * x_texPoint;
+			texCoord.y = z * y_texPoint;
+
+			vert.texCord = texCoord;
+
+			hmVerts.push_back(vert);
+		}
+	}
+
+	//Fill Height map indices data:
+	for(unsigned int i = 0; i < (hmHeight-1); i++)
+	{
+		for(unsigned int ii = 0; ii < (hmWidth-1)*6; ii = ii + 6)
+		{
+			hmIndices.push_back(i* hmWidth + ii);
+			hmIndices.push_back((i + 1) * hmWidth + ii);
+			hmIndices.push_back(((i + 1) * hmWidth + ii) + 1);
+			
+			hmIndices.push_back(i* hmWidth + ii);
+			hmIndices.push_back(((i + 1)* hmWidth + ii) + 1);
+			hmIndices.push_back((i* hmWidth + ii) + 1);
+		}
+	}
+
+	GLCALL(glGenVertexArrays(1, &heightMapVAO));
+	GLCALL(glGenBuffers(1, &heightMapVBO));
+	GLCALL(glGenBuffers(1, &heightMapEBO));
+
+	GLCALL(glBindVertexArray(heightMapVAO));
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, heightMapVBO));
+
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, heightMapVBO));
+	GLCALL(glBufferData(GL_ARRAY_BUFFER, hmVerts.size() * sizeof(Vert), &hmVerts[0], GL_STATIC_DRAW));
+
+	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, heightMapEBO));
+	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, hmIndices.size() * sizeof(unsigned int), &hmIndices[0], GL_STATIC_DRAW));
+
+	GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vert), (void*)0));
+	GLCALL(glEnableVertexAttribArray(0));
+
+	GLCALL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vert), (void*)offsetof(Vert, texCord)));
+	GLCALL(glEnableVertexAttribArray(1));
+
+
+	//Texture2D heightMapTex("diffuse");
+	//heightMapTex.setupHeightMapTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/mt_fuji.png");
 
 	// ----------------------------------
 	//End HeightMap SetUp
@@ -131,7 +224,7 @@ int main(void)
 	Texture2D cubeTex("diffuse");
 	cubeTex.setupTexturePNG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2.png");
 
-	Model ourModel("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/models/backpack/backpack.obj", sh_modelLoading);
+	//Model ourModel("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/models/backpack/backpack.obj", sh_modelLoading);
 
 	//IMGUI setup:
 	imGuiSetup(window);
@@ -149,11 +242,25 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//HeightMapRendering:
+		sh_HeightMap.bindProgram();
+		GLCALL(glBindVertexArray(heightMapVAO));
 
+		glm::mat4 hmProjection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 hmView = camera.GetViewMatrix();
+		sh_HeightMap.setUniformMat4("projection", GL_FALSE, glm::value_ptr(hmProjection));
+		sh_HeightMap.setUniformMat4("view", GL_FALSE, glm::value_ptr(hmView));
 
+		glm::mat4 hmModel = glm::mat4(1.0f);
+		//hmModel = glm::translate(hmModel, glm::vec3(1.5f, 0.0f, -1.2f));
+		//hmModel = glm::scale(hmModel, glm::vec3(1.0f, 1.0f, 1.0f));
+		sh_HeightMap.setUniformMat4("model", GL_FALSE, glm::value_ptr(hmModel));
+
+		//hmTex.changeTexUnit(0);
+
+		//sh_HeightMap.setUniformTextureUnit("colorTexture", 0);
+		GLCALL(glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(hmIndices.size()), GL_UNSIGNED_INT, 0));
 
 		//Old Rendering:
-
 		sh_modelLoading.bindProgram();
 		bindVao(CubeVAO);
 		glm::mat4 cubeProjection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -184,7 +291,7 @@ int main(void)
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -4.0f)); // translate it down so it's at the center of the scene
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
 		sh_modelLoading.setUniformMat4("model", GL_FALSE, glm::value_ptr(model));
-		ourModel.Draw(sh_modelLoading);
+		//ourModel.Draw(sh_modelLoading);
 
 		if(wireframe)
 		{
