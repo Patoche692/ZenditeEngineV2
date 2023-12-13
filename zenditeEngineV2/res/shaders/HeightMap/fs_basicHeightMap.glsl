@@ -8,7 +8,7 @@ out vec4 FragColor;
 
 //uniform vec4 ourColor;
 
-//uniform sampler2D colorTexture;
+uniform sampler2D colorTexture;
 
 void main()
 {

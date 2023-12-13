@@ -126,7 +126,7 @@ int main(void)
 	int hmHeight;
 	int hmNrChannels;
 
-	//"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/heightmap.png"
+	//"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/mt_fuji.png"
 	unsigned char* hmTexData = stbi_load("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/heightmap.png", &hmWidth, &hmHeight, &hmNrChannels, 0);
 
 	if (!hmTexData)
@@ -148,8 +148,8 @@ int main(void)
 	float yScale = 64.0f / 256.0f; 
 	float yShift = 16.0f;
 
-	float x_texPoint = 1.0f / hmWidth;
-	float y_texPoint = 1.0f / hmHeight;
+	float x_texPoint = 1.0f / (hmWidth/6);
+	float y_texPoint = 1.0f / (hmHeight/6);
 
 	for(unsigned int z = 0; z < hmHeight; z++)
 	{
@@ -210,7 +210,11 @@ int main(void)
 	GLCALL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vert), (void*)offsetof(Vert, texCord)));
 	GLCALL(glEnableVertexAttribArray(1));
 
-
+	Texture2D hmSurfaceTex("diffuse");
+	hmSurfaceTex.setupTexturePNG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/rockySurface.png");
+	
+	//Texture2D hmSurfaceTex_2("diffuse");
+	//hmSurfaceTex.setupTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/heightmap.png");
 	//Texture2D heightMapTex("diffuse");
 	//heightMapTex.setupHeightMapTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/mt_fuji.png");
 
@@ -255,6 +259,11 @@ int main(void)
 		hmModel = glm::translate(hmModel, glm::vec3(0.0f, -3.0f, -1.0f));
 		hmModel = glm::scale(hmModel, glm::vec3(0.01f, 0.01f, 0.01f));
 		sh_HeightMap.setUniformMat4("model", GL_FALSE, glm::value_ptr(hmModel));
+
+		hmSurfaceTex.changeTexUnit(0);
+		//hmSurfaceTex_2.changeTexUnit(1);
+
+		sh_HeightMap.setUniformTextureUnit("colorTexture", 0);
 
 		//hmTex.changeTexUnit(0);
 
