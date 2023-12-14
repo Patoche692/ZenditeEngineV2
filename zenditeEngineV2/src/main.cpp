@@ -54,6 +54,13 @@ struct PointLight
 	float quadratic;
 };
 
+struct Light
+{
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+};
+
 struct DirLight
 {
 	glm::vec3 direction;
@@ -84,8 +91,8 @@ glm::vec3 calcVertNormal(std::vector<Face> faces)
 }
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1200;
+const unsigned int SCR_HEIGHT = 800;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -133,7 +140,22 @@ int main(void)
 
 	glEnable(GL_DEPTH_TEST);
 
+	//Light Set up:
+	Material material;
+	material.ambientColor = glm::vec3(1.0f, 0.5f, 0.31f);
+	material.diffuseColor = glm::vec3(1.0f, 0.5f, 0.31f);
+	material.specularColor = glm::vec3(0.5f, 0.5f, 0.5f);
+	material.shininess = 32.0f;
+
+	Light light;
+	light.ambient = glm::vec3(0.1f, 0.1f, 0.1f);
+	light.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+	light.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+
 	std::cout <<glGetString(GL_VERSION) << "\n";
+
+	Shader shader_LightSource("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_LightSource.glsl",
+		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_LightSource.glsl");
 
 	Shader sh_basicWithTex("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
 		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
@@ -389,6 +411,13 @@ int main(void)
 	Texture2D hmSurfaceTex("diffuse");
 	hmSurfaceTex.setupTexturePNG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/rockySurface.png");
 	
+	int count = 0;
+	bool rotation = false;
+	float rotationSpeed = 30.0f;
+	float specularStrength = 0.5f;
+	int specularIntensity = 32;
+	float angle = 1.0f;
+
 	//Texture2D hmSurfaceTex_2("diffuse");
 	//hmSurfaceTex.setupTexturePNG(1, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/heightmap.png");
 	//Texture2D heightMapTex("diffuse");
@@ -397,6 +426,23 @@ int main(void)
 	// ----------------------------------
 	//End HeightMap SetUp
 	
+	//Create our regular cube VAO
+	unsigned int VAO_Cube;
+	unsigned int VBO_Cube;
+	GenerateCubeNoEBO(VAO_Cube, VBO_Cube);
+	bindVao(VAO_Cube);
+
+	//Create out light source cube: (uses the same VBO as the regular cube object, which improves data reuse)
+	unsigned int VAO_LightCube;
+
+	glGenVertexArrays(1, &VAO_LightCube);
+	glBindVertexArray(VAO_LightCube);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_Cube);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	bindVao(VAO_Cube);
 
 	unsigned int CubeVAO;
 	unsigned int CubeVBO;
@@ -409,6 +455,7 @@ int main(void)
 
 	//IMGUI setup:
 	imGuiSetup(window);
+	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -417,10 +464,50 @@ int main(void)
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		
+
 		/* Render here */
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		
+
+		if (rotation)
+		{
+			angle = angle + rotationSpeed * deltaTime;
+		}
+
+		glm::vec3 cubePositions(0.0f, 0.0f, 0.0f);
+
+		glm::mat4 modelMat = glm::mat4(1.0f);
+		modelMat = glm::translate(modelMat, cubePositions);
+		glm::mat4 viewMat = camera.GetViewMatrix();
+		glm::mat4 projMat = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+		glm::vec3 lightCenter(0.0f, 1.0f, 0.0f);
+		glm::vec4 lightRotation(3.0f, 0.0f, 0.0f, 0.0f);
+
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+
+		lightRotation = rotationMatrix * lightRotation;
+
+		glm::vec3 lightPos = glm::vec3(lightRotation) + lightCenter;
+
+		//Draw LightCube:
+		shader_LightSource.bindProgram();
+		bindVao(VAO_LightCube);
+
+		glm::mat4 LC_modelMat = glm::mat4(1.0f);
+
+		LC_modelMat = glm::translate(LC_modelMat, lightPos);
+		LC_modelMat = glm::scale(LC_modelMat, glm::vec3(0.2f));
+
+		shader_LightSource.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(viewMat));
+		shader_LightSource.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(projMat));
+		shader_LightSource.setUniformMat4("modelMat", GL_FALSE, glm::value_ptr(LC_modelMat));
+
+
+		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+	
 
 		//HeightMapRendering:
 		sh_HeightMap.bindProgram();
@@ -431,9 +518,24 @@ int main(void)
 		sh_HeightMap.setUniformMat4("projection", GL_FALSE, glm::value_ptr(hmProjection));
 		sh_HeightMap.setUniformMat4("view", GL_FALSE, glm::value_ptr(hmView));
 
+		glm::vec3 camPos = camera.getPosition();
+
+		sh_HeightMap.setUniform3fv("lightWorldPos", lightPos);
+		sh_HeightMap.setUniform3fv("cameraWorldPos", camPos);
+
+		sh_HeightMap.setUniform3fv("material.diffuseColor", material.diffuseColor);
+		sh_HeightMap.setUniform3fv("material.specularColor", material.specularColor);
+		sh_HeightMap.setUniformFloat("material.shininess", material.shininess);
+
+		sh_HeightMap.setUniform3fv("light.ambient", light.ambient);
+		sh_HeightMap.setUniform3fv("light.diffuse", light.diffuse);
+		sh_HeightMap.setUniform3fv("light.specular", light.specular);
+
+		sh_HeightMap.setUniform3fv("lightColor", 1.0f, 1.0f, 1.0f);
+
 		glm::mat4 hmModel = glm::mat4(1.0f);
-		hmModel = glm::translate(hmModel, glm::vec3(0.0f, -3.0f, -1.0f));
-		hmModel = glm::scale(hmModel, glm::vec3(0.01f, 0.01f, 0.01f));
+		hmModel = glm::translate(hmModel, glm::vec3(-7.0f, -2.5f, -6.5f));
+		hmModel = glm::scale(hmModel, glm::vec3(0.03f, 0.03f, 0.03f));
 		sh_HeightMap.setUniformMat4("model", GL_FALSE, glm::value_ptr(hmModel));
 
 		hmSurfaceTex.changeTexUnit(0);
@@ -463,7 +565,7 @@ int main(void)
 
 		sh_basicWithTex.setUniformTextureUnit("colorTexture", 0);
 
-		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+		//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 		
 		//Model Rendering:
 		sh_modelLoading.bindProgram();
@@ -505,17 +607,17 @@ int main(void)
 			}
 		}
 		ImGui::NewLine();
-		if(ImGui::Button("Toggle Depth Test"))
+		if(ImGui::Button("Toggle Rotation"))
 		{
-			if (toggle)
+			if (rotation)
 			{
-				glDisable(GL_DEPTH_TEST);
-				toggle = false;
+				//glDisable(GL_DEPTH_TEST);
+				rotation = false;
 			}
 			else
 			{
-				glEnable(GL_DEPTH_TEST);
-				toggle = true;
+				//glEnable(GL_DEPTH_TEST);
+				rotation = true;
 			}
 		}
 		ImGui::NewLine();
