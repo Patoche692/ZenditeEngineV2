@@ -141,7 +141,7 @@ int main(void)
 
 	stbi_set_flip_vertically_on_load(true); //#### THIS NEEDS TO BE ACTIVE ### or else image texture will be upside down.
 
-	std::cout << "Current working directory: " << fs::current_path() << std::endl;
+	//std::cout << "Current working directory: " << fs::current_path() << std::endl;
 
 	glEnable(GL_DEPTH_TEST);
 
