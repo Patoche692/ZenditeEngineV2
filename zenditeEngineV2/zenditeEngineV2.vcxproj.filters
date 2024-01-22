@@ -1391,5 +1391,7 @@
     <None Include="res\shaders\multiLightShaders\vs_multiLight.glsl" />
     <None Include="res\shaders\modelLoading\vs_model_loading.glsl" />
     <None Include="res\shaders\modelLoading\fs_model_loading.glsl" />
+    <None Include="res\shaders\BasicShaders\vs_cubeWnormANDtex.glsl" />
+    <None Include="res\shaders\BasicShaders\fs_cubeWnormANDtex.glsl" />
   </ItemGroup>
 </Project>
