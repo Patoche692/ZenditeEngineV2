@@ -12,6 +12,10 @@
 
 #include "Helper/Model.h"
 
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
 struct Vert
 {
 	//Position
@@ -137,6 +141,7 @@ int main(void)
 
 	stbi_set_flip_vertically_on_load(true); //#### THIS NEEDS TO BE ACTIVE ### or else image texture will be upside down.
 
+	std::cout << "Current working directory: " << fs::current_path() << std::endl;
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -154,20 +159,20 @@ int main(void)
 
 	std::cout <<glGetString(GL_VERSION) << "\n";
 
-	Shader shader_LightSource("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/vs_LightSource.glsl",
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/LightingShaders/fs_LightSource.glsl");
+	Shader shader_LightSource("res/shaders/LightingShaders/vs_LightSource.glsl",
+		"res/shaders/LightingShaders/fs_LightSource.glsl");
 
-	Shader sh_basicWithTex("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
+	Shader sh_basicWithTex("res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
+		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
 
-	Shader sh_modelLoading("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/vs_model_loading.glsl",
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/modelLoading/fs_model_loading.glsl");
+	Shader sh_modelLoading("res/shaders/modelLoading/vs_model_loading.glsl",
+		"res/shaders/modelLoading/fs_model_loading.glsl");
 
 	//HeightMap SetUp
 	// ----------------------------------
 
-	Shader sh_HeightMap("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/HeightMap/vs_basicHeightMap.glsl",
-		"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/shaders/HeightMap/fs_basicHeightMap.glsl");
+	Shader sh_HeightMap("res/shaders/HeightMap/vs_basicHeightMap.glsl",
+		"res/shaders/HeightMap/fs_basicHeightMap.glsl");
 
 	//Get height map texture data:
 	int hmWidth;
@@ -175,7 +180,7 @@ int main(void)
 	int hmNrChannels;
 
 	//"C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/mt_fuji.png"
-	unsigned char* hmTexData = stbi_load("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/heightmap.png", &hmWidth, &hmHeight, &hmNrChannels, 0);
+	unsigned char* hmTexData = stbi_load("res/textures/heightmap.png", &hmWidth, &hmHeight, &hmNrChannels, 0);
 
 	if (!hmTexData)
 	{
@@ -409,7 +414,7 @@ int main(void)
 	GLCALL(glEnableVertexAttribArray(2));
 
 	Texture2D hmSurfaceTex("diffuse");
-	hmSurfaceTex.setupTexturePNG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/rockySurface.png");
+	hmSurfaceTex.setupTexturePNG(0, "res/textures/rockySurface.png");
 	
 	int count = 0;
 	bool rotation = false;
@@ -449,7 +454,7 @@ int main(void)
 	
 	GenerateCubeNoEBO(CubeVAO, CubeVBO);
 	Texture2D cubeTex("diffuse");
-	cubeTex.setupTexturePNG(0, "C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2.png");
+	cubeTex.setupTexturePNG(0, "res/textures/container2.png");
 
 	//Model ourModel("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/models/backpack/backpack.obj", sh_modelLoading);
 
