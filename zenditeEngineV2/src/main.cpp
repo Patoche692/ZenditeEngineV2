@@ -84,7 +84,7 @@ int main(void)
 	light.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
 	light.specular = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	std::cout <<glGetString(GL_VERSION) << "\n";
+	std::cout << glGetString(GL_VERSION) << "\n";
 
 	Shader shader_LightSource("res/shaders/LightingShaders/vs_LightSource.glsl",
 		"res/shaders/LightingShaders/fs_LightSource.glsl");
@@ -94,6 +94,7 @@ int main(void)
 
 	Shader sh_modelLoading("res/shaders/modelLoading/vs_model_loading.glsl",
 		"res/shaders/modelLoading/fs_model_loading.glsl");
+
 
 	//HeightMap SetUp
 	// ----------------------------------
@@ -232,7 +233,6 @@ int main(void)
 
 		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 	
-
 		//HeightMapRendering:
 		sh_HeightMap.bindProgram();
 		GLCALL(glBindVertexArray(heightMapVAO));
