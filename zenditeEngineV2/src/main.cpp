@@ -125,7 +125,7 @@ int main(void)
 
 	//Load in vertex data to the heightMapVBO Data (using the hmTexData for the y axis Data):
 
-	//Set up heightmap:
+	//Set up height map:
 	GenerateHeightmapPlane(heightMapVAO,
 		heightMapVBO,
 		heightMapEBO,
@@ -137,7 +137,7 @@ int main(void)
 		hmNrChannels,
 		hmTexData);
 	
-	//Set heightmap texture
+	//Set height map texture
 	Texture2D hmSurfaceTex("diffuse");
 	hmSurfaceTex.setupTexturePNG(0, "res/textures/rockySurface.png");
 
