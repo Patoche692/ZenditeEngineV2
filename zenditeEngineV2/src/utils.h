@@ -9,6 +9,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+//This a utility file.
+
 //Basic Error Checking
 #define ASSERT(x) if (!(x)) __debugbreak();
 #define GLCALL(x) GLClearError();\
@@ -57,6 +59,7 @@ struct Face
 	glm::vec3 faceNormal;
 };
 
+
 struct Material
 {
 	glm::vec3 ambientColor;
@@ -76,6 +79,7 @@ struct PointLight
 	float constant;
 	float linear;
 	float quadratic;
+
 };
 
 struct Light
