@@ -10,6 +10,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 //This a utility file.
+//Not a class file. Only add useful functions that can be used generally throughout the code.
 
 //Basic Error Checking
 #define ASSERT(x) if (!(x)) __debugbreak();
