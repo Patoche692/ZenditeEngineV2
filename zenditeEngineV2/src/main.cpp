@@ -184,6 +184,10 @@ int main(void)
 	imGuiSetup(window);
 	glEnable(GL_DEPTH_TEST);
 
+	GLint maxTextureUnits;
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
+	std::cout << "Maximum texture units available: " << maxTextureUnits << std::endl;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
