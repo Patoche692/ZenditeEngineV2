@@ -40,6 +40,7 @@ float lastFrame = 0.0f;
 //GUI Menu Toggles
 bool toggle = true;
 bool wireframe = false;
+bool rotation = false;
 
 int main(void)
 {
@@ -145,11 +146,11 @@ int main(void)
 	hmSurfaceTex.setupTexturePNG(0, "res/textures/rockySurface.png");
 
 	int count = 0;
-	bool rotation = false;
 	float rotationSpeed = 30.0f;
 	float specularStrength = 0.5f;
 	int specularIntensity = 32;
 	float angle = 1.0f;
+
 
 	// ----------------------------------
 	//End HeightMap SetUp
@@ -239,7 +240,7 @@ int main(void)
 
 
 		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
-	
+
 		//HeightMapRendering:
 		sh_HeightMap.bindProgram();
 		GLCALL(glBindVertexArray(heightMapVAO));
@@ -288,8 +289,8 @@ int main(void)
 		sh_basicWithTex.setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
 
 		glm::mat4 cubeModel = glm::mat4(1.0f);
-		cubeModel = glm::translate(cubeModel, glm::vec3(1.5f, 0.0f, -1.2f)); 
-		cubeModel = glm::scale(cubeModel, glm::vec3(1.0f, 1.0f, 1.0f));	
+		cubeModel = glm::translate(cubeModel, glm::vec3(1.5f, 0.0f, -1.2f));
+		cubeModel = glm::scale(cubeModel, glm::vec3(1.0f, 1.0f, 1.0f));
 		sh_basicWithTex.setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
 		cubeTex.changeTexUnit(0);
@@ -297,7 +298,7 @@ int main(void)
 		sh_basicWithTex.setUniformTextureUnit("colorTexture", 0);
 
 		//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
-		
+
 		//Model Rendering:
 		sh_modelLoading.bindProgram();
 
@@ -312,7 +313,7 @@ int main(void)
 		sh_modelLoading.setUniformMat4("model", GL_FALSE, glm::value_ptr(model));
 		ourModel.Draw(sh_modelLoading);
 
-		if(wireframe)
+		if (wireframe)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
@@ -321,45 +322,15 @@ int main(void)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
-		//Create IMGUI menu:
-		ImGui_ImplGlfwGL3_NewFrame();
 
-		ImGui::Begin("GUI");
-		ImGui::Separator();
-		if (ImGui::Button("Toggle Wireframe"))
-		{
-			if(wireframe == false)
-			{
-				wireframe = true;
-			}
-			else
-			{
-				wireframe = false;
-			}
-		}
-		ImGui::NewLine();
-		if(ImGui::Button("Toggle Rotation"))
-		{
-			if (rotation)
-			{
-				//glDisable(GL_DEPTH_TEST);
-				rotation = false;
-			}
-			else
-			{
-				//glEnable(GL_DEPTH_TEST);
-				rotation = true;
-			}
-		}
-		ImGui::NewLine();
+		genMenu_1(toggle, wireframe, rotation);
 
-		ImGui::End();
-		ImGui::Render();
-		ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+
+		glfwPollEvents();
 
 		glfwSwapBuffers(window);
 
-		glfwPollEvents();
+		
 	}
 
 	glfwTerminate();

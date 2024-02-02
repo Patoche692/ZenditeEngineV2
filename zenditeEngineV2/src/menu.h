@@ -9,21 +9,43 @@ void imGuiSetup(GLFWwindow* window)
 	ImGui::StyleColorsDark();
 }
 
-void genMenu_1()
+void genMenu_1(bool& toggle, bool& wireframe, bool& rotation)
 {
+	//Create IMGUI menu:
 	ImGui_ImplGlfwGL3_NewFrame();
+	//ImGui::NewFrame();
 
-	ImGui::Begin("Test");
-
-	//#Write_IMGUI_things_here
-	ImGui::Text("Dear ImGui, %s", ImGui::GetVersion());
+	ImGui::Begin("GUI");
 	ImGui::Separator();
-	ImGui::Text("By Omar Cornut and all dear imgui contributors.");
-	ImGui::Text("Dear ImGui is licensed under the MIT License, see LICENSE for more information.");
+	if (ImGui::Button("Toggle Wireframe"))
+	{
+		if (wireframe == false)
+		{
+			wireframe = true;
+		}
+		else
+		{
+			wireframe = false;
+		}
+	}
+	ImGui::NewLine();
+	if (ImGui::Button("Toggle Rotation"))
+	{
+		if (rotation)
+		{
+			//glDisable(GL_DEPTH_TEST);
+			rotation = false;
+		}
+		else
+		{
+			//glEnable(GL_DEPTH_TEST);
+			rotation = true;
+		}
+	}
+	ImGui::NewLine();
 
 	ImGui::End();
-
-
 	ImGui::Render();
 	ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+
 }
