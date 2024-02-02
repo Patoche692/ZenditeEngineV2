@@ -14,6 +14,8 @@
 
 #include <filesystem>
 
+//ECS implementation ver 1.0
+
 namespace fs = std::filesystem;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
