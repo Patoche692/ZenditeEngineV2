@@ -161,6 +161,14 @@
     <ClInclude Include="res\shaders\LightingShaders\fs_blMaterial.glsl" />
     <ClInclude Include="res\shaders\LightingShaders\vs_blMaterial.glsl" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Coordinator.h" />
+    <ClInclude Include="src\ECS\ComponentArray.h" />
+    <ClInclude Include="src\ECS\ComponentManager.h" />
+    <ClInclude Include="src\ECS\ECSCoordinator.h" />
+    <ClInclude Include="src\ECS\ECSUtils.h" />
+    <ClInclude Include="src\ECS\EntityManager.h" />
+    <ClInclude Include="src\ECS\I_System.h" />
+    <ClInclude Include="src\ECS\SystemManager.h" />
     <ClInclude Include="src\geometrySetup.h" />
     <ClInclude Include="src\Helper\Mesh.h" />
     <ClInclude Include="src\Helper\Model.h" />
