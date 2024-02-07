@@ -160,6 +160,10 @@
   <ItemGroup>
     <ClInclude Include="res\shaders\LightingShaders\fs_blMaterial.glsl" />
     <ClInclude Include="res\shaders\LightingShaders\vs_blMaterial.glsl" />
+    <ClInclude Include="src\API_Rendering\I_API_Manager.h" />
+    <ClInclude Include="src\API_Rendering\I_Render.h" />
+    <ClInclude Include="src\API_Rendering\OpenGL_Manager.h" />
+    <ClInclude Include="src\API_Rendering\OpenGl_Renderer.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Coordinator.h" />
     <ClInclude Include="src\ECS\ComponentArray.h" />
@@ -169,6 +173,8 @@
     <ClInclude Include="src\ECS\EntityManager.h" />
     <ClInclude Include="src\ECS\I_System.h" />
     <ClInclude Include="src\ECS\SystemManager.h" />
+    <ClInclude Include="src\ECS\Systems\CollisionDetectionSystem.h" />
+    <ClInclude Include="src\ECS\Systems\RenderableSystem.h" />
     <ClInclude Include="src\EventManager\CollisionResponseSystem.h" />
     <ClInclude Include="src\EventManager\I_Observer.h" />
     <ClInclude Include="src\EventManager\I_Subject.h" />

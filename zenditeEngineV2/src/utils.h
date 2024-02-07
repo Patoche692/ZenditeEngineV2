@@ -39,6 +39,14 @@ static bool GLLogCall(const char* function, const char* file, int line)
 	return true;
 }
 
+struct transform
+{
+	glm::vec3 pos;
+	glm::vec3 rotation;
+	glm::vec3 scale;
+
+};
+
 struct Vert
 {
 	//Position

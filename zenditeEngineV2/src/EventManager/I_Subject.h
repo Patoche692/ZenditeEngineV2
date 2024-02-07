@@ -4,7 +4,7 @@
 
 class I_Subject
 {
-private:
+protected:
 	std::vector<I_Observer> observerList;
 
 public:

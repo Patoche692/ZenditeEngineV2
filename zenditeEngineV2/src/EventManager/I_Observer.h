@@ -5,5 +5,5 @@
 class I_Observer
 {
 public:
-	virtual void UpdateObservers(std::shared_ptr<ComponentManager> CM, int* i);
+	virtual void UpdateObservers(std::shared_ptr<ComponentManager> CM, int* i) = 0;
 };
