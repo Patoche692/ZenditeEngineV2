@@ -989,6 +989,15 @@
     <ClInclude Include="src\ECS\I_System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\EventManager\I_Subject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EventManager\I_Observer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EventManager\CollisionResponseSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vendor\glm\detail\func_common.inl">

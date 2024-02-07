@@ -61,4 +61,13 @@ public:
 		}
 	}
 
+	template<typename T>
+	std::bitset<MAX_COMPONENTS> GetSystemBitset()
+	{
+		const char* sysTag = typeid(T).name();
+
+		return m_map_SYSTAGtoSIGNATURE[sysTag];
+
+	}
+
 };
