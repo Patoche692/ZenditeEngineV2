@@ -4,6 +4,8 @@
 
 class CollisionDetectionSystem : public I_System, public I_Subject
 {
+private:
+
 public:
 	void NotifyObservers(int* i) override
 	{
@@ -12,7 +14,5 @@ public:
 			
 		}
 	}
-
-private:
 
 };

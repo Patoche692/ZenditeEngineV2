@@ -25,10 +25,3 @@ using Entity = std::uint32_t;
 using ComponentBitsetPos = std::uint8_t;
 using Signature = std::bitset<MAX_COMPONENTS>;
 
-struct R_DataHandle
-{
-	//vec3 pos;
-	//vec2 texCoords
-
-	std::string name;
-};

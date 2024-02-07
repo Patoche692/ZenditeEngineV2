@@ -1,4 +1,5 @@
 #pragma once
+#include "../utils.h"
 #include "../ECS/ECSUtils.h"
 #include <unordered_map>
 
@@ -9,5 +10,6 @@ protected:
 
 public:
 	virtual void SetupRenderData(Entity EID) = 0;
+	const virtual R_DataHandle& GetEntityDataHandle(Entity EID) const = 0;
 
 };

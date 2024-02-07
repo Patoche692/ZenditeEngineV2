@@ -39,6 +39,14 @@ static bool GLLogCall(const char* function, const char* file, int line)
 	return true;
 }
 
+struct R_DataHandle
+{
+	//vec3 pos;
+	//vec2 texCoords
+
+	std::string name;
+};
+
 struct transform
 {
 	glm::vec3 pos;

@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Coordinator.cpp" />
     <ClCompile Include="src\geometrySetup.cpp" />
     <ClCompile Include="src\Helper\Mesh.cpp" />
     <ClCompile Include="src\Helper\Model.cpp" />
@@ -161,13 +162,14 @@
     <ClInclude Include="res\shaders\LightingShaders\fs_blMaterial.glsl" />
     <ClInclude Include="res\shaders\LightingShaders\vs_blMaterial.glsl" />
     <ClInclude Include="src\API_Rendering\I_API_Manager.h" />
-    <ClInclude Include="src\API_Rendering\I_Render.h" />
+    <ClInclude Include="src\API_Rendering\I_Renderer.h" />
     <ClInclude Include="src\API_Rendering\OpenGL_Manager.h" />
     <ClInclude Include="src\API_Rendering\OpenGl_Renderer.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Coordinator.h" />
     <ClInclude Include="src\ECS\ComponentArray.h" />
     <ClInclude Include="src\ECS\ComponentManager.h" />
+    <ClInclude Include="src\ECS\Components.h" />
     <ClInclude Include="src\ECS\ECSCoordinator.h" />
     <ClInclude Include="src\ECS\ECSUtils.h" />
     <ClInclude Include="src\ECS\EntityManager.h" />
