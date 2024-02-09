@@ -6,7 +6,8 @@ class ECSCoordinator;
 class OpenGL_Renderer : public I_Renderer
 {
 public:
-	void Render(const R_DataHandle& DataHandle, const transform& trans) override;
+	OpenGL_Renderer(std::shared_ptr<Camera> cam);
+	void Render(const R_DataHandle& DataHandle, const c_Transform& trans) override;
 
 private:
 

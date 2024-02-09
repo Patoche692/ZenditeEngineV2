@@ -6,13 +6,17 @@
 #include "ECS/Systems/Trigger_CollisionDetectionSystem.h"
 #include "API_Rendering/OpenGL_Manager.h"
 
+class Camera;
+class I_Renderer;
+
 class Coordinator
 {
 private:
 	std::shared_ptr<ECSCoordinator> m_ECSCoord;
 	std::shared_ptr<I_Subject> m_Subject;
 
-	std::unique_ptr<I_API_Manager> m_APImanager;
+	std::shared_ptr<I_API_Manager> m_APImanager;
+	std::shared_ptr<I_Renderer> m_Renderer;
 
 	//Systems:
 	std::shared_ptr<RenderableSystem> m_RenderableSystem;
@@ -22,7 +26,7 @@ private:
 
 	
 public:
-	Coordinator(std::string API_Type);
+	Coordinator(std::string API_Type, std::string Render_Type, std::shared_ptr<Camera> camera);
 
 	void RegisterComponents();
 
@@ -31,6 +35,10 @@ public:
 	void SetUpSystemBitsets();
 
 	Entity CreateEntity();
+
+	void runAllSystems(float deltaTime);
+	
+	void setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader);
 
 	template<typename T>
 	void AddComponentToEntity(Entity EID, T comp)

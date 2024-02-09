@@ -1,18 +1,29 @@
 #include "Coordinator.h"
 #include "ECS/Components.h"
+#include "Camera.h"
+#include "../API_Rendering/OpenGl_Renderer.h"
 
-Coordinator::Coordinator(std::string API_Type)
+Coordinator::Coordinator(std::string API_Type, std::string Render_Type, std::shared_ptr<Camera> camera)
 {
 	m_ECSCoord = std::make_shared<ECSCoordinator>();
 
 	if (API_Type == "opengl")
 	{
-		m_APImanager = std::make_unique<OpenGL_Manager>();
+		m_APImanager = std::make_shared<OpenGL_Manager>();
 	}
 	else
 	{
 		//default:
-		m_APImanager = std::make_unique<OpenGL_Manager>();
+		m_APImanager = std::make_shared<OpenGL_Manager>();
+	}
+
+	if(Render_Type == "opengl")
+	{		
+		m_Renderer = std::make_shared<OpenGL_Renderer>(camera);
+	}
+	else
+	{
+		m_Renderer = std::make_shared<OpenGL_Renderer>(camera);
 	}
 }
 
@@ -68,3 +79,15 @@ Entity Coordinator::CreateEntity()
 {
 	return m_ECSCoord->CreateEntity();
 }
+
+void Coordinator::setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader)
+{
+	m_APImanager->SetShaderForEntity(EID, shader);
+}
+
+void Coordinator::runAllSystems(float deltaTime)
+{
+	m_RenderableSystem->Render(m_Renderer, m_APImanager, m_ECSCoord);
+}
+
+

@@ -56,7 +56,7 @@ public:
 	//Doing this keeps the component array data tightly packed which allows for better cache spatial locality, leading to improved overall performance (hopefully)
 	void RemoveComponentDataFromRelatedEntity(Entity EID_TD)
 	{
-		DEBUG_ASSERT(m_map_EntityToIndex[EID_TD].find() != m_map_EntityToIndex.end(), "Attempting to remove component data from an entity that does not contain the relevant component data");
+		DEBUG_ASSERT(m_map_EntityToIndex.find(EID_TD) != m_map_EntityToIndex.end(), "Attempting to remove component data from an entity that does not contain the relevant component data");
 	
 		size_t EID_TD_Index = m_map_EntityToIndex[EID_TD];
 		size_t EID_TA_Index = m_arraySize - 1;

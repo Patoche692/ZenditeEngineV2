@@ -11,6 +11,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 class Shader;
+class Texture2D;
 
 //This a utility file.
 //Not a class file. Only add useful functions that can be used generally throughout the code.
@@ -53,6 +54,8 @@ struct R_DataHandle
 	unsigned VBO;
 	unsigned EBO;
 	std::shared_ptr<Shader> shader;
+	std::shared_ptr<Texture2D> texture;
+	uint32_t texUnit;
 
 	std::bitset<32> signature;
 

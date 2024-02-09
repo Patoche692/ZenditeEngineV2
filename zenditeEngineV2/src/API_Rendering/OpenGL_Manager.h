@@ -1,6 +1,7 @@
 #pragma once
 #include "I_API_Manager.h"
 #include "../ECS/Components.h"
+#include "../Texture2D.h"
 
 class OpenGL_Manager : public I_API_Manager
 {
@@ -30,7 +31,14 @@ public:
 		GLCALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)(6 * sizeof(float))));
 		GLCALL(glEnableVertexAttribArray(2));
 
+		DH.texture = std::make_unique<Texture2D>("diffuse");
+		(DH.texture)->setupTexturePNG(0, "res/textures/container2.png");
+
+
+
 		GLCALL(glBindVertexArray(0)); //Unbind the VAO
+
+		ECScoord->GetComponentDataFromEntity<c_Modified>(EID).isModifed = false;
 
 		m_Map_ENTITYtoHANDLE[EID] = DH; //Insert modified DH into the map.
 	}
@@ -58,7 +66,7 @@ public:
 		else {
 			// Handle the case where the EID is not found. For example, throw an exception
 			// or return a reference to a static default-constructed R_DataHandle object.
-			DEBUG_ASSERT(false, "EID data handle Not found");
+			DEBUG_ASSERT(false, "EID data handle Not found"); // Handle map is not retrieving the data handle (find out why)
 			static R_DataHandle defaultHandle;
 			return defaultHandle;
 		}

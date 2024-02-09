@@ -33,7 +33,7 @@ public:
 
 	void DestroyEntity(Entity EID)
 	{
-		DEBUG_ASSERT(EID < MAX_ENTITIES && "Entity out of range. (needs to be smaller than MAX_ENTITIES)");
+		DEBUG_ASSERT(EID < MAX_ENTITIES, "Entity out of range. (needs to be smaller than MAX_ENTITIES)");
 
 		m_entitySignatures[EID].reset();
 
@@ -43,14 +43,14 @@ public:
 
 	void SetEntitySignature(Entity EID, Signature sig)
 	{
-		DEBUG_ASSERT(EID < MAX_ENTITIES && "Entity out of range. (needs to be smaller than MAX_ENTITIES)");
+		DEBUG_ASSERT(EID < MAX_ENTITIES, "Entity out of range. (needs to be smaller than MAX_ENTITIES)");
 
 		m_entitySignatures[EID] = sig;
 	}
 
 	Signature GetEntitySignature(Entity EID) const
 	{
-		DEBUG_ASSERT(EID < MAX_ENTITIES && "Entity out of range. (needs to be smaller than MAX_ENTITIES)");
+		DEBUG_ASSERT(EID < MAX_ENTITIES, "Entity out of range. (needs to be smaller than MAX_ENTITIES)");
 
 		return m_entitySignatures[EID];
 	}

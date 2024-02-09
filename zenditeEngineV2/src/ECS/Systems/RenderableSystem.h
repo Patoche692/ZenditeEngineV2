@@ -5,6 +5,7 @@
 #include "../../EventManager/I_Subject.h"
 #include "../../API_Rendering/I_Renderer.h"
 #include "../../API_Rendering/I_API_Manager.h"
+#include "../../ECS/Components.h"
 
 class RenderableSystem : public I_System, public I_Subject
 {
@@ -31,12 +32,13 @@ public:
 		for (auto const& EID : m_EntitySet)
 		{
 			//If entities "modified" component is true, then call
-			if (true)
+			if (ECScoord->GetComponentDataFromEntity<c_Modified>(EID).isModifed)
 			{
 				apiManager->SetupRenderData(EID, ECScoord);
+				
 			}
 
-			renderer->Render(apiManager->GetEntityDataHandle(EID), ECScoord->GetComponentDataFromEntity<transform>(EID));
+			renderer->Render(apiManager->GetEntityDataHandle(EID), ECScoord->GetComponentDataFromEntity<c_Transform>(EID));
 		}
 	}
 

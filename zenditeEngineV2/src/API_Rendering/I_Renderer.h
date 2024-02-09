@@ -4,14 +4,20 @@
 #include "../ECS/ECSUtils.h"
 
 class ECSCoordinator;
+class c_Transform;
 
 class I_Renderer
 {
 protected:
-	Camera cam;
+	std::shared_ptr<Camera> cam;
 
 
 public:
-	virtual void Render(const R_DataHandle& DataHandle, const transform& trans) = 0;
+	I_Renderer(std::shared_ptr<Camera> camera)
+	{
+		cam = camera;
+	}
+
+	virtual void Render(const R_DataHandle& DataHandle, const c_Transform& trans) = 0;
 
 };
