@@ -26,10 +26,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
-// settings
-const unsigned int SCR_WIDTH = 1200;
-const unsigned int SCR_HEIGHT = 800;
-
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
@@ -93,7 +89,7 @@ int main(void)
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
 	std::cout << "Maximum texture units available: " << maxTextureUnits << std::endl;
 
-	//Testing ECS:
+	//Testing ECS: Start - $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 	Coordinator COORD("opengl");
 	COORD.RegisterComponents();
 	COORD.RegisterSystems();
@@ -112,6 +108,7 @@ int main(void)
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 
+	// Start - $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 	//Old Rendering:
 

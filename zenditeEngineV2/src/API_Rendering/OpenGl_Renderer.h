@@ -1,6 +1,8 @@
 #pragma once
 #include "I_Renderer.h"
 
+class ECSCoordinator;
+
 class OpenGL_Renderer : public I_Renderer
 {
 public:

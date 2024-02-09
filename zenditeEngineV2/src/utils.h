@@ -21,6 +21,10 @@ class Shader;
 	x;\
 	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 
+// settings
+const unsigned int SCR_WIDTH = 1200;
+const unsigned int SCR_HEIGHT = 800;
+
 static void GLClearError()
 {
 	while (glGetError() != GL_NO_ERROR);
