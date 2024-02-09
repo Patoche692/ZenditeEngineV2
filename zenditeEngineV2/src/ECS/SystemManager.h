@@ -17,6 +17,8 @@ public:
 		DEBUG_ASSERT(m_map_SYSTAGtoISYSTEM.find(systag) == m_map_SYSTAGtoISYSTEM.end(), "Attemting to register the same system more than once is prohibited");
 
 		m_map_SYSTAGtoISYSTEM[systag] = std::make_shared<T>();
+
+		return std::static_pointer_cast<T>(m_map_SYSTAGtoISYSTEM[systag]);
 	}
 
 	template<typename T>
@@ -31,18 +33,17 @@ public:
 	//When an entity is destroyed its EID needs to removed from all systems std::set<Entity> m_EntitySet; which is inherited from I_System
 	void EntityDestroyed(Entity EID)
 	{
-		for (const std::pair<const char* const, std::shared_ptr<I_System>> const& pair : m_map_SYSTAGtoISYSTEM)
-		{
-			std::shared_ptr<I_System> const& system = pair.second;
 
-			system->m_EntitySet.erase(EID);
+		for (auto const& it : m_map_SYSTAGtoISYSTEM)
+		{
+			it.second->m_EntitySet.erase(EID); //erase the entity from the set of all entities tied to that system. (even if its signature matches, its gone, so it's EID needs to be removed)
 		}
 	}
 
 	//This is the function that is called every time a component is added or removed from an entity. When this happens we notify every system and check if the signature is now valid or invalid and the add or remove it accordingly
 	void EntitySignatureChanged(Entity EID, Signature entitySig)
 	{
-		for (const std::pair<const char* const, std::shared_ptr<I_System>> const& it : m_map_SYSTAGtoISYSTEM)
+		for (auto const& it : m_map_SYSTAGtoISYSTEM)
 		{
 			auto const& sysTag = it.first;
 			auto const& system = it.second;

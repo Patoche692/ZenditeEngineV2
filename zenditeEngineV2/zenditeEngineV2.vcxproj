@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\API_Rendering\OpenGl_Renderer.cpp" />
     <ClCompile Include="src\Coordinator.cpp" />
     <ClCompile Include="src\geometrySetup.cpp" />
     <ClCompile Include="src\Helper\Mesh.cpp" />
@@ -175,8 +176,10 @@
     <ClInclude Include="src\ECS\EntityManager.h" />
     <ClInclude Include="src\ECS\I_System.h" />
     <ClInclude Include="src\ECS\SystemManager.h" />
-    <ClInclude Include="src\ECS\Systems\CollisionDetectionSystem.h" />
+    <ClInclude Include="src\ECS\Systems\Im_CollisionDetectionSystem.h" />
+    <ClInclude Include="src\ECS\Systems\Rigid_CollisionDetectionSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderableSystem.h" />
+    <ClInclude Include="src\ECS\Systems\Trigger_CollisionDetectionSystem.h" />
     <ClInclude Include="src\EventManager\CollisionResponseSystem.h" />
     <ClInclude Include="src\EventManager\I_Observer.h" />
     <ClInclude Include="src\EventManager\I_Subject.h" />

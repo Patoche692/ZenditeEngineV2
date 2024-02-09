@@ -80,7 +80,7 @@ public:
 	template<typename T>
 	std::shared_ptr<I_System> RegisterSystem()
 	{
-		return m_SystemManager->RegisterSystem<T>();
+		return m_SystemManager->GenerateAndRegisterSystem<T>();
 	}
 
 	template<typename T>

@@ -4,10 +4,13 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <bitset>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+class Shader;
 
 //This a utility file.
 //Not a class file. Only add useful functions that can be used generally throughout the code.
@@ -41,8 +44,13 @@ static bool GLLogCall(const char* function, const char* file, int line)
 
 struct R_DataHandle
 {
-	//vec3 pos;
-	//vec2 texCoords
+
+	unsigned VAO;
+	unsigned VBO;
+	unsigned EBO;
+	std::shared_ptr<Shader> shader;
+
+	std::bitset<32> signature;
 
 	std::string name;
 };

@@ -14,6 +14,9 @@
 
 #include <filesystem>
 
+#include "Coordinator.h"
+#include "ECS/Components.h"
+
 //ECS implementation ver 1.0
 
 namespace fs = std::filesystem;
@@ -42,13 +45,16 @@ bool toggle = true;
 bool wireframe = false;
 bool rotation = false;
 
+
+//Coordinator:
+
 int main(void)
 {
 	GLFWwindow* window;
 	if (!glfwInit()) {
 		return -1;
 	}
-	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello GRAPHICS", NULL, NULL);
+	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Zen", NULL, NULL);
 	if (!window){
 		glfwTerminate();
 		return -1;
@@ -87,6 +93,41 @@ int main(void)
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
 	std::cout << "Maximum texture units available: " << maxTextureUnits << std::endl;
 
+	//Testing ECS:
+	Coordinator COORD("opengl");
+	COORD.RegisterComponents();
+	COORD.RegisterSystems();
+	COORD.SetUpSystemBitsets();
+
+	Shader sh_basicWithTex("res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
+		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
+
+	std::vector<Entity> entities(MAX_ENTITIES);
+
+	entities[0] = COORD.CreateEntity();
+
+	c_Transform tr_0;
+	tr_0.pos = glm::vec3(0.0f,0.0f,0.0f);
+	tr_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
+
+
+	//Old Rendering:
+
+	/*
+	Shader sh_basicWithTex("res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
+		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
+	*/
+
+	unsigned int CubeVAO;
+	unsigned int CubeVBO;
+
+	GenerateCubeNoEBO(CubeVAO, CubeVBO);
+	Texture2D cubeTex("diffuse");
+	cubeTex.setupTexturePNG(0, "res/textures/container2.png");
+
+
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -99,10 +140,27 @@ int main(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// ----------------------------------------------------------------------
+		sh_basicWithTex.bindProgram();
+		bindVao(CubeVAO);
+		glm::mat4 cubeProjection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 cubeView = camera.GetViewMatrix();
+		sh_basicWithTex.setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
+		sh_basicWithTex.setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
+
+		glm::mat4 cubeModel = glm::mat4(1.0f);
+		cubeModel = glm::translate(cubeModel, glm::vec3(1.5f, 0.0f, -1.2f));
+		cubeModel = glm::scale(cubeModel, glm::vec3(1.0f, 1.0f, 1.0f));
+		sh_basicWithTex.setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
+
+		cubeTex.changeTexUnit(0);
+
+		sh_basicWithTex.setUniformTextureUnit("colorTexture", 0);
+
+		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 
 
-
-		/* End Rendering Code */
+		/* End Rendering Code */ // ----------------------------------------------
 
 		//#Removed_1: 206 - 314
 

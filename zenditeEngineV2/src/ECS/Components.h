@@ -12,15 +12,20 @@ struct c_Transform
 
 struct c_RenderableComponent
 {
-
+	float *vertices;
 };
 
-struct c_RigidBody
+struct c_RigidBodyCollidable
 {
 
 };
 
 struct c_ImmovableCollidable
+{
+
+};
+
+struct c_CollidableTrigger
 {
 
 };

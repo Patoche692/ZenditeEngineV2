@@ -64,7 +64,7 @@ public:
 	}
 
 	template<typename T>
-	ComponentBitsetPos GetComponentBitsetPos() const
+	ComponentBitsetPos GetComponentBitsetPos()
 	{
 		const char* tag = typeid(T).name();
 

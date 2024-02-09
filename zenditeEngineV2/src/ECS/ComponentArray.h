@@ -22,9 +22,9 @@ private:
 public:
 	void EntityDestroyed(Entity EID_TD) override
 	{
-		if (m_map_EntityToIndex[EID_TD].find() != m_map_EntityToIndex.end())
+		if (m_map_EntityToIndex.find(EID_TD) != m_map_EntityToIndex.end())
 		{
-			RemoveComponentDataFromRelatedEntity(Entity EID_TD);
+			RemoveComponentDataFromRelatedEntity(EID_TD);
 		}
 
 	}
@@ -40,10 +40,11 @@ public:
 
 	}
 
-	T& GetSpecificComponentData(Entity EID) const
+	T& GetSpecificComponentData(Entity EID)
 	{
-		DEBUG_ASSERT(m_map_EntityToIndex.find(EID) != m_map_EntityToIndex.end(), "Entity requested does not contain component data of this type.")
-		return m_ComponentArray[m_map_EntityToIndex[EID]];
+		DEBUG_ASSERT(m_map_EntityToIndex.find(EID) != m_map_EntityToIndex.end(), "Entity requested does not contain component data of this type.");
+		size_t index = m_map_EntityToIndex[EID];
+		return m_ComponentArray[index];
 	}
 
 	std::array<T, MAX_ENTITIES> const& GetComponentArray() const

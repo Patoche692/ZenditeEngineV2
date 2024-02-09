@@ -9,11 +9,12 @@
 class RenderableSystem : public I_System, public I_Subject
 {
 private:
-	std::shared_ptr<ECSCoordinator> ECScoord;
+	//std::shared_ptr<ECSCoordinator> ECScoord;
 
 public:
-	RenderableSystem(std::shared_ptr<ECSCoordinator> ECScoordPtr) : ECScoord(ECScoordPtr)
+	RenderableSystem()
 	{
+		//#Temp_Simple_Rendering_System
 		
 	}
 
@@ -21,18 +22,18 @@ public:
 	{
 		for (size_t i = 0; i < observerList.size(); ++i) //Iterate through every item in observerList
 		{
-
+			//#To_Complete_3
 		}
 	}
 
-	void Render(std::shared_ptr<I_Renderer> renderer, std::shared_ptr<I_API_Manager> apiManager)
+	void Render(std::shared_ptr<I_Renderer> renderer, std::shared_ptr<I_API_Manager> apiManager, std::shared_ptr<ECSCoordinator> ECScoord)
 	{	
 		for (auto const& EID : m_EntitySet)
 		{
 			//If entities "modified" component is true, then call
 			if (true)
 			{
-				apiManager->SetupRenderData(EID);
+				apiManager->SetupRenderData(EID, ECScoord);
 			}
 
 			renderer->Render(apiManager->GetEntityDataHandle(EID), ECScoord->GetComponentDataFromEntity<transform>(EID));

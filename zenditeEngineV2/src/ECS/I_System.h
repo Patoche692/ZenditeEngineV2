@@ -8,5 +8,3 @@ public:
 	std::set<Entity> m_EntitySet;
 };
 
-
-//Add systems here:
