@@ -35,12 +35,11 @@ public:
 		(DH.texture)->setupTexturePNG(0, "res/textures/container2.png");
 
 
-
-		GLCALL(glBindVertexArray(0)); //Unbind the VAO
-
 		ECScoord->GetComponentDataFromEntity<c_Modified>(EID).isModifed = false;
 
 		m_Map_ENTITYtoHANDLE[EID] = DH; //Insert modified DH into the map.
+	
+		GLCALL(glBindVertexArray(0)); //Unbind the VAO
 	}
 
 	R_DataHandle const& GetEntityDataHandle(Entity EID) const override

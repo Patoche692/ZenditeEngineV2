@@ -75,6 +75,11 @@ void Coordinator::SetUpSystemBitsets()
 
 }
 
+void Coordinator::SetUpRenderData(Entity EID)
+{
+	m_APImanager->SetupRenderData(EID, m_ECSCoord);
+}
+
 Entity Coordinator::CreateEntity()
 {
 	return m_ECSCoord->CreateEntity();

@@ -34,6 +34,8 @@ public:
 
 	void SetUpSystemBitsets();
 
+	void SetUpRenderData(Entity EID);
+
 	Entity CreateEntity();
 
 	void runAllSystems(float deltaTime);

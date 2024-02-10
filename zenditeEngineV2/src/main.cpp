@@ -160,7 +160,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[0], md_0);
-
+	COORD.SetUpRenderData(entities[0]);
 	COORD.setShaderForEntity(entities[0], sh_basicWithTex);
 
 	// END ECS - $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -172,12 +172,12 @@ int main(void)
 		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
 	*/
 
-	unsigned int CubeVAO;
-	unsigned int CubeVBO;
+	//unsigned int CubeVAO;
+	//unsigned int CubeVBO;
 
-	GenerateCubeNoEBO(CubeVAO, CubeVBO);
-	Texture2D cubeTex("diffuse");
-	cubeTex.setupTexturePNG(0, "res/textures/container2.png");
+	//GenerateCubeNoEBO(CubeVAO, CubeVBO);
+	//Texture2D cubeTex("diffuse");
+	//cubeTex.setupTexturePNG(0, "res/textures/container2.png");
 
 
 	while (!glfwWindowShouldClose(window))
