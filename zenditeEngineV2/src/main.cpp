@@ -98,6 +98,7 @@ int main(void)
 	std::shared_ptr<Shader> sh_basicWithTex = std::make_shared<Shader>("res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
 		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
 
+	//#TODO Need to pass data read in from the model loader to the ECS system for rendering.
 	float vertexDataValues[] = {
 		// positions          // normals           // texture coords
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
