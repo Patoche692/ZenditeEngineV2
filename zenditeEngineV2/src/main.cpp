@@ -152,7 +152,8 @@ int main(void)
 	tr_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	c_RenderableComponent rc_0;
-	rc_0.vertices = vertexDataValues;
+	rc_0.setVertexArray(vertexDataValues, sizeof(vertexDataValues));
+	//rc_0.vertices = vertexDataValues;
 
 	c_Modified md_0;
 	md_0.isModifed = true;
@@ -172,12 +173,12 @@ int main(void)
 		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
 	*/
 
-	//unsigned int CubeVAO;
-	//unsigned int CubeVBO;
+	unsigned int CubeVAO;
+	unsigned int CubeVBO;
 
-	//GenerateCubeNoEBO(CubeVAO, CubeVBO);
-	//Texture2D cubeTex("diffuse");
-	//cubeTex.setupTexturePNG(0, "res/textures/container2.png");
+	GenerateCubeNoEBO(CubeVAO, CubeVBO);
+	Texture2D cubeTex("diffuse");
+	cubeTex.setupTexturePNG(0, "res/textures/container2.png");
 
 
 	while (!glfwWindowShouldClose(window))
@@ -193,7 +194,7 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// ----------------------------------------------------------------------
-		/*
+		
 		sh_basicWithTex->bindProgram();
 		bindVao(CubeVAO);
 		glm::mat4 cubeProjection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -202,7 +203,7 @@ int main(void)
 		sh_basicWithTex->setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
 
 		glm::mat4 cubeModel = glm::mat4(1.0f);
-		cubeModel = glm::translate(cubeModel, glm::vec3(1.5f, 0.0f, -1.2f));
+		cubeModel = glm::translate(cubeModel, glm::vec3(2.5f, 0.0f, -1.2f));
 		cubeModel = glm::scale(cubeModel, glm::vec3(1.0f, 1.0f, 1.0f));
 		sh_basicWithTex->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
@@ -210,10 +211,10 @@ int main(void)
 
 		sh_basicWithTex->setUniformTextureUnit("colorTexture", 0);
 
-		//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
-		*/
+		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+		
 
-		COORD.runAllSystems(2.0f);
+		COORD.runAllSystems(2.0f); //#ECS_RENDERING
 
 		/* End Rendering Code */ // ----------------------------------------------
 

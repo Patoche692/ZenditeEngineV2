@@ -12,7 +12,20 @@ struct c_Transform
 
 struct c_RenderableComponent
 {
-	float *vertices;
+	void setVertexArray(float* verts, size_t size)
+	{
+		vertices = new float[size];
+
+		for (int i = 0; i < size; ++i)
+		{
+			vertices[i] = verts[i];
+		}
+
+		arraySize = size;
+	}
+
+	float* vertices;
+	size_t arraySize;
 };
 
 struct c_RigidBodyCollidable

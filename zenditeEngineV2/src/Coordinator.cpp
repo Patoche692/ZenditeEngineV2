@@ -72,7 +72,6 @@ void Coordinator::SetUpSystemBitsets()
 	Trigger_CollisionDetectionSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 	m_ECSCoord->SetSystemBitsetSignature<Trigger_CollisionDetectionSystem>(Trigger_CollisionDetectionSystemSig);
 
-
 }
 
 void Coordinator::SetUpRenderData(Entity EID)

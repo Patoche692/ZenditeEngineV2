@@ -11,6 +11,7 @@ public:
 		R_DataHandle DH;
 		c_RenderableComponent vertexData = ECScoord->GetComponentDataFromEntity<c_RenderableComponent>(EID);
 		float* vertices = vertexData.vertices;
+		size_t arraySize = vertexData.arraySize;
 
 		//#NOTE Use the DH.bitset value to determine what data to setup for the vertex data passed in
 		// (For this version do a simple set up for testing purposes.
@@ -20,7 +21,7 @@ public:
 
 		GLCALL(glGenBuffers(1, &(DH.VBO)));
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.VBO));
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, arraySize, vertices, GL_STATIC_DRAW));
 
 		GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)0));
 		GLCALL(glEnableVertexAttribArray(0));
