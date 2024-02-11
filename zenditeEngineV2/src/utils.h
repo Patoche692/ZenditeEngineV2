@@ -4,10 +4,14 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <bitset>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+class Shader;
+class Texture2D;
 
 //This a utility file.
 //Not a class file. Only add useful functions that can be used generally throughout the code.
@@ -17,6 +21,10 @@
 #define GLCALL(x) GLClearError();\
 	x;\
 	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+
+// settings
+const unsigned int SCR_WIDTH = 1200;
+const unsigned int SCR_HEIGHT = 800;
 
 static void GLClearError()
 {
@@ -38,6 +46,29 @@ static bool GLLogCall(const char* function, const char* file, int line)
 
 	return true;
 }
+
+struct R_DataHandle
+{
+
+	unsigned VAO;
+	unsigned VBO;
+	unsigned EBO;
+	std::shared_ptr<Shader> shader;
+	std::shared_ptr<Texture2D> texture;
+	uint32_t texUnit;
+
+	std::bitset<32> signature;
+
+	std::string name;
+};
+
+struct transform
+{
+	glm::vec3 pos;
+	glm::vec3 rotation;
+	glm::vec3 scale;
+
+};
 
 struct Vert
 {

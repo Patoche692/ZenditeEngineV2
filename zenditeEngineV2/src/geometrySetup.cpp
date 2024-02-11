@@ -69,7 +69,8 @@ void GenerateTexTriVAO(unsigned int& VAO_TexTri, unsigned int& VBO_TexTri, unsig
 
 void GenerateCubeNoEBO(unsigned int& VAO_Cube, unsigned int& VBO_Cube)
 {
-	float vertices[] = {
+	float vertices[] = 
+	{
 		    // positions          // normals           // texture coords
 			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
