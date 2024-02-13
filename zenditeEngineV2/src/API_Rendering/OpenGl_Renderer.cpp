@@ -3,7 +3,7 @@
 #include "../ECS/ECSCoordinator.h"
 #include "../Shader.h"
 #include "../geometrySetup.h"
-#include "../Texture2D.h"
+#include "../TextureData.h"
 #include "../ECS/Components.h"
 
 OpenGL_Renderer::OpenGL_Renderer(std::shared_ptr<Camera> cam) : I_Renderer(cam)
@@ -25,9 +25,9 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, const c_Transform& 
 	cubeModel = glm::scale(cubeModel, trans.scale);
 	(DataHandle.shader)->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
-	(DataHandle.texture)->changeTexUnit(0); //#Temporary, needs a mechanism for the system to select this
+	(DataHandle.texture)->changeTexUnit(DataHandle.texUnit); //#Temporary, needs a mechanism for the system to select this
 
-	(DataHandle.shader)->setUniformTextureUnit("colorTexture", 0);
+	(DataHandle.shader)->setUniformTextureUnit("colorTexture", DataHandle.texUnit);
 
 	GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 }

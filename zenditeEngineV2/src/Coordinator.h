@@ -53,4 +53,6 @@ public:
 		return m_ECSCoord->GetComponentManager();
 	}
 
+	unsigned short int GenerateTexUnit(std::string texFilePath, std::string fileType);
+
 };

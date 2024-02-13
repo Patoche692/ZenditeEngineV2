@@ -60,6 +60,9 @@
     <ClCompile Include="src\API_Rendering\OpenGl_Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\TextureData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vendor\glm\detail\_features.hpp">
@@ -1029,6 +1032,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS\Systems\Trigger_CollisionDetectionSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

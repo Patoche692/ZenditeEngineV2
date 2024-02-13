@@ -31,6 +31,7 @@ void Coordinator::RegisterComponents()
 {
 	m_ECSCoord->RegisterComponent<c_Transform>();
 	m_ECSCoord->RegisterComponent<c_RenderableComponent>();
+	m_ECSCoord->RegisterComponent<c_Texture>();
 	m_ECSCoord->RegisterComponent<c_RigidBodyCollidable>();
 	m_ECSCoord->RegisterComponent<c_ImmovableCollidable>();
 	m_ECSCoord->RegisterComponent<c_Modified>();
@@ -87,6 +88,11 @@ Entity Coordinator::CreateEntity()
 void Coordinator::setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader)
 {
 	m_APImanager->SetShaderForEntity(EID, shader);
+}
+
+unsigned short int Coordinator::GenerateTexUnit(std::string texFilePath, std::string fileType)
+{
+	return m_APImanager->GenerateTexUnit(texFilePath, fileType);
 }
 
 void Coordinator::runAllSystems(float deltaTime)

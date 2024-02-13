@@ -1,17 +1,26 @@
 #pragma once
 #include "I_API_Manager.h"
 #include "../ECS/Components.h"
-#include "../Texture2D.h"
+#include "../TextureData.h"
 
 class OpenGL_Manager : public I_API_Manager
 {
+private:
+	std::vector<TextureData> textures;
+
 public:
+	OpenGL_Manager()
+	{
+		No_texUnits = 0;
+	}
+
 	void SetupRenderData(Entity EID, std::shared_ptr<ECSCoordinator> ECScoord) override
 	{
 		R_DataHandle DH;
-		c_RenderableComponent vertexData = ECScoord->GetComponentDataFromEntity<c_RenderableComponent>(EID);
-		float* vertices = vertexData.vertices;
-		size_t arraySize = vertexData.arraySize;
+		c_RenderableComponent posVertexData = ECScoord->GetComponentDataFromEntity<c_RenderableComponent>(EID);
+		float* posVertices = posVertexData.posVertices;
+		//#HERE CREATE a surface normal vertex array.
+		size_t posArraySize = posVertexData.posArraySize;
 
 		//#NOTE Use the DH.bitset value to determine what data to setup for the vertex data passed in
 		// (For this version do a simple set up for testing purposes.
@@ -19,22 +28,57 @@ public:
 		GLCALL(glGenVertexArrays(1, &(DH.VAO)));
 		GLCALL(glBindVertexArray(DH.VAO));
 
-		GLCALL(glGenBuffers(1, &(DH.VBO)));
-		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.VBO));
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, arraySize, vertices, GL_STATIC_DRAW));
+		GLCALL(glGenBuffers(1, &(DH.posVBO)));
+		GLCALL(glGenBuffers(1, &(DH.surfaceNormalVBO)));
 
-		GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)0));
+		//Position data:
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.posVBO));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, posArraySize, posVertices, GL_STATIC_DRAW));
+		GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
 		GLCALL(glEnableVertexAttribArray(0));
 
-		GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)(3 * sizeof(float))));
+		//Surface Normal Data:
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.surfaceNormalVBO));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, posArraySize, posVertices, GL_STATIC_DRAW));
+		GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
 		GLCALL(glEnableVertexAttribArray(1));
 
-		GLCALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)(6 * sizeof(float))));
-		GLCALL(glEnableVertexAttribArray(2));
 
-		DH.texture = std::make_unique<Texture2D>("diffuse");
-		(DH.texture)->setupTexturePNG(0, "res/textures/container2.png");
+		//Texture Coordinates Data:
+		//GLCALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)(0));
+		//GLCALL(glEnableVertexAttribArray(2));
 
+		
+		//Get The texture if the bitset matches the texture.
+		//DH.texture = std::make_unique<Texture2D>("diffuse");
+		//(DH.texture)->setupTexturePNG(0, "res/textures/container2.png");
+
+		short int bitSetPos = ECScoord->GetComponentBitsetPos<c_Texture>();
+
+		std::bitset<32> textureBitset; // Create a bitset of size 32
+		textureBitset.set(bitSetPos);
+
+		std::bitset<32> entitySig = ECScoord->GetEntitySignature(EID);
+		
+
+		if ((entitySig & textureBitset) == textureBitset) // If this entity has a texture component
+		{
+			c_Texture texVertexData = ECScoord->GetComponentDataFromEntity<c_Texture>(EID);
+			size_t textureArraySize = texVertexData.arraySize;
+
+			GLCALL(glGenBuffers(1, &(DH.texCoordVBO)));
+			GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.texCoordVBO));
+
+			GLCALL(glBufferData(GL_ARRAY_BUFFER, textureArraySize, texVertexData.texCoords, GL_STATIC_DRAW));
+			GLCALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0));
+			GLCALL(glEnableVertexAttribArray(2));
+
+			DH.texUnit = texVertexData.texUnit; //#TexUNIT_Set
+		}
+		else
+		{
+			
+		}
 
 		ECScoord->GetComponentDataFromEntity<c_Modified>(EID).isModifed = false;
 
@@ -77,6 +121,34 @@ public:
 		R_DataHandle& DH = GetNonConstEntityDataHandle(EID);
 
 		DH.shader = shader;
+	}
+
+	unsigned short int GenerateTexUnit(std::string texFilePath, std::string fileType) override
+	{
+		DEBUG_ASSERT(No_texUnits <= 16, "Cap on No. Texture Units has been exceeded"); //#IMPROVE Create a system to swap texture units that are not in use in and out
+		
+		//#SetUp Tex Unit here
+		if(m_Map_FILEPATHtoTEXUNIT.find(texFilePath) == m_Map_FILEPATHtoTEXUNIT.end())
+		{
+			textures.push_back(TextureData(texFilePath));
+
+			if(fileType == "JPG")
+			{
+				textures[No_texUnits].setupTextureJPG(No_texUnits, texFilePath);
+			}
+			else // PNG will be default 
+			{
+				textures[No_texUnits].setupTexturePNG(No_texUnits, texFilePath);
+			}
+
+			m_Map_FILEPATHtoTEXUNIT[texFilePath] = No_texUnits;
+
+			++No_texUnits;
+		}
+
+
+		return m_Map_FILEPATHtoTEXUNIT[texFilePath];
+
 	}
 
 };

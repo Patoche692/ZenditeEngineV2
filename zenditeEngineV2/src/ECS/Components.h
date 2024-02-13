@@ -12,19 +12,52 @@ struct c_Transform
 
 struct c_RenderableComponent
 {
-	void setVertexArray(float* verts, size_t size)
+	void setPosVertexArray(float* verts, size_t size)
 	{
-		vertices = new float[size];
+		posVertices = new float[size];
 
 		for (int i = 0; i < size; ++i)
 		{
-			vertices[i] = verts[i];
+			posVertices[i] = verts[i];
+		}
+
+		posArraySize = size;
+	}
+
+	void setSurfaceNormalVertexArray(float* verts, size_t size)
+	{
+		surfaceNormalVertices = new float[size];
+
+		for (int i = 0; i < size; ++i)
+		{
+			surfaceNormalVertices[i] = verts[i];
+		}
+
+		snArraySize = size;
+	}
+
+	float* posVertices;
+	float* surfaceNormalVertices; //#HERE
+	size_t posArraySize;
+	size_t snArraySize;
+};
+
+struct c_Texture
+{
+	void setTexCoordsVertexArray(float* verts, size_t size)
+	{
+		texCoords = new float[size];
+
+		for (int i = 0; i < size; ++i)
+		{
+			texCoords[i] = verts[i];
 		}
 
 		arraySize = size;
 	}
 
-	float* vertices;
+	unsigned short int texUnit;
+	float* texCoords;
 	size_t arraySize;
 };
 
