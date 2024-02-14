@@ -31,7 +31,7 @@ void genMenu_1(c_Transform& posData)
 	ImGui::NewLine();
 
 
-	// ----------------------------------------------------------
+	// --------------------------------------------------------------
 	ImGui::End();
 	ImGui::Render();
 	ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
