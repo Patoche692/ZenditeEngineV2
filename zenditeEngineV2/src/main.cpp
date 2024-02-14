@@ -362,13 +362,17 @@ int main(void)
 
 	entities[0] = COORD.CreateEntity();
 	entities[1] = COORD.CreateEntity();
+	entities[2] = COORD.CreateEntity();
 
 	c_Transform tr_0;
 	c_Transform tr_1;
+	c_Transform tr_2;
 	tr_0.pos = glm::vec3(0.0f,0.0f,0.0f);
 	tr_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	tr_1.pos = glm::vec3(-2.0f, 0.0f, 3.0f);
 	tr_1.scale = glm::vec3(0.5f, 0.5f, 0.5f);
+	tr_2.pos = glm::vec3(-0.2f, 0.0f, -2.5f);
+	tr_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	c_RenderableComponent rc_0;
 	rc_0.setPosVertexArray(vertexDataValues, sizeof(vertexDataValues));
@@ -387,11 +391,18 @@ int main(void)
 	tx_1.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_1.texUnit = COORD.GenerateTexUnit("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2.png", "PNG");
 
+	c_Texture tx_2;
+	tx_2.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_2.texUnit = COORD.GenerateTexUnit("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/rockySurface.png", "PNG");
+
 	c_Modified md_0;
 	md_0.isModifed = true;
 
 	c_Modified md_1;
 	md_1.isModifed = true;
+
+	c_Modified md_2;
+	md_2.isModifed = true;
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
@@ -406,6 +417,13 @@ int main(void)
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
 	COORD.SetUpRenderData(entities[1]);
 	COORD.setShaderForEntity(entities[1], sh_basicWithTex);
+
+	COORD.AddComponentToEntity<c_Transform>(entities[2], tr_2);
+	COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
+	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
+	COORD.SetUpRenderData(entities[2]);
+	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
 
 	// END ECS - $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
