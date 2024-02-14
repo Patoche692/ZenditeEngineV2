@@ -52,6 +52,11 @@ public:
 
 	}
 
+	Signature GetEntitySignature(Entity EID)
+	{
+		return m_EntityManager->GetEntitySignature(EID);
+	}
+
 	template<typename T>
 	void RemoveComponentFromEntity(Entity EID)
 	{

@@ -41,7 +41,6 @@ bool toggle = true;
 bool wireframe = false;
 bool rotation = false;
 
-
 //Coordinator:
 
 int main(void)
@@ -98,71 +97,334 @@ int main(void)
 	std::shared_ptr<Shader> sh_basicWithTex = std::make_shared<Shader>("res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
 		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
 
+	//#TODO Need to pass data read in from the model loader to the ECS system for rendering.
 	float vertexDataValues[] = {
 		// positions          // normals           // texture coords
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f,  0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		-0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f
+	};
 
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+	float surfaceNormalValues[] =
+	{
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
 
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
 
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
 
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
 
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f
+	};
+
+	float textureCoords[] =
+	{
+		 0.0f,  0.0f,
+		 1.0f,  0.0f,
+		 1.0f,  1.0f,
+		 1.0f,  1.0f,
+		 0.0f,  1.0f,
+		 0.0f,  0.0f,
+		 0.0f,  0.0f,
+		 1.0f,  0.0f,
+		 1.0f,  1.0f,
+		 1.0f,  1.0f,
+		 0.0f,  1.0f,
+		 0.0f,  0.0f,
+		 1.0f,  0.0f,
+		 1.0f,  1.0f,
+		 0.0f,  1.0f,
+		 0.0f,  1.0f,
+		 0.0f,  0.0f,
+		 1.0f,  0.0f,
+		 1.0f,  0.0f,
+		 1.0f,  1.0f,
+		 0.0f,  1.0f,
+		 0.0f,  1.0f,
+		 0.0f,  0.0f,
+		 1.0f,  0.0f,
+		 0.0f,  1.0f,
+		 1.0f,  1.0f,
+		 1.0f,  0.0f,
+		 1.0f,  0.0f,
+		 0.0f,  0.0f,
+		 0.0f,  1.0f,
+		 0.0f,  1.0f,
+		 1.0f,  1.0f,
+		 1.0f,  0.0f,
+		 1.0f,  0.0f,
+		 0.0f,  0.0f,
+		 0.0f,  1.0f
+	};
+
+	float oddShapeVertexData[] = {
+		// positions          // normals           // texture coords
+		-0.5f, -1.5f, -0.5f,  
+		 0.5f, -1.5f, -0.5f,  
+		 0.5f,  1.5f, -0.5f,  
+		 0.5f,  1.5f, -0.5f,  
+		-0.5f,  1.5f, -0.5f,  
+		-0.5f, -1.5f, -0.5f,  
+
+		-0.5f, -1.5f,  0.5f,  
+		 0.5f, -1.5f,  0.5f,  
+		 0.5f,  1.5f,  0.5f,  
+		 0.5f,  1.5f,  0.5f,  
+		-0.5f,  1.5f,  0.5f,  
+		-0.5f, -1.5f,  0.5f,  
+
+		-0.5f,  1.5f,  0.5f,  
+		-0.5f,  1.5f, -0.5f,  
+		-0.5f, -1.5f, -0.5f,  
+		-0.5f, -1.5f, -0.5f,  
+		-0.5f, -1.5f,  0.5f,  
+		-0.5f,  1.5f,  0.5f,  
+				
+		 0.5f,  1.5f,  0.5f,  
+		 0.5f,  1.5f, -0.5f,  
+		 0.5f, -1.5f, -0.5f,  
+		 0.5f, -1.5f, -0.5f,  
+		 0.5f, -1.5f,  0.5f,  
+		 0.5f,  1.5f,  0.5f,  
+				
+		- 0.5f, -1.5f, -0.5f, 
+		 0.5f, -1.5f, -0.5f,  
+		 0.5f, -1.5f,  0.5f,  
+		 0.5f, -1.5f,  0.5f,  
+		-0.5f, -1.5f,  0.5f,  
+		-0.5f, -1.5f, -0.5f,  
+				
+		-0.5f,  1.5f, -0.5f,  
+		 0.5f,  1.5f, -0.5f,  
+		 0.5f,  1.5f,  0.5f,  
+		 0.5f,  1.5f,  0.5f,  
+		-0.5f,  1.5f,  0.5f,  
+		-0.5f,  1.5f, -0.5f  
+	};
+
+	float oddShapedVDataNormals[] =
+	{
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+		0.0f,  0.0f,  1.0f,
+
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f
+	};
+
+	float oddShapedTexCoordData[] =
+	{
+		0.0f,  0.0f,
+		1.0f,  0.0f,
+		1.0f,  1.0f,
+		1.0f,  1.0f,
+		0.0f,  1.0f,
+		0.0f,  0.0f,
+
+		0.0f,  0.0f,
+		1.0f,  0.0f,
+		1.0f,  1.0f,
+		1.0f,  1.0f,
+		0.0f,  1.0f,
+		0.0f,  0.0f,
+
+		1.0f,  0.0f,
+		1.0f,  1.0f,
+		0.0f,  1.0f,
+		0.0f,  1.0f,
+		0.0f,  0.0f,
+		1.0f,  0.0f,
+
+		1.0f,  0.0f,
+		1.0f,  1.0f,
+		0.0f,  1.0f,
+		0.0f,  1.0f,
+		0.0f,  0.0f,
+		1.0f,  0.0f,
+
+		0.0f,  1.0f,
+		1.0f,  1.0f,
+		1.0f,  0.0f,
+		1.0f,  0.0f,
+		0.0f,  0.0f,
+		0.0f,  1.0f,
+
+		0.0f,  1.0f,
+		1.0f,  1.0f,
+		1.0f,  0.0f,
+		1.0f,  0.0f,
+		0.0f,  0.0f,
+		0.0f,  1.0f
 	};
 
 	std::vector<Entity> entities(MAX_ENTITIES);
+	Entity ent_2;
 
 	entities[0] = COORD.CreateEntity();
+	entities[1] = COORD.CreateEntity();
+	entities[2] = COORD.CreateEntity();
 
 	c_Transform tr_0;
+	c_Transform tr_1;
+	c_Transform tr_2;
 	tr_0.pos = glm::vec3(0.0f,0.0f,0.0f);
 	tr_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	tr_1.pos = glm::vec3(-2.0f, 0.0f, 3.0f);
+	tr_1.scale = glm::vec3(0.5f, 0.5f, 0.5f);
+	tr_2.pos = glm::vec3(-0.2f, 0.0f, -2.5f);
+	tr_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	c_RenderableComponent rc_0;
-	rc_0.setVertexArray(vertexDataValues, sizeof(vertexDataValues));
+	rc_0.setPosVertexArray(vertexDataValues, sizeof(vertexDataValues));
+	rc_0.setSurfaceNormalVertexArray(surfaceNormalValues, sizeof(surfaceNormalValues));
 	//rc_0.vertices = vertexDataValues;
+
+	c_RenderableComponent rc_1;
+	rc_1.setPosVertexArray(oddShapeVertexData, sizeof(oddShapeVertexData));
+	rc_0.setSurfaceNormalVertexArray(oddShapedVDataNormals, sizeof(oddShapedVDataNormals));
+
+	c_Texture tx_0;
+	tx_0.setTexCoordsVertexArray(textureCoords, sizeof(textureCoords));
+	tx_0.texUnit = COORD.GenerateTexUnit("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2.png", "PNG");
+
+	c_Texture tx_1;
+	tx_1.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_1.texUnit = COORD.GenerateTexUnit("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2.png", "PNG");
+
+	c_Texture tx_2;
+	tx_2.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_2.texUnit = COORD.GenerateTexUnit("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/rockySurface.png", "PNG");
 
 	c_Modified md_0;
 	md_0.isModifed = true;
 
+	c_Modified md_1;
+	md_1.isModifed = true;
+
+	c_Modified md_2;
+	md_2.isModifed = true;
+
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[0], md_0);
 	COORD.SetUpRenderData(entities[0]);
 	COORD.setShaderForEntity(entities[0], sh_basicWithTex);
+
+	COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
+	COORD.AddComponentToEntity<c_RenderableComponent>(entities[1], rc_1);
+	COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
+	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
+	COORD.SetUpRenderData(entities[1]);
+	COORD.setShaderForEntity(entities[1], sh_basicWithTex);
+
+	COORD.AddComponentToEntity<c_Transform>(entities[2], tr_2);
+	COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
+	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
+	COORD.SetUpRenderData(entities[2]);
+	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
 
 	// END ECS - $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
@@ -180,6 +442,8 @@ int main(void)
 	Texture2D cubeTex("diffuse");
 	cubeTex.setupTexturePNG(0, "res/textures/container2.png");
 
+	auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[0]);
+	auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[0]);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -207,12 +471,13 @@ int main(void)
 		cubeModel = glm::scale(cubeModel, glm::vec3(1.0f, 1.0f, 1.0f));
 		sh_basicWithTex->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
-		cubeTex.changeTexUnit(0);
+		//cubeTex.changeTexUnit(0);
 
 		sh_basicWithTex->setUniformTextureUnit("colorTexture", 0);
 
-		GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
-		
+		//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+		//tr_0.pos.x = tr_0.pos.x + 1.0f;
+
 
 		COORD.runAllSystems(2.0f); //#ECS_RENDERING
 
@@ -221,7 +486,10 @@ int main(void)
 		//#Removed_1: 206 - 314
 
 		if (wireframe){
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			//posData.pos.x = posData.pos.x + 0.2f;
+			texData.texUnit = tx_2.texUnit;
+			COORD.GetComponentDataFromEntity<c_Modified>(entities[0]).isModifed = true;
 		}
 		else{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

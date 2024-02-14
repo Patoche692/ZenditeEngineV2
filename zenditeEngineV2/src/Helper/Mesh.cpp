@@ -161,7 +161,7 @@ void Mesh::loadDiffuseTextureFromMaterial()
 
 		const std::vector<Texture>& textures_loaded = modelRef->getLoadedTexRef();
 
-		for (unsigned int j = 0; j < textures_loaded.size(); j++) //#Optimization_using_hash_map_cachin
+		for (unsigned int j = 0; j < textures_loaded.size(); j++) //#Optimization_using_hash_map_caching
 		{
 			if (std::strcmp(textures_loaded[j].fullPath.data(), fullFilePath.c_str()) == 0)
 			{

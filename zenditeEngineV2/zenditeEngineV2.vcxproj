@@ -151,6 +151,7 @@
     <ClCompile Include="src\Helper\Node.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\TextureData.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="src\menu.h" />
     <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\TextureData.h" />
     <ClInclude Include="src\Texture2D.h" />
     <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
