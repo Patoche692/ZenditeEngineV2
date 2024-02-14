@@ -6,7 +6,7 @@
 class OpenGL_Manager : public I_API_Manager
 {
 private:
-	std::vector<TextureData> textures;
+	std::vector<std::shared_ptr<TextureData>> textures;
 
 public:
 	OpenGL_Manager()
@@ -74,6 +74,7 @@ public:
 			GLCALL(glEnableVertexAttribArray(2));
 
 			DH.texUnit = texVertexData.texUnit; //#TexUNIT_Set
+			DH.texture = textures[texVertexData.texUnit];
 		}
 		else
 		{
@@ -130,15 +131,15 @@ public:
 		//#SetUp Tex Unit here
 		if(m_Map_FILEPATHtoTEXUNIT.find(texFilePath) == m_Map_FILEPATHtoTEXUNIT.end())
 		{
-			textures.push_back(TextureData(texFilePath));
+			textures.push_back(std::make_shared<TextureData>(texFilePath));
 
 			if(fileType == "JPG")
 			{
-				textures[No_texUnits].setupTextureJPG(No_texUnits, texFilePath);
+				(textures[No_texUnits])->setupTextureJPG(No_texUnits, texFilePath);
 			}
 			else // PNG will be default 
 			{
-				textures[No_texUnits].setupTexturePNG(No_texUnits, texFilePath);
+				(textures[No_texUnits])->setupTexturePNG(No_texUnits, texFilePath);
 			}
 
 			m_Map_FILEPATHtoTEXUNIT[texFilePath] = No_texUnits;
