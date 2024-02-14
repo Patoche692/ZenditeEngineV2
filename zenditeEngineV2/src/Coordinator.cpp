@@ -98,6 +98,7 @@ unsigned short int Coordinator::GenerateTexUnit(std::string texFilePath, std::st
 void Coordinator::runAllSystems(float deltaTime)
 {
 	m_RenderableSystem->Render(m_Renderer, m_APImanager, m_ECSCoord);
+	
 }
 
 

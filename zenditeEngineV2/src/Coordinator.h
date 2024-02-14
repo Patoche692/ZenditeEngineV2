@@ -43,6 +43,12 @@ public:
 	void setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader);
 
 	template<typename T>
+	T& GetComponentDataFromEntity(Entity EID)
+	{
+		return m_ECSCoord->GetComponentDataFromEntity<T>(EID);
+	}
+
+	template<typename T>
 	void AddComponentToEntity(Entity EID, T comp)
 	{
 		m_ECSCoord->AddComponentToEntity<T>(EID, comp);

@@ -359,6 +359,7 @@ int main(void)
 	};
 
 	std::vector<Entity> entities(MAX_ENTITIES);
+	Entity ent_2;
 
 	entities[0] = COORD.CreateEntity();
 	entities[1] = COORD.CreateEntity();
@@ -441,6 +442,8 @@ int main(void)
 	Texture2D cubeTex("diffuse");
 	cubeTex.setupTexturePNG(0, "res/textures/container2.png");
 
+	auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[0]);
+	auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[0]);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -473,7 +476,8 @@ int main(void)
 		sh_basicWithTex->setUniformTextureUnit("colorTexture", 0);
 
 		//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
-		
+		//tr_0.pos.x = tr_0.pos.x + 1.0f;
+
 
 		COORD.runAllSystems(2.0f); //#ECS_RENDERING
 
@@ -482,7 +486,10 @@ int main(void)
 		//#Removed_1: 206 - 314
 
 		if (wireframe){
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			//posData.pos.x = posData.pos.x + 0.2f;
+			texData.texUnit = tx_2.texUnit;
+			COORD.GetComponentDataFromEntity<c_Modified>(entities[0]).isModifed = true;
 		}
 		else{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
