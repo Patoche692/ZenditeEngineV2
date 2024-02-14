@@ -488,15 +488,15 @@ int main(void)
 		if (wireframe){
 			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			//posData.pos.x = posData.pos.x + 0.2f;
-			texData.texUnit = tx_2.texUnit;
-			COORD.GetComponentDataFromEntity<c_Modified>(entities[0]).isModifed = true;
+			//texData.texUnit = tx_2.texUnit;
+			//COORD.GetComponentDataFromEntity<c_Modified>(entities[0]).isModifed = true;
 		}
 		else{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
 
-		genMenu_1(toggle, wireframe, rotation);
+		genMenu_1(posData);
 
 
 		glfwPollEvents();
