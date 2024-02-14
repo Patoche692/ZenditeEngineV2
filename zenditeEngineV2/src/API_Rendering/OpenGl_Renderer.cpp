@@ -25,7 +25,9 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, const c_Transform& 
 	cubeModel = glm::scale(cubeModel, trans.scale);
 	(DataHandle.shader)->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
-	(DataHandle.texture)->changeTexUnit(DataHandle.texUnit); //#Temporary, needs a mechanism for the system to select this
+	//(DataHandle.texture)->changeTexUnit(DataHandle.texUnit); //#unnecessary. Each texture is saved to a texture unit and is not changed throught the programs lifespan
+															   //			   This might be useful later if assigned texture units can be modified later during runtime
+															   //			   Although, all this does is take a texture and assign it to a texture unit.
 
 	(DataHandle.shader)->setUniformTextureUnit("colorTexture", DataHandle.texUnit);
 
