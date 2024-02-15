@@ -386,15 +386,15 @@ int main(void)
 
 	c_Texture tx_0;
 	tx_0.setTexCoordsVertexArray(textureCoords, sizeof(textureCoords));
-	tx_0.texUnit = COORD.GenerateTexUnit("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2.png", "PNG");
+	tx_0.texUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 
 	c_Texture tx_1;
 	tx_1.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
-	tx_1.texUnit = COORD.GenerateTexUnit("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/container2.png", "PNG");
+	tx_1.texUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 
 	c_Texture tx_2;
 	tx_2.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
-	tx_2.texUnit = COORD.GenerateTexUnit("C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/textures/rockySurface.png", "PNG");
+	tx_2.texUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
 
 	c_Modified md_0;
 	md_0.isModifed = true;
