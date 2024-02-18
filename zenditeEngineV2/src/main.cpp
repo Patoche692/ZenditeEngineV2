@@ -64,7 +64,7 @@ int main(void)
 	glfwSetScrollCallback(window, scroll_callback);
 
 	// tell GLFW to capture our mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	glfwSwapInterval(1);
 
@@ -567,12 +567,12 @@ void processInput(GLFWwindow* window)
 
 	if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
 		glfwSetCursorPosCallback(window, nullptr);
 	}
 	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
 	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //#BUG_CAUSED_HERE
 		glfwSetCursorPosCallback(window, mouse_callback);
 	}
 }
