@@ -7,8 +7,16 @@
 
 void imGuiSetup(GLFWwindow* window)
 {
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 130"); // Use GLSL version 130
+
+	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 }
 

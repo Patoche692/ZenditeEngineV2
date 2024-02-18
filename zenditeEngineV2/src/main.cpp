@@ -7,7 +7,7 @@
 #include "Shader.h"
 #include "Texture2D.h"
 #include "geometrySetup.h"
-//#include "menu.h"
+#include "menu.h"
 #include "Camera.h"
 
 #include "Helper/Model.h"
@@ -17,11 +17,7 @@
 #include "Coordinator.h"
 #include "ECS/Components.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
-
-//ECS implementation ver 1.0
+//ECS implementation ver 3.0
 
 namespace fs = std::filesystem;
 
@@ -35,6 +31,9 @@ std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
+bool trackMouseMovement = true;
+double savedXpos, savedYpos;
+double currentX, currentY;
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
@@ -58,13 +57,20 @@ int main(void)
 		glfwTerminate();
 		return -1;
 	}
+
+	GLFWcursorposfun previousCursorPosCallback = nullptr;
+
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetCursorPosCallback(window, mouse_callback);
+	previousCursorPosCallback = glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
+	//glfwSetCursorPosCallback(window, nullptr);
+	//glfwSetCursorPosCallback(window, mouse_callback);
+
 	// tell GLFW to capture our mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 
 	glfwSwapInterval(1);
 
@@ -73,17 +79,8 @@ int main(void)
 		std::cout << "I'm am not GLEW_OK, I'm GLEW_SAD :(\n";
 	}
 
-	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 130"); // Use GLSL version 130
-
-	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
+	imGuiSetup(window);
 
 
 	stbi_set_flip_vertically_on_load(true); //#### THIS NEEDS TO BE ACTIVE ### or else image texture will be upside down.
@@ -465,9 +462,15 @@ int main(void)
 
 	std::cout << "GLFW Version: " << major << "." << minor << "." << revision << std::endl;
 
+	//glfwSetCursorPosCallback(window, nullptr);
+	//glfwSetCursorPosCallback(window, mouse_callback);
+
+	double xx = 0.0f;
+	double yy = 0.0f;
 
 	while (!glfwWindowShouldClose(window))
 	{
+		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
@@ -518,19 +521,7 @@ int main(void)
 
 		glfwPollEvents();
 
-		// Start the Dear ImGui frame
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
-		// Here, you can start using ImGui to create interfaces
-		ImGui::Begin("Hello, world!");
-		ImGui::Text("This is some useful text.");
-		ImGui::End();
-
-		// Rendering
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		genMenu_1(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]));
 
 		processInput(window);
 
@@ -545,7 +536,6 @@ int main(void)
 	glfwTerminate();
 	return 0;
 }
-
 
 void processInput(GLFWwindow* window)
 {
@@ -565,16 +555,37 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		camera->ProcessKeyboard(DOWN, deltaTime);
 
+	
 	if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{
+
+		//glfwGetCursorPos(window, &savedXpos, &savedYpos);
+		savedXpos = currentX;
+		savedYpos = currentY;
+		trackMouseMovement = false;
+
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
-		glfwSetCursorPosCallback(window, nullptr);
+		
+		
 	}
 	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
 	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //#BUG_CAUSED_HERE
-		glfwSetCursorPosCallback(window, mouse_callback);
+		//glfwSetCursorPos(window, savedXpos, savedYpos);
+
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+		lastX = savedXpos;
+		lastY = savedYpos;
+
+		currentX = lastX;
+		currentY = lastY;
+
+		glfwSetCursorPos(window, currentX, currentY);
+		 
+		trackMouseMovement = true;
+		
 	}
+	
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -591,23 +602,30 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
 	
-	float xpos = static_cast<float>(xposIn);
-	float ypos = static_cast<float>(yposIn);
-
-	if (firstMouse)
+	if (trackMouseMovement)
 	{
+
+		float xpos = static_cast<float>(xposIn);
+		float ypos = static_cast<float>(yposIn);
+
+		currentX = xpos;
+		currentY = ypos;
+
+		if (firstMouse)
+		{
+			lastX = xpos;
+			lastY = ypos;
+			firstMouse = false;
+		}
+
+		float xoffset = xpos - lastX;
+		float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
 		lastX = xpos;
 		lastY = ypos;
-		firstMouse = false;
+
+		camera->ProcessMouseMovement(xoffset, yoffset);
 	}
-
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-	lastX = xpos;
-	lastY = ypos;
-
-	camera->ProcessMouseMovement(xoffset, yoffset);
 	
 }
 
