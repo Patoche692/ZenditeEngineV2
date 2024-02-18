@@ -7,7 +7,7 @@
 #include "Shader.h"
 #include "Texture2D.h"
 #include "geometrySetup.h"
-#include "menu.h"
+//#include "menu.h"
 #include "Camera.h"
 
 #include "Helper/Model.h"
@@ -16,6 +16,10 @@
 
 #include "Coordinator.h"
 #include "ECS/Components.h"
+
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 //ECS implementation ver 1.0
 
@@ -69,6 +73,18 @@ int main(void)
 		std::cout << "I'm am not GLEW_OK, I'm GLEW_SAD :(\n";
 	}
 
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	// Setup Platform/Renderer bindings
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 130"); // Use GLSL version 130
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+
 
 	stbi_set_flip_vertically_on_load(true); //#### THIS NEEDS TO BE ACTIVE ### or else image texture will be upside down.
 	//std::cout << "Current working directory: " << fs::current_path() << std::endl;
@@ -79,9 +95,6 @@ int main(void)
 	std::cout << glGetString(GL_VERSION) << "\n";
 
 	//#Removed_2: 92 - 184
-
-	//IMGUI setup:
-	imGuiSetup(window);
 
 	//Check the number of texture units we can have on the GPU
 	GLint maxTextureUnits;
@@ -445,9 +458,16 @@ int main(void)
 	auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[0]);
 	auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[0]);
 
+	std::cout << "\nImGui Version: " << IMGUI_VERSION << std::endl;
+
+	int major, minor, revision;
+	glfwGetVersion(&major, &minor, &revision);
+
+	std::cout << "GLFW Version: " << major << "." << minor << "." << revision << std::endl;
+
+
 	while (!glfwWindowShouldClose(window))
 	{
-		processInput(window);
 
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
@@ -496,16 +516,32 @@ int main(void)
 		}
 
 
-		genMenu_1(posData);
-
-
 		glfwPollEvents();
+
+		// Start the Dear ImGui frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		// Here, you can start using ImGui to create interfaces
+		ImGui::Begin("Hello, world!");
+		ImGui::Text("This is some useful text.");
+		ImGui::End();
+
+		// Rendering
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		processInput(window);
 
 		glfwSwapBuffers(window);
 
 		
 	}
 
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 	glfwTerminate();
 	return 0;
 }
