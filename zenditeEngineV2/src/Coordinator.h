@@ -34,6 +34,12 @@ public:
 
 	void SetUpSystemBitsets();
 
+	template<typename T>
+	Signature GetSystemBitset()
+	{
+		return m_ECSCoord->GetSystemBitsetSignature<T>();
+	}
+
 	void SetUpRenderData(Entity EID);
 
 	Entity CreateEntity();

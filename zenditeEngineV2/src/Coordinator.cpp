@@ -77,7 +77,16 @@ void Coordinator::SetUpSystemBitsets()
 
 void Coordinator::SetUpRenderData(Entity EID)
 {
-	m_APImanager->SetupRenderData(EID, m_ECSCoord);
+	// if ((entitySig & sysSig) == sysSig)
+
+	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>())
+	{
+		m_APImanager->SetupRenderData(EID, m_ECSCoord);
+	}
+	else
+	{
+		std::cout << "\nNOTIFY: Attempting to Set Up Render Data on EID: " << EID << " Which is without a renderable component" << std::endl;
+	}
 }
 
 Entity Coordinator::CreateEntity()
@@ -87,7 +96,14 @@ Entity Coordinator::CreateEntity()
 
 void Coordinator::setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader)
 {
-	m_APImanager->SetShaderForEntity(EID, shader);
+	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>())
+	{
+		m_APImanager->SetShaderForEntity(EID, shader);
+	}
+	else
+	{
+		std::cout << "NOTIFY: Attempting to set shader for EID: " << EID << " which is without a renderable component" << std::endl;
+	}
 }
 
 unsigned short int Coordinator::GenerateTexUnit(std::string texFilePath, std::string fileType)

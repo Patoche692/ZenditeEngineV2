@@ -104,6 +104,9 @@ int main(void)
 	COORD.RegisterSystems();
 	COORD.SetUpSystemBitsets();
 
+	std::cout << "\nRenderableSystem bitset: " << COORD.GetSystemBitset<RenderableSystem>() << std::endl;
+	std::cout << "\Rigid_CollisionDetectionSystem bitset: " << COORD.GetSystemBitset<Rigid_CollisionDetectionSystem>() << std::endl;
+
 	std::shared_ptr<Shader> sh_basicWithTex = std::make_shared<Shader>("res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
 		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
 
@@ -430,7 +433,7 @@ int main(void)
 	COORD.setShaderForEntity(entities[1], sh_basicWithTex);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[2], tr_2);
-	COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
+	//COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
 	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
 	COORD.SetUpRenderData(entities[2]);
