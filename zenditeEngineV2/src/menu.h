@@ -5,6 +5,9 @@
 
 #include "ECS/Components.h"
 
+int selectedOption = 0; // You can assign default selection here, 0 for Option A, 1 for Option B, etc.
+int lastSelectedOption = selectedOption;
+
 void imGuiSetup(GLFWwindow* window)
 {
 	// Setup Dear ImGui context
@@ -20,7 +23,7 @@ void imGuiSetup(GLFWwindow* window)
 	ImGui::StyleColorsDark();
 }
 
-void genMenu_1(c_Transform& posData)
+void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, short int containerTexUnit, unsigned short int rockySurfaceTexUnit)
 {
 
 	// Start the Dear ImGui frame
@@ -41,6 +44,35 @@ void genMenu_1(c_Transform& posData)
 	}
 
 	ImGui::NewLine();
+
+	
+
+	
+	ImGui::Text("Choose a Texture:");
+	if (ImGui::RadioButton("Wooden Box", selectedOption == 0)) 
+	{
+		selectedOption = 0;
+		if (selectedOption != lastSelectedOption)
+		{
+			
+			texData.texUnit = containerTexUnit;
+			modified.isModifed = true;
+			lastSelectedOption = selectedOption;
+			std::cout << selectedOption << std::endl;
+		}
+	}
+	if (ImGui::RadioButton("Rocky Surface", selectedOption == 1)) 
+	{
+		selectedOption = 1;
+		if (selectedOption != lastSelectedOption)
+		{
+			
+			texData.texUnit = rockySurfaceTexUnit;
+			modified.isModifed = true;
+			lastSelectedOption = selectedOption;
+			std::cout << selectedOption << std::endl;
+		}
+	}
 
 	ImGui::End();
 

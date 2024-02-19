@@ -372,11 +372,13 @@ int main(void)
 	};
 
 	std::vector<Entity> entities(MAX_ENTITIES);
-	Entity ent_2;
-
+	
 	entities[0] = COORD.CreateEntity();
 	entities[1] = COORD.CreateEntity();
 	entities[2] = COORD.CreateEntity();
+
+	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
+	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
 
 	c_Transform tr_0;
 	c_Transform tr_1;
@@ -399,15 +401,16 @@ int main(void)
 
 	c_Texture tx_0;
 	tx_0.setTexCoordsVertexArray(textureCoords, sizeof(textureCoords));
-	tx_0.texUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
+
+	tx_0.texUnit = containerTexUnit;
 
 	c_Texture tx_1;
 	tx_1.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
-	tx_1.texUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
+	tx_1.texUnit = containerTexUnit;
 
 	c_Texture tx_2;
 	tx_2.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
-	tx_2.texUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
+	tx_2.texUnit = rockySurfaceTexUnit;
 
 	c_Modified md_0;
 	md_0.isModifed = true;
@@ -422,8 +425,10 @@ int main(void)
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[0], md_0);
-	COORD.SetUpRenderData(entities[0]);
-	COORD.setShaderForEntity(entities[0], sh_basicWithTex);
+	COORD.SetUpRenderData(entities[0]); //#NOTE: SetUpRenderData and setShaderForEntity will do nothing if the entity does no have a c_RenderableComponent
+	COORD.setShaderForEntity(entities[0], sh_basicWithTex); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
+	COORD.StoreShaderInEntityDataHandle(entities[0]);
+
 
 	COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[1], rc_1);
@@ -431,6 +436,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
 	COORD.SetUpRenderData(entities[1]);
 	COORD.setShaderForEntity(entities[1], sh_basicWithTex);
+	COORD.StoreShaderInEntityDataHandle(entities[1]);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[2], tr_2);
 	//COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
@@ -438,6 +444,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
 	COORD.SetUpRenderData(entities[2]);
 	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
+	COORD.StoreShaderInEntityDataHandle(entities[2]);
 
 	// END ECS - $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
@@ -457,6 +464,7 @@ int main(void)
 
 	auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[0]);
 	auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[0]);
+	auto& modifiedData = COORD.GetComponentDataFromEntity<c_Modified>(entities[0]);
 
 	std::cout << "\nImGui Version: " << IMGUI_VERSION << std::endl;
 
@@ -524,7 +532,8 @@ int main(void)
 
 		glfwPollEvents();
 
-		genMenu_1(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]));
+		//c_Transform& posData, c_Texture& texData, c_Modified& modified, short int containerTexUnit, unsigned short int rockySurfaceTexUnit
+		genMenu_1(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), texData, modifiedData, containerTexUnit, rockySurfaceTexUnit);
 
 		processInput(window);
 

@@ -117,11 +117,27 @@ public:
 		}
 	}
 
+	std::shared_ptr<Shader> GetEntityShader(Entity EID) const
+	{
+		DEBUG_ASSERT(m_Map_ENTITYtoSHADER.find(EID) != m_Map_ENTITYtoSHADER.end(), "EID does not exist");
+
+		auto it = m_Map_ENTITYtoSHADER.find(EID);
+
+		return it->second;
+	}
+
 	void SetShaderForEntity(Entity EID, std::shared_ptr<Shader> shader) override
+	{
+		DEBUG_ASSERT(m_Map_ENTITYtoHANDLE.find(EID) != m_Map_ENTITYtoHANDLE.end(), "Entity does not exist");
+		
+		m_Map_ENTITYtoSHADER[EID] = shader;
+	}
+
+	void SetShaderForDataHandle(Entity EID) override
 	{
 		R_DataHandle& DH = GetNonConstEntityDataHandle(EID);
 
-		DH.shader = shader;
+		DH.shader = m_Map_ENTITYtoSHADER[EID];
 	}
 
 	unsigned short int GenerateTexUnit(std::string texFilePath, std::string fileType) override

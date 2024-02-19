@@ -35,6 +35,7 @@ public:
 			if (ECScoord->GetComponentDataFromEntity<c_Modified>(EID).isModifed)
 			{
 				apiManager->SetupRenderData(EID, ECScoord);
+				apiManager->SetShaderForDataHandle(EID);
 
 			}
 

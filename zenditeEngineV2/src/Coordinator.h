@@ -48,6 +48,8 @@ public:
 	
 	void setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader);
 
+	void StoreShaderInEntityDataHandle(Entity EID);
+
 	template<typename T>
 	T& GetComponentDataFromEntity(Entity EID)
 	{

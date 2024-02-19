@@ -106,6 +106,18 @@ void Coordinator::setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader)
 	}
 }
 
+void Coordinator::StoreShaderInEntityDataHandle(Entity EID)
+{
+	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>())
+	{
+		m_APImanager->SetShaderForDataHandle(EID);
+	}
+	else
+	{
+		std::cout << "NOTIFY: Attempting to set shader for EID: " << EID << " which is without a renderable component" << std::endl;
+	}
+}
+
 unsigned short int Coordinator::GenerateTexUnit(std::string texFilePath, std::string fileType)
 {
 	return m_APImanager->GenerateTexUnit(texFilePath, fileType);
