@@ -455,6 +455,7 @@ int main(void)
 	auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[0]);
 	auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[0]);
 
+
 	std::cout << "\nImGui Version: " << IMGUI_VERSION << std::endl;
 
 	int major, minor, revision;
