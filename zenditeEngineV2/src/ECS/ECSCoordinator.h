@@ -105,5 +105,11 @@ public:
 		return m_ComponentManager;
 	}
 
+	template<typename T>
+	ComponentBitsetPos GetComponentBitsetPos() const
+	{
+		return m_ComponentManager->GetComponentBitsetPos<T>();
+	}
+
 };
 

@@ -11,8 +11,13 @@ Pos=73,103
 Size=587,314
 
 [Window][Hello, world!]
+<<<<<<< HEAD
+Pos=697,39
+Size=450,355
+=======
 Pos=706,415
 Size=407,341
+>>>>>>> GEA/ECSver3
 
 [Window][Entities]
 Pos=79,52

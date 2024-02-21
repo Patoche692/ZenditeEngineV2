@@ -43,23 +43,11 @@ public:
 		GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
 		GLCALL(glEnableVertexAttribArray(1));
 
-
-		//Texture Coordinates Data:
-		//GLCALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)(0));
-		//GLCALL(glEnableVertexAttribArray(2));
-
-		
-		//Get The texture if the bitset matches the texture.
-		//DH.texture = std::make_unique<Texture2D>("diffuse");
-		//(DH.texture)->setupTexturePNG(0, "res/textures/container2.png");
-
 		short int bitSetPos = ECScoord->GetComponentBitsetPos<c_Texture>();
-
 		std::bitset<32> textureBitset; // Create a bitset of size 32
 		textureBitset.set(bitSetPos);
 
 		std::bitset<32> entitySig = ECScoord->GetEntitySignature(EID);
-		
 
 		if ((entitySig & textureBitset) == textureBitset) // If this entity has a texture component
 		{
@@ -81,11 +69,34 @@ public:
 			
 		}
 
-		ECScoord->GetComponentDataFromEntity<c_Modified>(EID).isModifed = false;
-
 		m_Map_ENTITYtoHANDLE[EID] = DH; //Insert modified DH into the map.
 	
 		GLCALL(glBindVertexArray(0)); //Unbind the VAO
+	}
+
+	void SetupAABBRenderData(Entity EID, std::shared_ptr<ECSCoordinator> ECScoord)
+	{
+		R_DataHandle DH;
+
+		GLCALL(glGenVertexArrays(1, &(DH.AABB_VAO)));
+		GLCALL(glBindVertexArray(DH.AABB_VAO));
+
+		c_AABB vertexDataAABB = ECScoord->GetComponentDataFromEntity<c_AABB>(EID);
+		GLCALL(glGenBuffers(1, &(DH.AABB_posVBO)));
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.AABB_posVBO));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, 36*3*sizeof(float), vertexDataAABB.vertices, GL_STATIC_DRAW));
+		GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
+		GLCALL(glEnableVertexAttribArray(0));
+
+		if(m_Map_ENTITYtoHANDLE.find(EID) == m_Map_ENTITYtoHANDLE.end()) //If EID is not in the map
+		{
+			m_Map_ENTITYtoHANDLE[EID] = DH;
+		}
+		else
+		{
+			m_Map_ENTITYtoHANDLE[EID].AABB_VAO = DH.AABB_VAO;
+			m_Map_ENTITYtoHANDLE[EID].AABB_posVBO = DH.AABB_posVBO;
+		}
 	}
 
 	R_DataHandle const& GetEntityDataHandle(Entity EID) const override
@@ -117,11 +128,27 @@ public:
 		}
 	}
 
+	std::shared_ptr<Shader> GetEntityShader(Entity EID) const
+	{
+		DEBUG_ASSERT(m_Map_ENTITYtoSHADER.find(EID) != m_Map_ENTITYtoSHADER.end(), "EID does not exist");
+
+		auto it = m_Map_ENTITYtoSHADER.find(EID);
+
+		return it->second;
+	}
+
 	void SetShaderForEntity(Entity EID, std::shared_ptr<Shader> shader) override
+	{
+		DEBUG_ASSERT(m_Map_ENTITYtoHANDLE.find(EID) != m_Map_ENTITYtoHANDLE.end(), "Entity does not exist");
+		
+		m_Map_ENTITYtoSHADER[EID] = shader;
+	}
+
+	void SetShaderForDataHandle(Entity EID) override
 	{
 		R_DataHandle& DH = GetNonConstEntityDataHandle(EID);
 
-		DH.shader = shader;
+		DH.shader = m_Map_ENTITYtoSHADER[EID];
 	}
 
 	unsigned short int GenerateTexUnit(std::string texFilePath, std::string fileType) override

@@ -5,11 +5,13 @@
 
 #include "ECS/Components.h"
 
+<<<<<<< HEAD
 #include <cstdlib>
 
-
+=======
 int selectedOption = 0; // You can assign default selection here, 0 for Option A, 1 for Option B, etc.
 int lastSelectedOption = selectedOption;
+>>>>>>> GEA/ECSver3
 
 void imGuiSetup(GLFWwindow* window)
 {

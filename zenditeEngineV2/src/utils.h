@@ -62,6 +62,10 @@ struct R_DataHandle
 	std::bitset<32> signature;
 
 	std::string name;
+
+	//EXTRA:
+	unsigned AABB_VAO;
+	unsigned AABB_posVBO;
 };
 
 struct transform
