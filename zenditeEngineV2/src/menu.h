@@ -74,6 +74,16 @@ void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, s
 		}
 	}
 
+	ImGui::NewLine();
+	ImGui::NewLine();
+
+	//Radio Button Testing:
+	/*
+	if (ImGui::RadioButton("Label", &variable, value)) {
+		// Action to take when this radio button is selected
+	}
+	*/
+
 	ImGui::End();
 
 	// Rendering

@@ -1,9 +1,7 @@
 #pragma once
 #include "ECS/ECSCoordinator.h"
-#include "ECS/Systems/Im_CollisionDetectionSystem.h"
-#include "ECS/Systems/Rigid_CollisionDetectionSystem.h"
 #include "ECS/Systems/RenderableSystem.h"
-#include "ECS/Systems/Trigger_CollisionDetectionSystem.h"
+#include "ECS/Systems/RenderAABBSystem.h"
 #include "API_Rendering/OpenGL_Manager.h"
 
 class Camera;
@@ -20,9 +18,7 @@ private:
 
 	//Systems:
 	std::shared_ptr<RenderableSystem> m_RenderableSystem;
-	std::shared_ptr<Rigid_CollisionDetectionSystem> m_Rigid_CollisionDetectionSystem;
-	std::shared_ptr<Im_CollisionDetectionSystem> m_Im_CollisionDetectionSystem;
-	std::shared_ptr<Trigger_CollisionDetectionSystem> m_Trigger_CollisionDetectionSystem;
+	std::shared_ptr<RenderAABBSystem> m_RenderAABBSystem;
 
 	
 public:
@@ -44,7 +40,7 @@ public:
 
 	Entity CreateEntity();
 
-	void runAllSystems(float deltaTime);
+	void runAllSystems(float deltaTime, std::vector<Entity>* entities);
 	
 	void setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader);
 
@@ -60,6 +56,12 @@ public:
 	void AddComponentToEntity(Entity EID, T comp)
 	{
 		m_ECSCoord->AddComponentToEntity<T>(EID, comp);
+	}
+
+	template<typename T>
+	void RemoveComponentFromEntity(Entity EID)
+	{
+		m_ECSCoord->RemoveComponentFromEntity<T>(EID);
 	}
 
 	std::shared_ptr<ComponentManager> GetComponentManager()

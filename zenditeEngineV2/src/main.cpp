@@ -105,49 +105,57 @@ int main(void)
 	COORD.SetUpSystemBitsets();
 
 	std::cout << "\nRenderableSystem bitset: " << COORD.GetSystemBitset<RenderableSystem>() << std::endl;
-	std::cout << "\Rigid_CollisionDetectionSystem bitset: " << COORD.GetSystemBitset<Rigid_CollisionDetectionSystem>() << std::endl;
+	//std::cout << "\Rigid_CollisionDetectionSystem bitset: " << COORD.GetSystemBitset<Rigid_CollisionDetectionSystem>() << std::endl;
 
 	std::shared_ptr<Shader> sh_basicWithTex = std::make_shared<Shader>("res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
-		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
+		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl"); //#Shaders have not yet been abstracted into the API_Manger
+
 
 	//#TODO Need to pass data read in from the model loader to the ECS system for rendering.
 	float vertexDataValues[] = {
-		// positions          // normals           // texture coords
+		// positions          
 		-0.5f, -0.5f, -0.5f,
 		 0.5f, -0.5f, -0.5f,
 		 0.5f,  0.5f, -0.5f,
 		 0.5f,  0.5f, -0.5f,
 		-0.5f,  0.5f, -0.5f,
+
 		-0.5f, -0.5f, -0.5f,
 		-0.5f, -0.5f,  0.5f,
 		 0.5f, -0.5f,  0.5f,
 		 0.5f,  0.5f,  0.5f,
 		 0.5f,  0.5f,  0.5f,
+
 		-0.5f,  0.5f,  0.5f,
 		-0.5f, -0.5f,  0.5f,
 		-0.5f,  0.5f,  0.5f,
 		-0.5f,  0.5f, -0.5f,
 		-0.5f, -0.5f, -0.5f,
+
 		-0.5f, -0.5f, -0.5f,
 		-0.5f, -0.5f,  0.5f,
 		-0.5f,  0.5f,  0.5f,
 		 0.5f,  0.5f,  0.5f,
 		 0.5f,  0.5f, -0.5f,
+
 		 0.5f, -0.5f, -0.5f,
 		 0.5f, -0.5f, -0.5f,
 		 0.5f, -0.5f,  0.5f,
 		 0.5f,  0.5f,  0.5f,
 		-0.5f, -0.5f, -0.5f,
+
 		 0.5f, -0.5f, -0.5f,
 		 0.5f, -0.5f,  0.5f,
 		 0.5f, -0.5f,  0.5f,
 		-0.5f, -0.5f,  0.5f,
 		-0.5f, -0.5f, -0.5f,
+
 		-0.5f,  0.5f, -0.5f,
 		 0.5f,  0.5f, -0.5f,
 		 0.5f,  0.5f,  0.5f,
 		 0.5f,  0.5f,  0.5f,
 		-0.5f,  0.5f,  0.5f,
+
 		-0.5f,  0.5f, -0.5f
 	};
 
@@ -421,6 +429,10 @@ int main(void)
 	c_Modified md_2;
 	md_2.isModifed = true;
 
+	c_AABB aabb_2;
+	aabb_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	aabb_2.vertices = vertexDataValues;
+
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
@@ -440,7 +452,8 @@ int main(void)
 
 	COORD.AddComponentToEntity<c_Transform>(entities[2], tr_2);
 	//COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
-	COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
+	//COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
+	COORD.AddComponentToEntity<c_AABB>(entities[2], aabb_2);
 	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
 	COORD.SetUpRenderData(entities[2]);
 	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
@@ -513,7 +526,7 @@ int main(void)
 		//tr_0.pos.x = tr_0.pos.x + 1.0f;
 
 
-		COORD.runAllSystems(2.0f); //#ECS_RENDERING
+		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
 
 		/* End Rendering Code */ // ----------------------------------------------
 

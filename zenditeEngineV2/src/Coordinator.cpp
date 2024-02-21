@@ -32,18 +32,14 @@ void Coordinator::RegisterComponents()
 	m_ECSCoord->RegisterComponent<c_Transform>();
 	m_ECSCoord->RegisterComponent<c_RenderableComponent>();
 	m_ECSCoord->RegisterComponent<c_Texture>();
-	m_ECSCoord->RegisterComponent<c_RigidBodyCollidable>();
-	m_ECSCoord->RegisterComponent<c_ImmovableCollidable>();
+	m_ECSCoord->RegisterComponent<c_AABB>();
 	m_ECSCoord->RegisterComponent<c_Modified>();
-	m_ECSCoord->RegisterComponent<c_CollidableTrigger>();
 }
 
 void Coordinator::RegisterSystems() //And add them to the system manager list
 {
 	m_RenderableSystem = std::static_pointer_cast<RenderableSystem>(m_ECSCoord->RegisterSystem<RenderableSystem>());
-	m_Rigid_CollisionDetectionSystem = std::static_pointer_cast<Rigid_CollisionDetectionSystem>(m_ECSCoord->RegisterSystem<Rigid_CollisionDetectionSystem>());
-	m_Im_CollisionDetectionSystem = std::static_pointer_cast<Im_CollisionDetectionSystem>(m_ECSCoord->RegisterSystem<Im_CollisionDetectionSystem>());
-	m_Trigger_CollisionDetectionSystem = std::static_pointer_cast<Trigger_CollisionDetectionSystem>(m_ECSCoord->RegisterSystem<Trigger_CollisionDetectionSystem>());
+	m_RenderAABBSystem = std::static_pointer_cast<RenderAABBSystem>(m_ECSCoord->RegisterSystem<RenderAABBSystem>());
 }
 
 void Coordinator::SetUpSystemBitsets()
@@ -55,23 +51,12 @@ void Coordinator::SetUpSystemBitsets()
 	RenerableSysSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 	m_ECSCoord->SetSystemBitsetSignature<RenderableSystem>(RenerableSysSig);
 
-	Signature Rigid_CollisionDetectionSystemSig;
-	Rigid_CollisionDetectionSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
-	Rigid_CollisionDetectionSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_RigidBodyCollidable>());
-	Rigid_CollisionDetectionSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
-	m_ECSCoord->SetSystemBitsetSignature<Rigid_CollisionDetectionSystem>(Rigid_CollisionDetectionSystemSig);
-
-	Signature Im_CollisionDetectionSystemSig;
-	Im_CollisionDetectionSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
-	Im_CollisionDetectionSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_ImmovableCollidable>());
-	Im_CollisionDetectionSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
-	m_ECSCoord->SetSystemBitsetSignature<Im_CollisionDetectionSystem>(Im_CollisionDetectionSystemSig);
-
-	Signature Trigger_CollisionDetectionSystemSig;
-	Trigger_CollisionDetectionSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
-	Trigger_CollisionDetectionSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_RigidBodyCollidable>());
-	Trigger_CollisionDetectionSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
-	m_ECSCoord->SetSystemBitsetSignature<Trigger_CollisionDetectionSystem>(Trigger_CollisionDetectionSystemSig);
+	Signature RenderAABBSystemSig;
+	RenderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
+	//RenderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_RenderableComponent>());
+	RenderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_AABB>());
+	RenderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
+	m_ECSCoord->SetSystemBitsetSignature<RenderAABBSystem>(RenderAABBSystemSig);
 
 }
 
@@ -123,9 +108,15 @@ unsigned short int Coordinator::GenerateTexUnit(std::string texFilePath, std::st
 	return m_APImanager->GenerateTexUnit(texFilePath, fileType);
 }
 
-void Coordinator::runAllSystems(float deltaTime)
+void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)
 {
 	m_RenderableSystem->Render(m_Renderer, m_APImanager, m_ECSCoord);
+	m_RenderAABBSystem->RenderAABBs(m_Renderer, m_APImanager, m_ECSCoord);
+
+	for (auto const& EID : *entities)
+	{
+		m_ECSCoord->GetComponentDataFromEntity<c_Modified>(EID).isModifed = false;
+	}
 	
 }
 

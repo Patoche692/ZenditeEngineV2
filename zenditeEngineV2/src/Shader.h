@@ -38,4 +38,5 @@ public:
 	void setUniformMat4(std::string name, GLboolean transpose, const GLfloat* mat);
 
 	void bindProgram() const;
+
 };
