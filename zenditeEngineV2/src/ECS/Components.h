@@ -61,6 +61,11 @@ struct c_Texture
 	size_t arraySize;
 };
 
+struct c_Light
+{
+
+};
+
 struct c_RigidBodyCollidable
 {
 
