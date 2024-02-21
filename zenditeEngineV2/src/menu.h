@@ -44,9 +44,6 @@ void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, s
 	}
 
 	ImGui::NewLine();
-
-	
-
 	
 	ImGui::Text("Choose a Texture:");
 	if (ImGui::RadioButton("Wooden Box", selectedOption == 0)) 

@@ -54,5 +54,6 @@ void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle,
 
 	AABBShader.setUniform4f("lineColor", 1.0f, 0.08f, 0.58f, 1.0f);
 
-	GLCALL(glDrawArrays(GL_LINES, 0, 36));
+	GLCALL(glDrawArrays(GL_LINES, 0, 24));
+
 }

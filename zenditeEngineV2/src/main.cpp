@@ -379,6 +379,22 @@ int main(void)
 		0.0f,  1.0f
 	};
 
+	//size 72 values
+	float AABBvertices[] = {
+	-1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  // Edge 1
+	 1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  // Edge 2
+	 1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  // Edge 3
+	-1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  // Edge 4
+	-1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  // Edge 5
+	 1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  // Edge 6
+	 1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  // Edge 7
+	-1.0f,  1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  // Edge 8
+	-1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f,  // Edge 9
+	 1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  // Edge 10
+	 1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  // Edge 11
+	-1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f   // Edge 12
+	};
+
 	std::vector<Entity> entities(MAX_ENTITIES);
 	
 	entities[0] = COORD.CreateEntity();
@@ -387,6 +403,8 @@ int main(void)
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
+	unsigned short int heightMapTex = COORD.GenerateTexUnit("res/textures/heightmap.png", "PNG");
+
 
 	c_Transform tr_0;
 	c_Transform tr_1;
@@ -420,6 +438,10 @@ int main(void)
 	tx_2.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_2.texUnit = rockySurfaceTexUnit;
 
+	c_Texture tex_3;
+	tex_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tex_3.texUnit = heightMapTex;
+
 	c_Modified md_0;
 	md_0.isModifed = true;
 
@@ -431,7 +453,7 @@ int main(void)
 
 	c_AABB aabb_2;
 	aabb_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	aabb_2.vertices = vertexDataValues;
+	aabb_2.vertices = AABBvertices;
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
@@ -444,7 +466,7 @@ int main(void)
 
 	COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[1], rc_1);
-	COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
+	COORD.AddComponentToEntity<c_Texture>(entities[1], tex_3);
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
 	COORD.SetUpRenderData(entities[1]);
 	COORD.setShaderForEntity(entities[1], sh_basicWithTex);
@@ -458,6 +480,9 @@ int main(void)
 	COORD.SetUpRenderData(entities[2]);
 	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
 	COORD.StoreShaderInEntityDataHandle(entities[2]);
+	
+	std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
+	std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
 
 	// END ECS - $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
@@ -559,6 +584,9 @@ int main(void)
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 	glfwTerminate();
+
+	std::cin.get();
+
 	return 0;
 }
 

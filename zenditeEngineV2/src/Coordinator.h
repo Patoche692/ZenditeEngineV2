@@ -36,6 +36,8 @@ public:
 		return m_ECSCoord->GetSystemBitsetSignature<T>();
 	}
 
+	Signature GetEntitySignature(Entity EID);
+
 	void SetUpRenderData(Entity EID);
 
 	Entity CreateEntity();
@@ -67,6 +69,12 @@ public:
 	std::shared_ptr<ComponentManager> GetComponentManager()
 	{
 		return m_ECSCoord->GetComponentManager();
+	}
+
+	template<typename T>
+	ComponentBitsetPos GetComponentBitsetPos() const
+	{
+		return m_ECSCoord->GetComponentBitsetPos<T>();
 	}
 
 	unsigned short int GenerateTexUnit(std::string texFilePath, std::string fileType);

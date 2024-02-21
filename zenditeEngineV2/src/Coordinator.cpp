@@ -60,6 +60,11 @@ void Coordinator::SetUpSystemBitsets()
 
 }
 
+Signature Coordinator::GetEntitySignature(Entity EID)
+{
+	return m_ECSCoord->GetEntitySignature(EID);
+}
+
 void Coordinator::SetUpRenderData(Entity EID)
 {
 	// if ((entitySig & sysSig) == sysSig)
