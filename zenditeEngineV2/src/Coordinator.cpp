@@ -39,6 +39,7 @@ void Coordinator::RegisterComponents()
 void Coordinator::RegisterSystems() //And add them to the system manager list
 {
 	m_RenderableSystem = std::static_pointer_cast<RenderableSystem>(m_ECSCoord->RegisterSystem<RenderableSystem>());
+	m_CollisionDetectionAABBSystem = std::static_pointer_cast<CollisionDetectionAABBSystem>(m_ECSCoord->RegisterSystem<CollisionDetectionAABBSystem>());
 	m_RenderAABBSystem = std::static_pointer_cast<RenderAABBSystem>(m_ECSCoord->RegisterSystem<RenderAABBSystem>());
 }
 
@@ -53,10 +54,14 @@ void Coordinator::SetUpSystemBitsets()
 
 	Signature RenderAABBSystemSig;
 	RenderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
-	//RenderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_RenderableComponent>());
 	RenderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_AABB>());
 	RenderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 	m_ECSCoord->SetSystemBitsetSignature<RenderAABBSystem>(RenderAABBSystemSig);
+
+	Signature CollisionDetectionAABBSystem;
+	CollisionDetectionAABBSystem.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
+	CollisionDetectionAABBSystem.set(m_ECSCoord->GetComponentBitsetPos<c_AABB>());
+	CollisionDetectionAABBSystem.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 
 }
 
@@ -116,6 +121,7 @@ unsigned short int Coordinator::GenerateTexUnit(std::string texFilePath, std::st
 void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)
 {
 	m_RenderableSystem->Render(m_Renderer, m_APImanager, m_ECSCoord);
+	
 	m_RenderAABBSystem->RenderAABBs(m_Renderer, m_APImanager, m_ECSCoord);
 
 	for (auto const& EID : *entities)

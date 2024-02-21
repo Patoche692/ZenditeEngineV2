@@ -2,6 +2,7 @@
 #include "ECS/ECSCoordinator.h"
 #include "ECS/Systems/RenderableSystem.h"
 #include "ECS/Systems/RenderAABBSystem.h"
+#include "ECS/Systems/CollisionDetectionAABBSystem.h"
 #include "API_Rendering/OpenGL_Manager.h"
 
 class Camera;
@@ -18,6 +19,7 @@ private:
 
 	//Systems:
 	std::shared_ptr<RenderableSystem> m_RenderableSystem;
+	std::shared_ptr<CollisionDetectionAABBSystem> m_CollisionDetectionAABBSystem;
 	std::shared_ptr<RenderAABBSystem> m_RenderAABBSystem;
 
 	

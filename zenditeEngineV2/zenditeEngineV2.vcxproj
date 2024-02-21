@@ -180,6 +180,7 @@
     <ClInclude Include="src\ECS\EntityManager.h" />
     <ClInclude Include="src\ECS\I_System.h" />
     <ClInclude Include="src\ECS\SystemManager.h" />
+    <ClInclude Include="src\ECS\Systems\CollisionDetectionAABBSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderAABBSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderableSystem.h" />
     <ClInclude Include="src\EventManager\CollisionResponseSystem.h" />

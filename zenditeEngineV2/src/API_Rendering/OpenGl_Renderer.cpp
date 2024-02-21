@@ -52,7 +52,14 @@ void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle,
 	cubeModel = glm::scale(cubeModel, AABB_Data.scale);
 	AABBShader.setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
-	AABBShader.setUniform4f("lineColor", 1.0f, 0.08f, 0.58f, 1.0f);
+	if (AABB_Data.isColliding == true)
+	{
+		AABBShader.setUniform4f("lineColor", 1.0f, 0.0f, 0.0f, 1.0f);
+	}
+	else
+	{
+		AABBShader.setUniform4f("lineColor", 1.0f, 0.08f, 0.58f, 1.0f);
+	}
 
 	GLCALL(glDrawArrays(GL_LINES, 0, 24));
 

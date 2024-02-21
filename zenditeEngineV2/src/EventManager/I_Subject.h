@@ -8,5 +8,5 @@ protected:
 	std::vector<I_Observer> observerList;
 
 public:
-	virtual void NotifyObservers(int* i) = 0;
+	virtual void NotifyObservers(std::shared_ptr<ECSCoordinator> ECS_Coord, int* i) = 0;
 };

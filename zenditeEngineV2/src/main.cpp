@@ -472,8 +472,8 @@ int main(void)
 	COORD.StoreShaderInEntityDataHandle(entities[1]);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[2], tr_2);
-	//COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
-	//COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
+	COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
 	COORD.AddComponentToEntity<c_AABB>(entities[2], aabb_2);
 	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
 	COORD.SetUpRenderData(entities[2]);
@@ -584,7 +584,7 @@ int main(void)
 	ImGui::DestroyContext();
 	glfwTerminate();
 
-	std::cin.get();
+	//std::cin.get();
 
 	return 0;
 }

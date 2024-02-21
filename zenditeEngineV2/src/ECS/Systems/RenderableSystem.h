@@ -12,6 +12,8 @@ class RenderableSystem : public I_System, public I_Subject
 private:
 	//std::shared_ptr<ECSCoordinator> ECScoord;
 
+
+
 public:
 	RenderableSystem()
 	{
@@ -23,7 +25,7 @@ public:
 	{
 		for (size_t i = 0; i < observerList.size(); ++i) //Iterate through every item in observerList
 		{
-			//#To_Complete_3
+			//#To_Complete_4
 		}
 	}
 
