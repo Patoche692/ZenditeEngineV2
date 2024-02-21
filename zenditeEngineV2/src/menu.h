@@ -159,7 +159,7 @@ void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, s
                         for (int i = 0; i < IM_ARRAYSIZE(names); i++)
                             if (ImGui::Selectable(names[i]))
                                 selected_fish = i;
-               
+                        ImGui::EndPopup();
                     }
                 }
                 if (ImGui::BeginTabItem("Details"))
