@@ -403,7 +403,7 @@ int main(void)
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
-	unsigned short int heightMapTex = COORD.GenerateTexUnit("res/textures/heightmap.png", "PNG");
+	//unsigned short int heightMapTex = COORD.GenerateTexUnit("res/textures/heightmap.png", "PNG");
 
 
 	c_Transform tr_0;
@@ -438,9 +438,9 @@ int main(void)
 	tx_2.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_2.texUnit = rockySurfaceTexUnit;
 
-	c_Texture tex_3;
-	tex_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
-	tex_3.texUnit = heightMapTex;
+	//c_Texture tex_3;
+	//tex_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	//tex_3.texUnit = heightMapTex;
 
 	c_Modified md_0;
 	md_0.isModifed = true;
@@ -463,10 +463,9 @@ int main(void)
 	COORD.setShaderForEntity(entities[0], sh_basicWithTex); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
 	COORD.StoreShaderInEntityDataHandle(entities[0]);
 
-
 	COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[1], rc_1);
-	COORD.AddComponentToEntity<c_Texture>(entities[1], tex_3);
+	COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
 	COORD.SetUpRenderData(entities[1]);
 	COORD.setShaderForEntity(entities[1], sh_basicWithTex);
