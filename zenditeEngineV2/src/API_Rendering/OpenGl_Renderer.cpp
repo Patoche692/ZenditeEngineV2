@@ -76,7 +76,7 @@ void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle,
 
 }
 
-void RenderLighting(const R_DataHandle& DataHandle,
+void OpenGL_Renderer::RenderLighting(const R_DataHandle& DataHandle,
 	const c_Transform& trans,
 	std::shared_ptr<ECSCoordinator> ECScoord)
 {
