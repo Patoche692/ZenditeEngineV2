@@ -28,6 +28,17 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, const c_Transform& 
 	//(DataHandle.texture)->changeTexUnit(DataHandle.texUnit); //#unnecessary. Each texture is saved to a texture unit and is not changed throught the programs lifespan
 															   //			   This might be useful later if assigned texture units can be modified later during runtime
 															   //			   Although, all this does is take a texture and assign it to a texture unit.
+	glm::vec3 camPosition = cam->getPosition();
+	std::shared_ptr<Shader> shader = DataHandle.shader;
+	shader->setUniform3fv("viewPos", camPosition);
+	shader->setUniform3fv("lightPos", -8.0f, 7.0f, -4.0f);
+	shader->setUniform3fv("dirLight.direction", 8.0f, -7.0f, 4.0f);
+	shader->setUniform3fv("dirLight.ambient", 0.5f, 0.5f, 0.5f);
+	shader->setUniform3fv("dirLight.diffuse", 0.8f, 0.8f, 0.8f);
+	shader->setUniform3fv("dirLight.specular", 0.5f, 0.5f, 0.5f);
+	shader->setUniformInt("nrPointLights", 0);
+	shader->setUniformInt("nrSpotLights", 0);
+
 
 	(DataHandle.shader)->setUniformTextureUnit("colorTexture", DataHandle.texUnit);
 
@@ -63,4 +74,12 @@ void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle,
 
 	GLCALL(glDrawArrays(GL_LINES, 0, 24));
 
+}
+
+void OpenGL_Renderer::RenderLighting(const R_DataHandle& DataHandle,
+	const c_Transform& trans,
+	std::shared_ptr<ECSCoordinator> ECScoord)
+{
+	const c_SpotLightEmitter& spotLightData = ECScoord->GetComponentDataFromEntity<c_SpotLightEmitter>(ECScoord->GetSpotLightEntities()[0]);
+	
 }

@@ -14,6 +14,12 @@ public:
 		No_texUnits = 0;
 	}
 
+	void SetupLightingRenderData(Entity EID, std::shared_ptr<ECSCoordinator> ECScoord) override{
+		R_DataHandle DH;
+
+		m_Map_ENTITYtoHANDLE[EID] = DH; //Insert modified DH into the map.
+	}
+
 	void SetupRenderData(Entity EID, std::shared_ptr<ECSCoordinator> ECScoord) override
 	{
 		R_DataHandle DH;

@@ -2,6 +2,9 @@
 #include "ECS/ECSCoordinator.h"
 #include "ECS/Systems/RenderableSystem.h"
 #include "ECS/Systems/RenderAABBSystem.h"
+#include "ECS/Systems/SetupPointLightSystem.h"
+#include "ECS/Systems/SetupSpotLightSystem.h"
+#include "ECS/Systems/RenderLightingSystem.h"
 #include "ECS/Systems/CollisionDetectionAABBSystem.h"
 #include "API_Rendering/OpenGL_Manager.h"
 
@@ -13,7 +16,6 @@ class Coordinator
 private:
 	std::shared_ptr<ECSCoordinator> m_ECSCoord;
 	std::shared_ptr<I_Subject> m_Subject;
-
 	std::shared_ptr<I_API_Manager> m_APImanager;
 	std::shared_ptr<I_Renderer> m_Renderer;
 
@@ -21,6 +23,9 @@ private:
 	std::shared_ptr<RenderableSystem> m_RenderableSystem;
 	std::shared_ptr<CollisionDetectionAABBSystem> m_CollisionDetectionAABBSystem;
 	std::shared_ptr<RenderAABBSystem> m_RenderAABBSystem;
+	std::shared_ptr<SetupPointLightSystem> m_SetupPointLightSystem;
+	std::shared_ptr<SetupSpotLightSystem> m_SetupSpotLightSystem;
+	std::shared_ptr<RenderLightingSystem> m_RenderLightingSystem;
 
 	
 public:

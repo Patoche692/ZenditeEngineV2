@@ -18,6 +18,7 @@
 #include "ECS/Components.h"
 
 //ECS implementation ver 3.0
+const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
 
 namespace fs = std::filesystem;
 
@@ -549,7 +550,10 @@ int main(void)
 
 		//cubeTex.changeTexUnit(0);
 
-		sh_basicWithTex->setUniformTextureUnit("colorTexture", 0);
+		sh_basicWithTex->setUniformTextureUnit("Material.diffuse", 0);
+		sh_basicWithTex->setUniformTextureUnit("shadowMap", 1);
+		sh_basicWithTex->setUniform3fv("material.specular", 0.5f, 0.5f, 0.5f);
+		sh_basicWithTex->setUniformFloat("material.shininess", 32.0f);
 
 		//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 		//tr_0.pos.x = tr_0.pos.x + 1.0f;
