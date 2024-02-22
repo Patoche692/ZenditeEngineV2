@@ -72,16 +72,19 @@ void Coordinator::SetUpSystemBitsets()
 	RenderLightingSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
 	RenderLightingSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_LightResponderMesh>());
 	RenderLightingSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
+	m_ECSCoord->SetSystemBitsetSignature<RenderLightingSystem>(RenderLightingSystemSig);
 
 	Signature SetupPointLightSystemSig;
 	SetupPointLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
 	SetupPointLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_PointLightEmitter>());
 	SetupPointLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
+	m_ECSCoord->SetSystemBitsetSignature<SetupPointLightSystem>(SetupPointLightSystemSig);
 
 	Signature SetupSpotLightSystemSig;
 	SetupPointLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
 	SetupPointLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_SpotLightEmitter>());
 	SetupPointLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
+	m_ECSCoord->SetSystemBitsetSignature<SetupSpotLightSystem>(SetupSpotLightSystemSig);
 }
 
 Signature Coordinator::GetEntitySignature(Entity EID)
