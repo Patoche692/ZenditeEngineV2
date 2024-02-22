@@ -65,7 +65,14 @@ void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle,
 
 	if (AABB_Data.isColliding == true)
 	{
-		AABBShader.setUniform4f("lineColor", 1.0f, 0.0f, 0.0f, 1.0f);
+		if(AABB_Data.isWallColliding == true)
+		{
+			AABBShader.setUniform4f("lineColor", 0.0f, 1.0f, 0.0f, 1.0f);
+		}
+		else
+		{
+			AABBShader.setUniform4f("lineColor", 1.0f, 0.0f, 0.0f, 1.0f);
+		}
 	}
 	else
 	{

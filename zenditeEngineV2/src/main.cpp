@@ -460,10 +460,19 @@ int main(void)
 	aabb_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	aabb_2.vertices = AABBvertices;
 
+	c_Wall wall_0;
+	c_WallCollider wallCollider_2;
+
+	c_Transform tr_3;
+	c_AABB aabb_3;
+	c_Wall wall_3;
+	c_Modified md_3;
+
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
 	COORD.AddComponentToEntity<c_AABB>(entities[0], aabb_0);
+	COORD.AddComponentToEntity<c_Wall>(entities[0], wall_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[0], md_0);
 	COORD.SetUpRenderData(entities[0]); //#NOTE: SetUpRenderData and setShaderForEntity will do nothing if the entity does no have a c_RenderableComponent
 	COORD.setShaderForEntity(entities[0], sh_basicWithTex); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
@@ -481,6 +490,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
 	COORD.AddComponentToEntity<c_AABB>(entities[2], aabb_2);
+	COORD.AddComponentToEntity<c_WallCollider>(entities[2], wallCollider_2);
 	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
 	COORD.SetUpRenderData(entities[2]);
 	COORD.setShaderForEntity(entities[2], sh_basicWithTex);

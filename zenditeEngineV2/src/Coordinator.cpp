@@ -37,6 +37,8 @@ void Coordinator::RegisterComponents()
 	m_ECSCoord->RegisterComponent<c_PointLightEmitter>();
 	m_ECSCoord->RegisterComponent<c_SpotLightEmitter>();
 	m_ECSCoord->RegisterComponent<c_LightResponderMesh>();
+	m_ECSCoord->RegisterComponent<c_Wall>();
+	m_ECSCoord->RegisterComponent<c_WallCollider>();
 
 }
 
@@ -49,6 +51,13 @@ void Coordinator::RegisterSystems() //And add them to the system manager list
 	m_RenderLightingSystem = std::static_pointer_cast<RenderLightingSystem>(m_ECSCoord->RegisterSystem<RenderLightingSystem>());
 	m_CollisionDetectionAABBSystem = std::static_pointer_cast<CollisionDetectionAABBSystem>(m_ECSCoord->RegisterSystem<CollisionDetectionAABBSystem>());
 	m_RenderAABBSystem = std::static_pointer_cast<RenderAABBSystem>(m_ECSCoord->RegisterSystem<RenderAABBSystem>());
+	m_SetUpWallAABBSystem = std::static_pointer_cast<SetUpWallAABBSystem>(m_ECSCoord->RegisterSystem<SetUpWallAABBSystem>());
+	m_SetUpWallColliderAABBSystem = std::static_pointer_cast<SetUpWallColliderAABBSystem>(m_ECSCoord->RegisterSystem<SetUpWallColliderAABBSystem>());
+	m_WallCollisionHandlingSystem = std::static_pointer_cast<WallCollisionHandlingSystem>(m_ECSCoord->RegisterSystem<WallCollisionHandlingSystem>());
+
+	//Extra: (Prevent garbage memory being accessed if there are no entities will wall related AABB components)
+	m_SetUpWallAABBSystem->InitialSetup(m_ECSCoord); 
+	m_SetUpWallColliderAABBSystem->InitialSetup(m_ECSCoord);
 }
 
 void Coordinator::SetUpSystemBitsets()
@@ -89,6 +98,22 @@ void Coordinator::SetUpSystemBitsets()
 	SetupPointLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_SpotLightEmitter>());
 	SetupPointLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 	m_ECSCoord->SetSystemBitsetSignature<SetupSpotLightSystem>(SetupSpotLightSystemSig);
+
+	Signature SetUpWallAABBSystemSig;
+	SetUpWallAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
+	SetUpWallAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_AABB>());
+	SetUpWallAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Wall>());
+	m_ECSCoord->SetSystemBitsetSignature<SetUpWallAABBSystem>(SetUpWallAABBSystemSig);
+
+	Signature SetUpWallColliderAABBSystemSig;
+	SetUpWallColliderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
+	SetUpWallColliderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_AABB>());
+	SetUpWallColliderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_WallCollider>());
+	m_ECSCoord->SetSystemBitsetSignature<SetUpWallColliderAABBSystem>(SetUpWallColliderAABBSystemSig);
+
+	Signature WallCollisionHandlingSystemSig;
+	//Entities are assigned differently for this one, as such no sig is needed as of yet.
+	m_ECSCoord->SetSystemBitsetSignature<WallCollisionHandlingSystem>(WallCollisionHandlingSystemSig);
 }
 
 Signature Coordinator::GetEntitySignature(Entity EID)
@@ -150,7 +175,12 @@ void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)
 	m_SetupPointLightSystem->Setup(m_APImanager, m_ECSCoord);
 	m_SetupSpotLightSystem->Setup(m_APImanager, m_ECSCoord);
 	m_RenderLightingSystem->Render(m_Renderer, m_APImanager, m_ECSCoord);
-	m_CollisionDetectionAABBSystem->checkCollisions(m_APImanager, m_ECSCoord);
+	m_CollisionDetectionAABBSystem->checkCollisions(m_ECSCoord);
+	
+	m_SetUpWallAABBSystem->Setup(m_ECSCoord);
+	m_SetUpWallColliderAABBSystem->Setup(m_ECSCoord);
+	m_WallCollisionHandlingSystem->checkCollisions(m_ECSCoord);
+	
 	m_RenderAABBSystem->RenderAABBs(m_Renderer, m_APImanager, m_ECSCoord);
 
 	for (auto const& EID : *entities)

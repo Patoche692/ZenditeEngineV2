@@ -15,6 +15,17 @@ struct c_AABB
 	glm::vec3 scale;
 	float *vertices; //Data to go in the VBO that stores the vertices of the AABB
 	bool isColliding;
+	bool isWallColliding;
+};
+
+struct c_Wall
+{
+
+};
+
+struct c_WallCollider
+{
+
 };
 
 struct c_RenderableComponent
@@ -53,7 +64,7 @@ struct c_Texture
 {
 	void setTexCoordsVertexArray(float* verts, size_t size)
 	{
-		texCoords = new float[size];
+		texCoords = new float[size]; //#EXCEPTION_THROWN_RANDOMLY_HERE
 
 		for (int i = 0; i < size; ++i)
 		{
