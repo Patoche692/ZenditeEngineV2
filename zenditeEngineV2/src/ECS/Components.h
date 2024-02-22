@@ -13,7 +13,7 @@ struct c_Transform
 struct c_AABB
 {
 	glm::vec3 scale;
-	float *vertices; //A VBO that uses draw arrays will need 36 vertex points for any rectangular prism.
+	float *vertices; //Data to go in the VBO that stores the vertices of the AABB
 	bool isColliding;
 };
 

@@ -52,16 +52,17 @@ void Coordinator::SetUpSystemBitsets()
 	RenerableSysSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 	m_ECSCoord->SetSystemBitsetSignature<RenderableSystem>(RenerableSysSig);
 
+	Signature CollisionDetectionAABBSystemSig;
+	CollisionDetectionAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
+	CollisionDetectionAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_AABB>());
+	CollisionDetectionAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
+	m_ECSCoord->SetSystemBitsetSignature<CollisionDetectionAABBSystem>(CollisionDetectionAABBSystemSig);
+
 	Signature RenderAABBSystemSig;
 	RenderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
 	RenderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_AABB>());
 	RenderAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 	m_ECSCoord->SetSystemBitsetSignature<RenderAABBSystem>(RenderAABBSystemSig);
-
-	Signature CollisionDetectionAABBSystem;
-	CollisionDetectionAABBSystem.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
-	CollisionDetectionAABBSystem.set(m_ECSCoord->GetComponentBitsetPos<c_AABB>());
-	CollisionDetectionAABBSystem.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 
 }
 
@@ -121,7 +122,7 @@ unsigned short int Coordinator::GenerateTexUnit(std::string texFilePath, std::st
 void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)
 {
 	m_RenderableSystem->Render(m_Renderer, m_APImanager, m_ECSCoord);
-	
+	m_CollisionDetectionAABBSystem->checkCollisions(m_APImanager, m_ECSCoord);
 	m_RenderAABBSystem->RenderAABBs(m_Renderer, m_APImanager, m_ECSCoord);
 
 	for (auto const& EID : *entities)

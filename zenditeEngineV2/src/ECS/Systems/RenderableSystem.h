@@ -21,7 +21,7 @@ public:
 		
 	}
 
-	void NotifyObservers(int* i) override
+	void NotifyObservers(std::shared_ptr<ECSCoordinator> ECS_Coord, int* i) override
 	{
 		for (size_t i = 0; i < observerList.size(); ++i) //Iterate through every item in observerList
 		{

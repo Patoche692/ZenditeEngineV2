@@ -381,16 +381,16 @@ int main(void)
 
 	//size 72 values
 	float AABBvertices[] = {
-	-1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  // Edge 1
-	 1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  // Edge 2
-	 1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  // Edge 3
+	-1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  // Edge 1 (x max and x min)
+	 1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  // Edge 2 (y max and y min)
+	 1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  // Edge 3 (z max and z min)
 	-1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  // Edge 4
 	-1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  // Edge 5
 	 1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  // Edge 6
 	 1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  // Edge 7
 	-1.0f,  1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  // Edge 8
-	-1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f,  // Edge 9
-	 1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  // Edge 10
+	 1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  // Edge 9
+	-1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f,  // Edge 10
 	 1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  // Edge 11
 	-1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f   // Edge 12
 	};
@@ -413,7 +413,7 @@ int main(void)
 	tr_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	tr_1.pos = glm::vec3(-2.0f, 0.0f, 3.0f);
 	tr_1.scale = glm::vec3(0.5f, 0.5f, 0.5f);
-	tr_2.pos = glm::vec3(-0.2f, 0.0f, -2.5f);
+	tr_2.pos = glm::vec3(-0.2f, 0.0f, -4.5f);
 	tr_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	c_RenderableComponent rc_0;
@@ -451,6 +451,10 @@ int main(void)
 	c_Modified md_2;
 	md_2.isModifed = true;
 
+	c_AABB aabb_0;
+	aabb_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	aabb_0.vertices = AABBvertices;
+
 	c_AABB aabb_2;
 	aabb_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	aabb_2.vertices = AABBvertices;
@@ -458,6 +462,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
+	COORD.AddComponentToEntity<c_AABB>(entities[0], aabb_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[0], md_0);
 	COORD.SetUpRenderData(entities[0]); //#NOTE: SetUpRenderData and setShaderForEntity will do nothing if the entity does no have a c_RenderableComponent
 	COORD.setShaderForEntity(entities[0], sh_basicWithTex); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
