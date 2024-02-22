@@ -18,6 +18,7 @@
 #include "ECS/Components.h"
 
 //ECS implementation ver 3.0
+const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
 
 namespace fs = std::filesystem;
 
@@ -109,6 +110,31 @@ int main(void)
 
 	std::shared_ptr<Shader> sh_basicWithTex = std::make_shared<Shader>("res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
 		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
+	std::shared_ptr<Shader> sh_shadows = std::make_shared<Shader>("res/shaders/Shadows/vs_multiLightShadowNoSpecular.glsl",
+		"res/shaders/Shadows/fs_multiLightShadowNoSpecular.glsl");
+	std::shared_ptr<Shader> sh_shadowMap = std::make_shared<Shader>("res/shaders/Shadows/vs_shadowMap.glsl",
+		"res/shaders/Shadows/fs_shadowMap.glsl");
+
+    unsigned int depthMapFBO;
+    glGenFramebuffers(1, &depthMapFBO);
+
+	unsigned int depthMap;
+    glGenTextures(1, &depthMap);
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 
 	//#TODO Need to pass data read in from the model loader to the ECS system for rendering.
 	float vertexDataValues[] = {
@@ -426,7 +452,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[0], md_0);
 	COORD.SetUpRenderData(entities[0]); //#NOTE: SetUpRenderData and setShaderForEntity will do nothing if the entity does no have a c_RenderableComponent
-	COORD.setShaderForEntity(entities[0], sh_basicWithTex); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
+	COORD.setShaderForEntity(entities[0], sh_shadows); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
 	COORD.StoreShaderInEntityDataHandle(entities[0]);
 
 
@@ -435,7 +461,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
 	COORD.SetUpRenderData(entities[1]);
-	COORD.setShaderForEntity(entities[1], sh_basicWithTex);
+	COORD.setShaderForEntity(entities[1], sh_shadows);
 	COORD.StoreShaderInEntityDataHandle(entities[1]);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[2], tr_2);
@@ -443,7 +469,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
 	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
 	COORD.SetUpRenderData(entities[2]);
-	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
+	COORD.setShaderForEntity(entities[2], sh_shadows);
 	COORD.StoreShaderInEntityDataHandle(entities[2]);
 
 	// END ECS - $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -493,21 +519,24 @@ int main(void)
 
 		// ----------------------------------------------------------------------
 		
-		sh_basicWithTex->bindProgram();
+		sh_shadows->bindProgram();
 		bindVao(CubeVAO);
 		glm::mat4 cubeProjection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glm::mat4 cubeView = camera->GetViewMatrix();
-		sh_basicWithTex->setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
-		sh_basicWithTex->setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
+		sh_shadows->setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
+		sh_shadows->setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
 
 		glm::mat4 cubeModel = glm::mat4(1.0f);
 		cubeModel = glm::translate(cubeModel, glm::vec3(2.5f, 0.0f, -1.2f));
 		cubeModel = glm::scale(cubeModel, glm::vec3(1.0f, 1.0f, 1.0f));
-		sh_basicWithTex->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
+		sh_shadows->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
 		//cubeTex.changeTexUnit(0);
 
-		sh_basicWithTex->setUniformTextureUnit("colorTexture", 0);
+		sh_shadows->setUniformTextureUnit("Material.diffuse", 0);
+		sh_shadows->setUniformTextureUnit("shadowMap", 1);
+		sh_shadows->setUniform3fv("material.specular", 0.5f, 0.5f, 0.5f);
+		sh_shadows->setUniformFloat("material.shininess", 32.0f);
 
 		//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 		//tr_0.pos.x = tr_0.pos.x + 1.0f;
