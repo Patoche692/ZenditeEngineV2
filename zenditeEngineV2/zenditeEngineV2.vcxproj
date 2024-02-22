@@ -183,6 +183,9 @@
     <ClInclude Include="src\ECS\Systems\CollisionDetectionAABBSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderAABBSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderableSystem.h" />
+    <ClInclude Include="src\ECS\Systems\RenderLightingSystem.h" />
+    <ClInclude Include="src\ECS\Systems\SetupPointLightSystem.h" />
+    <ClInclude Include="src\ECS\Systems\SetupSpotLightSystem.h" />
     <ClInclude Include="src\EventManager\CollisionResponseSystem.h" />
     <ClInclude Include="src\EventManager\I_Observer.h" />
     <ClInclude Include="src\EventManager\I_Subject.h" />

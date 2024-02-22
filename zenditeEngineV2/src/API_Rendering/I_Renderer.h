@@ -26,9 +26,7 @@ public:
 		const c_Transform& trans) = 0;
 	virtual void RenderLighting(const R_DataHandle& DataHandle,
 		const c_Transform& trans,
-		const ECSCoordinator& ECScoord,
-		std::vector<Entity>& SpotLightEntities,
-		std::vector<Entity>& PointLightEntities
+		std::shared_ptr<ECSCoordinator> ECScoord
 	) = 0;
 
 

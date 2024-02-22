@@ -78,10 +78,8 @@ void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle,
 
 void RenderLighting(const R_DataHandle& DataHandle,
 	const c_Transform& trans,
-	std::shared_ptr<ECSCoordinator> ECScoord,
-	std::vector<Entity>& SpotLightEntities,
-	std::vector<Entity>& PointLightEntities)
+	std::shared_ptr<ECSCoordinator> ECScoord)
 {
-	const c_SpotLightEmitter& spotLightData = ECScoord->GetComponentDataFromEntity<c_SpotLightEmitter>(SpotLightEntities[0]);
+	const c_SpotLightEmitter& spotLightData = ECScoord->GetComponentDataFromEntity<c_SpotLightEmitter>(ECScoord->GetSpotLightEntities()[0]);
 	
 }

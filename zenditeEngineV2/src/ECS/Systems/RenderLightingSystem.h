@@ -40,7 +40,7 @@ public:
 
 			}
 
-			renderer->RenderLighting(apiManager->GetEntityDataHandle(EID), ECScoord->GetComponentDataFromEntity<c_Transform>(EID));
+			renderer->RenderLighting(apiManager->GetEntityDataHandle(EID), ECScoord->GetComponentDataFromEntity<c_Transform>(EID), ECScoord);
 		}
 	}
 

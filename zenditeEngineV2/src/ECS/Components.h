@@ -68,6 +68,22 @@ struct c_Texture
 	size_t arraySize;
 };
 
+struct c_SpotLightEmitter
+{
+
+};
+
+struct c_PointLightEmitter
+{
+
+};
+
+struct c_LightResponderMesh
+{
+
+};
+
+
 
 struct c_Modified
 {
