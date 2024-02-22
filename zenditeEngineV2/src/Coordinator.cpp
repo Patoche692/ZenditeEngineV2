@@ -34,6 +34,10 @@ void Coordinator::RegisterComponents()
 	m_ECSCoord->RegisterComponent<c_Texture>();
 	m_ECSCoord->RegisterComponent<c_AABB>();
 	m_ECSCoord->RegisterComponent<c_Modified>();
+	m_ECSCoord->RegisterComponent<c_PointLightEmitter>();
+	m_ECSCoord->RegisterComponent<c_SpotLightEmitter>();
+	m_ECSCoord->RegisterComponent<c_LightResponderMesh>();
+
 }
 
 void Coordinator::RegisterSystems() //And add them to the system manager list
