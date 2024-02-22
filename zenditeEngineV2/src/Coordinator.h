@@ -6,6 +6,7 @@
 #include "ECS/Systems/SetupSpotLightSystem.h"
 #include "ECS/Systems/RenderLightingSystem.h"
 #include "ECS/Systems/CollisionDetectionAABBSystem.h"
+#include "ECS/Systems/PositionTrackerSystem.h"
 
 #include "ECS/Systems/SetUpWallAABBSystem.h"
 #include "ECS/Systems/SetUpWallColliderAABBSystem.h"
@@ -34,6 +35,7 @@ private:
 	std::shared_ptr<SetUpWallAABBSystem> m_SetUpWallAABBSystem;
 	std::shared_ptr<SetUpWallColliderAABBSystem> m_SetUpWallColliderAABBSystem;
 	std::shared_ptr<WallCollisionHandlingSystem> m_WallCollisionHandlingSystem;
+	std::shared_ptr<PositionTrackerSystem> m_PositionTrackerSystem;
 	
 public:
 	Coordinator(std::string API_Type, std::string Render_Type, std::shared_ptr<Camera> camera);

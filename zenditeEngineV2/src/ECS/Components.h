@@ -7,6 +7,7 @@
 struct c_Transform
 {
 	glm::vec3 pos;
+	glm::vec3 prevPos;
 	glm::vec3 scale;
 };
 

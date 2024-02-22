@@ -205,6 +205,9 @@ public:
 
 						ECScoord->GetComponentDataFromEntity<c_AABB>(*iit).isWallColliding = true;
 
+						c_Transform& CollidingObjTransData = (ECScoord->GetComponentDataFromEntity<c_Transform>(*iit));
+						CollidingObjTransData.pos = CollidingObjTransData.prevPos;
+
 						NotifyObservers(ECScoord, collidingEnts);
 					}
 					else

@@ -54,6 +54,7 @@ void Coordinator::RegisterSystems() //And add them to the system manager list
 	m_SetUpWallAABBSystem = std::static_pointer_cast<SetUpWallAABBSystem>(m_ECSCoord->RegisterSystem<SetUpWallAABBSystem>());
 	m_SetUpWallColliderAABBSystem = std::static_pointer_cast<SetUpWallColliderAABBSystem>(m_ECSCoord->RegisterSystem<SetUpWallColliderAABBSystem>());
 	m_WallCollisionHandlingSystem = std::static_pointer_cast<WallCollisionHandlingSystem>(m_ECSCoord->RegisterSystem<WallCollisionHandlingSystem>());
+	m_PositionTrackerSystem = std::static_pointer_cast<PositionTrackerSystem>(m_ECSCoord->RegisterSystem<PositionTrackerSystem>());
 
 	//Extra: (Prevent garbage memory being accessed if there are no entities will wall related AABB components)
 	m_SetUpWallAABBSystem->InitialSetup(m_ECSCoord); 
@@ -68,6 +69,10 @@ void Coordinator::SetUpSystemBitsets()
 	RenerableSysSig.set(m_ECSCoord->GetComponentBitsetPos<c_RenderableComponent>());
 	RenerableSysSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 	m_ECSCoord->SetSystemBitsetSignature<RenderableSystem>(RenerableSysSig);
+
+	Signature PositionTrackerSystemSig;
+	PositionTrackerSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
+	m_ECSCoord->SetSystemBitsetSignature<PositionTrackerSystem>(PositionTrackerSystemSig);
 
 	Signature CollisionDetectionAABBSystemSig;
 	CollisionDetectionAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
@@ -182,6 +187,8 @@ void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)
 	m_WallCollisionHandlingSystem->checkCollisions(m_ECSCoord);
 	
 	m_RenderAABBSystem->RenderAABBs(m_Renderer, m_APImanager, m_ECSCoord);
+
+	m_PositionTrackerSystem->UpdatePrePosData(m_ECSCoord);
 
 	for (auto const& EID : *entities)
 	{
