@@ -10,11 +10,18 @@ struct c_Transform
 	glm::vec3 scale;
 };
 
+struct c_AABB
+{
+	glm::vec3 scale;
+	float *vertices; //Data to go in the VBO that stores the vertices of the AABB
+	bool isColliding;
+};
+
 struct c_RenderableComponent
 {
 	void setPosVertexArray(float* verts, size_t size)
 	{
-		posVertices = new float[size];
+		posVertices = new float[size]; //#Memory_Leak_Potential
 
 		for (int i = 0; i < size; ++i)
 		{
@@ -26,7 +33,7 @@ struct c_RenderableComponent
 
 	void setSurfaceNormalVertexArray(float* verts, size_t size)
 	{
-		surfaceNormalVertices = new float[size];
+		surfaceNormalVertices = new float[size]; //#Memory_Leak_Potential
 
 		for (int i = 0; i < size; ++i)
 		{
@@ -61,25 +68,6 @@ struct c_Texture
 	size_t arraySize;
 };
 
-struct c_Light
-{
-
-};
-
-struct c_RigidBodyCollidable
-{
-
-};
-
-struct c_ImmovableCollidable
-{
-
-};
-
-struct c_CollidableTrigger
-{
-
-};
 
 struct c_Modified
 {

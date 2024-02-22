@@ -5,6 +5,7 @@
 
 class ECSCoordinator;
 class c_Transform;
+class c_AABB;
 
 class I_Renderer
 {
@@ -19,5 +20,16 @@ public:
 	}
 
 	virtual void Render(const R_DataHandle& DataHandle, const c_Transform& trans) = 0;
+	virtual void RenderAABB(const R_DataHandle& DataHandle, 
+		Shader& AABBShader,
+		const c_AABB& AABB_Data, 
+		const c_Transform& trans) = 0;
+	virtual void RenderLighting(const R_DataHandle& DataHandle,
+		const c_Transform& trans,
+		const ECSCoordinator& ECScoord,
+		std::vector<Entity>& SpotLightEntities,
+		std::vector<Entity>& PointLightEntities
+	) = 0;
+
 
 };

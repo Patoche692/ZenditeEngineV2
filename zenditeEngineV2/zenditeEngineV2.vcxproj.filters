@@ -1028,16 +1028,7 @@
     <ClInclude Include="src\ECS\Components.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\Systems\Im_CollisionDetectionSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS\Systems\RenderableSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\Rigid_CollisionDetectionSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\Trigger_CollisionDetectionSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\TextureData.h">
@@ -1050,6 +1041,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vendor\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Systems\RenderAABBSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Systems\CollisionDetectionAABBSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1488,5 +1485,7 @@
     <None Include="res\shaders\Shadows\vs_multiLightShadowNoSpecular.glsl" />
     <None Include="res\shaders\Shadows\fs_shadowMap.glsl" />
     <None Include="res\shaders\Shadows\vs_shadowMap.glsl" />
+    <None Include="res\shaders\AABB\vs_BasicAABB.glsl" />
+    <None Include="res\shaders\AABB\fs_BasicAABB.glsl" />
   </ItemGroup>
 </Project>

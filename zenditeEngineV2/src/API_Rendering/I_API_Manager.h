@@ -16,6 +16,8 @@ protected:
 
 public:
 	virtual void SetupRenderData(Entity EID, std::shared_ptr<ECSCoordinator> ECScoord) = 0;
+	virtual void SetupLightingRenderData(Entity EID, std::shared_ptr<ECSCoordinator> ECScoord) = 0;
+	virtual void SetupAABBRenderData(Entity EID, std::shared_ptr<ECSCoordinator> ECScoord) = 0;
 	virtual R_DataHandle const& GetEntityDataHandle(Entity EID) const = 0;
 	virtual std::shared_ptr<Shader> GetEntityShader(Entity EID) const = 0;
 	virtual void SetShaderForDataHandle(Entity EID) = 0;

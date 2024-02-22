@@ -9,6 +9,8 @@ private:
 	std::shared_ptr<EntityManager> m_EntityManager;
 	std::shared_ptr<ComponentManager> m_ComponentManager;
 	std::shared_ptr<SystemManager> m_SystemManager;
+	std::vector<Entity> m_PointLightEntities = std::vector<Entity>(10);
+	std::vector<Entity> m_SpotLightEntities = std::vector<Entity>(10);
 
 public:
 	ECSCoordinator()
@@ -18,6 +20,22 @@ public:
 		m_SystemManager = std::make_shared<SystemManager>();
 	}
 
+	std::vector<Entity> GetPointLightEntities() 
+	{
+		return m_PointLightEntities;
+	}
+	std::vector<Entity> GetSpotLightEntities() 
+	{
+		return m_SpotLightEntities;
+	}
+	void SetPointLightEntities(std::vector<Entity> vec) 
+	{
+		m_PointLightEntities = vec;
+	}
+	void SetSpotLightEntities(std::vector<Entity> vec) 
+	{
+		m_SpotLightEntities = vec;
+	}
 
 	//Entity Member Functions:
 	Entity CreateEntity()
@@ -103,6 +121,12 @@ public:
 	const std::shared_ptr<ComponentManager> GetComponentManager() const
 	{
 		return m_ComponentManager;
+	}
+
+	template<typename T>
+	ComponentBitsetPos GetComponentBitsetPos() const
+	{
+		return m_ComponentManager->GetComponentBitsetPos<T>();
 	}
 
 };

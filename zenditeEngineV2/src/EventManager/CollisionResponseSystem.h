@@ -7,7 +7,7 @@ private:
 
 
 public:
-	void UpdateObservers(std::shared_ptr<ComponentManager> CM, int* i) override
+	void UpdateObservers(std::shared_ptr<ECSCoordinator> ECS_Coord, int* i) override
 	{
 
 	}

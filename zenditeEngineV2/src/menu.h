@@ -23,9 +23,8 @@ void imGuiSetup(GLFWwindow* window)
 	ImGui::StyleColorsDark();
 }
 
-void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, short int containerTexUnit, unsigned short int rockySurfaceTexUnit)
+void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, short int containerTexUnit, unsigned short int rockySurfaceTexUnit, c_AABB& aabb)
 {
-
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -43,10 +42,13 @@ void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, s
 		// You can handle the change here if needed.
 	}
 
+	if (ImGui::SliderFloat3("AABB scale", &aabb.scale[0], -5.0f, 5.0f));
+	{
+		// The slider was used; myVec3 has been updated.
+		// You can handle the change here if needed.
+	}
+
 	ImGui::NewLine();
-
-	
-
 	
 	ImGui::Text("Choose a Texture:");
 	if (ImGui::RadioButton("Wooden Box", selectedOption == 0)) 
@@ -74,7 +76,18 @@ void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, s
 		}
 	}
 
+	ImGui::NewLine();
+	ImGui::NewLine();
+
+	//Radio Button Testing:
+	/*
+	if (ImGui::RadioButton("Label", &variable, value)) {
+		// Action to take when this radio button is selected
+	}
+	*/
+
 	ImGui::End();
+
 
 	// Rendering
 	ImGui::Render();

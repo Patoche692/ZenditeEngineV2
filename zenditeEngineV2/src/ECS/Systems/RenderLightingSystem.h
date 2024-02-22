@@ -7,7 +7,7 @@
 #include "../../API_Rendering/I_API_Manager.h"
 #include "../../ECS/Components.h"
 
-class RenderableSystem : public I_System, public I_Subject
+class RenderLightingSystem : public I_System, public I_Subject
 {
 private:
 	//std::shared_ptr<ECSCoordinator> ECScoord;
@@ -15,9 +15,8 @@ private:
 
 
 public:
-	RenderableSystem()
+	RenderLightingSystem()
 	{
-		//#Temp_Simple_Rendering_System
 		
 	}
 
@@ -25,7 +24,7 @@ public:
 	{
 		for (size_t i = 0; i < observerList.size(); ++i) //Iterate through every item in observerList
 		{
-			//#To_Complete_4
+
 		}
 	}
 
@@ -36,12 +35,12 @@ public:
 			//If entities "modified" component is true, then call
 			if (ECScoord->GetComponentDataFromEntity<c_Modified>(EID).isModifed)
 			{
-				apiManager->SetupRenderData(EID, ECScoord);
+				apiManager->SetupLightingRenderData(EID, ECScoord);
 				apiManager->SetShaderForDataHandle(EID);
 
 			}
 
-			renderer->Render(apiManager->GetEntityDataHandle(EID), ECScoord->GetComponentDataFromEntity<c_Transform>(EID));
+			renderer->RenderLighting(apiManager->GetEntityDataHandle(EID), ECScoord->GetComponentDataFromEntity<c_Transform>(EID));
 		}
 	}
 
