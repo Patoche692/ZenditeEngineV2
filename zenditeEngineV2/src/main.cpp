@@ -575,7 +575,7 @@ int main(void)
 		glfwPollEvents();
 
 		//c_Transform& posData, c_Texture& texData, c_Modified& modified, short int containerTexUnit, unsigned short int rockySurfaceTexUnit
-		genMenu_1(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), texData, modifiedData, containerTexUnit, rockySurfaceTexUnit);
+		genMenu_1(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), texData, modifiedData, containerTexUnit, rockySurfaceTexUnit, COORD.GetComponentDataFromEntity<c_AABB>(entities[0]));
 
 		processInput(window);
 

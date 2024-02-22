@@ -23,9 +23,8 @@ void imGuiSetup(GLFWwindow* window)
 	ImGui::StyleColorsDark();
 }
 
-void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, short int containerTexUnit, unsigned short int rockySurfaceTexUnit)
+void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, short int containerTexUnit, unsigned short int rockySurfaceTexUnit, c_AABB& aabb)
 {
-
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -38,6 +37,12 @@ void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, s
 	ImGui::Separator();
 
 	if (ImGui::SliderFloat3("My Vec3 Slider", &posData.pos[0], -5.0f, 5.0f));
+	{
+		// The slider was used; myVec3 has been updated.
+		// You can handle the change here if needed.
+	}
+
+	if (ImGui::SliderFloat3("AABB scale", &aabb.scale[0], -5.0f, 5.0f));
 	{
 		// The slider was used; myVec3 has been updated.
 		// You can handle the change here if needed.
