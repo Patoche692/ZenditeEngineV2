@@ -10,7 +10,7 @@
 #include "../../Shader.h"
 
 
-class CollisionDetectionAABBSystem : public I_System, public I_Subject
+class WallCollisionHandlingSystem : public I_System, public I_Subject
 {
 private:
 	//std::shared_ptr<ECSCoordinator> ECScoord;
@@ -93,7 +93,7 @@ private:
 		float E1_zMax;
 		float E1_zMin;
 
-		if(E0_x0.x > E0_x1.x)
+		if (E0_x0.x > E0_x1.x)
 		{
 			E0_xMax = E0_x0.x;
 			E0_xMin = E0_x1.x;
@@ -161,17 +161,17 @@ private:
 
 		//Return true if the two AABBs are intersecting
 		return (E0_xMin <= E1_xMax &&
-				E0_xMax >= E1_xMin &&
-				E0_yMin <= E1_yMax &&
-				E0_yMax >= E1_yMin &&
-				E0_zMin <= E1_zMax &&
-				E0_zMax >= E1_zMin
+			E0_xMax >= E1_xMin &&
+			E0_yMin <= E1_yMax &&
+			E0_yMax >= E1_yMin &&
+			E0_zMin <= E1_zMax &&
+			E0_zMax >= E1_zMin
 			);
 	}
 
 public:
 	//res/shaders/AABB/vs_BasicAABB.glsl //res/shaders/AABB/fs_BasicAABB.glsl
-	CollisionDetectionAABBSystem()
+	WallCollisionHandlingSystem()
 	{
 
 	}
@@ -182,20 +182,19 @@ public:
 
 		int NoOfEntitesColliding = 0;
 
-		//#Parallelism_Potential
-		for (std::set<std::uint32_t>::iterator it = m_EntitySet.begin(); it != m_EntitySet.end(); ++it)
+		std::set<std::uint32_t>* WallAABBs = ECScoord->GetWallAABBEntitiesSetPtr();
+		std::set<std::uint32_t>* WallCollidingAABBs = ECScoord->GetWallCollidableAABBEntitiesSetPtr();
+
+		if (WallCollidingAABBs && WallAABBs && !WallAABBs->empty() && !WallCollidingAABBs->empty())
 		{
-			for (std::set<std::uint32_t>::iterator iit = it; iit != m_EntitySet.end(); ++iit)
+			//#Parallelism_Potential?
+			for (std::set<std::uint32_t>::iterator it = (*WallAABBs).begin(); it != (*WallAABBs).end(); ++it)
 			{
-				if(*iit == *it)
-				{
-					//do nothing
-				}
-				else
+				for (std::set<std::uint32_t>::iterator iit = (*WallCollidingAABBs).begin(); iit != (*WallCollidingAABBs).end(); ++iit)
 				{
 					bool isColliding = testCollision(*it, *iit, ECScoord);
 
-					if(isColliding)
+					if (isColliding)
 					{
 						int collidingEnts[2];
 						collidingEnts[0] = *it;
@@ -204,6 +203,11 @@ public:
 						(ECScoord->GetComponentDataFromEntity<c_AABB>(*it)).isColliding = true;
 						(ECScoord->GetComponentDataFromEntity<c_AABB>(*iit)).isColliding = true;
 
+						ECScoord->GetComponentDataFromEntity<c_AABB>(*iit).isWallColliding = true;
+
+						c_Transform& CollidingObjTransData = (ECScoord->GetComponentDataFromEntity<c_Transform>(*iit));
+						CollidingObjTransData.pos = CollidingObjTransData.prevPos;
+
 						NotifyObservers(ECScoord, collidingEnts);
 					}
 					else
@@ -211,6 +215,7 @@ public:
 						(ECScoord->GetComponentDataFromEntity<c_AABB>(*it)).isColliding = false;
 						(ECScoord->GetComponentDataFromEntity<c_AABB>(*iit)).isColliding = false;
 					}
+
 				}
 			}
 		}

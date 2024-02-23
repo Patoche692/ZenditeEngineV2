@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <GLFW/glfw3.h>
+#include <chrono>
 
 #include "vendor/stb_image/stb_image.h"
 #include "assimp/Importer.hpp"
@@ -26,6 +27,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+
+void moveEntityBackAndFourth(c_Transform& entTrans, float DT);
 
 // camera
 std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -460,10 +463,19 @@ int main(void)
 	aabb_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	aabb_2.vertices = AABBvertices;
 
+	c_Wall wall_0;
+	c_WallCollider wallCollider_2;
+
+	c_Transform tr_3;
+	c_AABB aabb_3;
+	c_Wall wall_3;
+	c_Modified md_3;
+
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
 	COORD.AddComponentToEntity<c_AABB>(entities[0], aabb_0);
+	COORD.AddComponentToEntity<c_WallCollider>(entities[0], wallCollider_2);
 	COORD.AddComponentToEntity<c_Modified>(entities[0], md_0);
 	COORD.SetUpRenderData(entities[0]); //#NOTE: SetUpRenderData and setShaderForEntity will do nothing if the entity does no have a c_RenderableComponent
 	COORD.setShaderForEntity(entities[0], sh_basicWithTex); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
@@ -481,6 +493,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
 	COORD.AddComponentToEntity<c_AABB>(entities[2], aabb_2);
+	COORD.AddComponentToEntity<c_Wall>(entities[2], wall_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
 	COORD.SetUpRenderData(entities[2]);
 	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
@@ -535,6 +548,19 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// ----------------------------------------------------------------------
+		std::cout << "\nent_0 pos    = " << COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).pos.x 
+			<< ", "
+			<< COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).pos.y
+			<< ", "
+			<< COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).pos.z
+			<< " " << std::endl;
+
+		std::cout << "\nent_0 prepos = " << COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).prevPos.x
+			<< ", "
+			<< COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).prevPos.y
+			<< ", "
+			<< COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).prevPos.z
+			<< " " << std::endl;
 		
 		sh_basicWithTex->bindProgram();
 		bindVao(CubeVAO);
@@ -558,10 +584,18 @@ int main(void)
 		//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 		//tr_0.pos.x = tr_0.pos.x + 1.0f;
 
+		moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
 
 		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
 
-		/* End Rendering Code */ // ----------------------------------------------
+		genMenu_1(
+			COORD.GetComponentDataFromEntity<c_Transform>(entities[0]),
+			texData,
+			modifiedData,
+			containerTexUnit,
+			rockySurfaceTexUnit,
+			COORD.GetComponentDataFromEntity<c_AABB>(entities[0])
+		);
 
 		//#Removed_1: 206 - 314
 
@@ -578,9 +612,6 @@ int main(void)
 
 		glfwPollEvents();
 
-		//c_Transform& posData, c_Texture& texData, c_Modified& modified, short int containerTexUnit, unsigned short int rockySurfaceTexUnit
-		genMenu_1(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), texData, modifiedData, containerTexUnit, rockySurfaceTexUnit, COORD.GetComponentDataFromEntity<c_AABB>(entities[0]));
-
 		processInput(window);
 
 		glfwSwapBuffers(window);
@@ -596,6 +627,18 @@ int main(void)
 	//std::cin.get();
 
 	return 0;
+}
+
+void moveEntityBackAndFourth(c_Transform& entTrans, float DT)
+{
+	if(entTrans.pos.z > (-4.0f))
+	{
+		entTrans.pos.z = entTrans.pos.z + (DT * (-0.4f));
+	}
+	else
+	{
+		entTrans.pos.z = entTrans.pos.z + (DT * 0.4f);
+	}
 }
 
 void processInput(GLFWwindow* window)

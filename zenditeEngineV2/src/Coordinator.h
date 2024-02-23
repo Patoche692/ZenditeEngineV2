@@ -6,6 +6,12 @@
 #include "ECS/Systems/SetupSpotLightSystem.h"
 #include "ECS/Systems/RenderLightingSystem.h"
 #include "ECS/Systems/CollisionDetectionAABBSystem.h"
+#include "ECS/Systems/PositionTrackerSystem.h"
+
+#include "ECS/Systems/SetUpWallAABBSystem.h"
+#include "ECS/Systems/SetUpWallColliderAABBSystem.h"
+#include "ECS/Systems/WallCollisionHandlingSystem.h"
+
 #include "API_Rendering/OpenGL_Manager.h"
 
 class Camera;
@@ -26,7 +32,10 @@ private:
 	std::shared_ptr<SetupPointLightSystem> m_SetupPointLightSystem;
 	std::shared_ptr<SetupSpotLightSystem> m_SetupSpotLightSystem;
 	std::shared_ptr<RenderLightingSystem> m_RenderLightingSystem;
-
+	std::shared_ptr<SetUpWallAABBSystem> m_SetUpWallAABBSystem;
+	std::shared_ptr<SetUpWallColliderAABBSystem> m_SetUpWallColliderAABBSystem;
+	std::shared_ptr<WallCollisionHandlingSystem> m_WallCollisionHandlingSystem;
+	std::shared_ptr<PositionTrackerSystem> m_PositionTrackerSystem;
 	
 public:
 	Coordinator(std::string API_Type, std::string Render_Type, std::shared_ptr<Camera> camera);
