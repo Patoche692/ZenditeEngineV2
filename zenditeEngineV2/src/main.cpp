@@ -83,19 +83,13 @@ int main(void)
 		std::cout << "I'm am not GLEW_OK, I'm GLEW_SAD :(\n";
 	}
 
-
 	imGuiSetup(window);
-
 
 	stbi_set_flip_vertically_on_load(true); //#### THIS NEEDS TO BE ACTIVE ### or else image texture will be upside down.
 	//std::cout << "Current working directory: " << fs::current_path() << std::endl;
 	glEnable(GL_DEPTH_TEST);
 
-	//#Removed_3: 78 - 88
-
 	std::cout << glGetString(GL_VERSION) << "\n";
-
-	//#Removed_2: 92 - 184
 
 	//Check the number of texture units we can have on the GPU
 	GLint maxTextureUnits;
@@ -405,6 +399,7 @@ int main(void)
 	entities[1] = COORD.CreateEntity();
 	entities[2] = COORD.CreateEntity();
 
+
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
 	//unsigned short int heightMapTex = COORD.GenerateTexUnit("res/textures/heightmap.png", "PNG");
@@ -471,6 +466,8 @@ int main(void)
 	c_Wall wall_3;
 	c_Modified md_3;
 
+	c_SpotLightEmitter spl_3;
+
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
@@ -499,24 +496,8 @@ int main(void)
 	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
 	COORD.StoreShaderInEntityDataHandle(entities[2]);
 	
-	std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
-	std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
-
-	// END ECS - $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-	// Old Rendering:
-
-	/*
-	Shader sh_basicWithTex("res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
-		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
-	*/
-
-	unsigned int CubeVAO;
-	unsigned int CubeVBO;
-
-	GenerateCubeNoEBO(CubeVAO, CubeVBO);
-	Texture2D cubeTex("diffuse");
-	cubeTex.setupTexturePNG(0, "res/textures/container2.png");
+	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
+	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
 
 	auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[0]);
 	auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[0]);
@@ -529,12 +510,6 @@ int main(void)
 
 	std::cout << "GLFW Version: " << major << "." << minor << "." << revision << std::endl;
 
-	//glfwSetCursorPosCallback(window, nullptr);
-	//glfwSetCursorPosCallback(window, mouse_callback);
-
-	double xx = 0.0f;
-	double yy = 0.0f;
-
 	while (!glfwWindowShouldClose(window))
 	{
 		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -546,43 +521,6 @@ int main(void)
 		/* Render here */
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// ----------------------------------------------------------------------
-		std::cout << "\nent_0 pos    = " << COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).pos.x 
-			<< ", "
-			<< COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).pos.y
-			<< ", "
-			<< COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).pos.z
-			<< " " << std::endl;
-
-		std::cout << "\nent_0 prepos = " << COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).prevPos.x
-			<< ", "
-			<< COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).prevPos.y
-			<< ", "
-			<< COORD.GetComponentDataFromEntity<c_Transform>(entities[0]).prevPos.z
-			<< " " << std::endl;
-		
-		sh_basicWithTex->bindProgram();
-		bindVao(CubeVAO);
-		glm::mat4 cubeProjection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		glm::mat4 cubeView = camera->GetViewMatrix();
-		sh_basicWithTex->setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
-		sh_basicWithTex->setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
-
-		glm::mat4 cubeModel = glm::mat4(1.0f);
-		cubeModel = glm::translate(cubeModel, glm::vec3(2.5f, 0.0f, -1.2f));
-		cubeModel = glm::scale(cubeModel, glm::vec3(1.0f, 1.0f, 1.0f));
-		sh_basicWithTex->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
-
-		//cubeTex.changeTexUnit(0);
-
-		sh_basicWithTex->setUniformTextureUnit("Material.diffuse", 0);
-		sh_basicWithTex->setUniformTextureUnit("shadowMap", 1);
-		sh_basicWithTex->setUniform3fv("material.specular", 0.5f, 0.5f, 0.5f);
-		sh_basicWithTex->setUniformFloat("material.shininess", 32.0f);
-
-		//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
-		//tr_0.pos.x = tr_0.pos.x + 1.0f;
 
 		moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
 
