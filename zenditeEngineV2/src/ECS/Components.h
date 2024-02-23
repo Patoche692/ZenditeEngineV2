@@ -7,6 +7,7 @@
 struct c_Transform
 {
 	glm::vec3 pos;
+	glm::vec3 prevPos;
 	glm::vec3 scale;
 };
 
@@ -15,6 +16,17 @@ struct c_AABB
 	glm::vec3 scale;
 	float *vertices; //Data to go in the VBO that stores the vertices of the AABB
 	bool isColliding;
+	bool isWallColliding;
+};
+
+struct c_Wall
+{
+
+};
+
+struct c_WallCollider
+{
+
 };
 
 struct c_RenderableComponent
@@ -53,7 +65,7 @@ struct c_Texture
 {
 	void setTexCoordsVertexArray(float* verts, size_t size)
 	{
-		texCoords = new float[size];
+		texCoords = new float[size]; //#EXCEPTION_THROWN_RANDOMLY_HERE
 
 		for (int i = 0; i < size; ++i)
 		{
@@ -97,41 +109,6 @@ struct c_SpotLightEmitter
     glm::vec3 specular;       
 
 };
-
-struct c_LightResponderMesh
-{
-	void setPosVertexArray(float* verts, size_t size)
-	{
-		posVertices = new float[size]; //#Memory_Leak_Potential
-
-		for (int i = 0; i < size; ++i)
-		{
-			posVertices[i] = verts[i];
-		}
-
-		posArraySize = size;
-	}
-
-	void setSurfaceNormalVertexArray(float* verts, size_t size)
-	{
-		surfaceNormalVertices = new float[size]; //#Memory_Leak_Potential
-
-		for (int i = 0; i < size; ++i)
-		{
-			surfaceNormalVertices[i] = verts[i];
-		}
-
-		snArraySize = size;
-	}
-
-	float* posVertices;
-	float* surfaceNormalVertices; //#HERE
-	size_t posArraySize;
-	size_t snArraySize;
-
-};
-
-
 
 struct c_Modified
 {

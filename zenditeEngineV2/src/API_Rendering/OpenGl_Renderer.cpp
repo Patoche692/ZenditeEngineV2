@@ -11,8 +11,10 @@ OpenGL_Renderer::OpenGL_Renderer(std::shared_ptr<Camera> cam) : I_Renderer(cam)
 	
 }
 
-void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, const c_Transform& trans)
+void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECScoord, Entity EID)
 {
+	c_Transform& trans = ECScoord.GetComponentDataFromEntity<c_Transform>(EID);
+
 	(DataHandle.shader)->bindProgram();
 	bindVao(DataHandle.VAO);
 	glm::mat4 cubeProjection = glm::perspective(glm::radians(cam->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -24,6 +26,8 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, const c_Transform& 
 	cubeModel = glm::translate(cubeModel, trans.pos);
 	cubeModel = glm::scale(cubeModel, trans.scale);
 	(DataHandle.shader)->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
+
+	
 
 	//(DataHandle.texture)->changeTexUnit(DataHandle.texUnit); //#unnecessary. Each texture is saved to a texture unit and is not changed throught the programs lifespan
 															   //			   This might be useful later if assigned texture units can be modified later during runtime
@@ -65,7 +69,14 @@ void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle,
 
 	if (AABB_Data.isColliding == true)
 	{
-		AABBShader.setUniform4f("lineColor", 1.0f, 0.0f, 0.0f, 1.0f);
+		if(AABB_Data.isWallColliding == true)
+		{
+			AABBShader.setUniform4f("lineColor", 0.0f, 1.0f, 0.0f, 1.0f);
+		}
+		else
+		{
+			AABBShader.setUniform4f("lineColor", 1.0f, 0.0f, 0.0f, 1.0f);
+		}
 	}
 	else
 	{
@@ -80,6 +91,12 @@ void OpenGL_Renderer::RenderLighting(const R_DataHandle& DataHandle,
 	const c_Transform& trans,
 	std::shared_ptr<ECSCoordinator> ECScoord)
 {
-	const c_SpotLightEmitter& spotLightData = ECScoord->GetComponentDataFromEntity<c_SpotLightEmitter>(ECScoord->GetSpotLightEntities()[0]);
+	std::set<Entity>* SpotLightSet = ECScoord->GetSpotLightEntitiesPtr();
+
+	for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it)
+	{
+		const c_SpotLightEmitter& spotLightData = ECScoord->GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
+	}
+	
 	
 }

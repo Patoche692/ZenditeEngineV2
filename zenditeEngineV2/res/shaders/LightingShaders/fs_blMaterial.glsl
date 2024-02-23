@@ -9,7 +9,7 @@ struct Material
     float shininess; //AKA: specularStrength
 };
 
-struct Light 
+struct Light  //"Light.ambient"
 {
     vec3 ambient;
     vec3 diffuse;

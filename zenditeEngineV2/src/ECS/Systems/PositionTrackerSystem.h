@@ -7,41 +7,37 @@
 #include "../../API_Rendering/I_API_Manager.h"
 #include "../../ECS/Components.h"
 
-class RenderableSystem : public I_System, public I_Subject
+#include "../../Shader.h"
+
+class PositionTrackerSystem : public I_System, public I_Subject
 {
 private:
-	//std::shared_ptr<ECSCoordinator> ECScoord;
-
-
+	Shader m_AABBShader;
 
 public:
-	RenderableSystem()
+	//res/shaders/AABB/vs_BasicAABB.glsl //res/shaders/AABB/fs_BasicAABB.glsl
+	PositionTrackerSystem() : m_AABBShader("res/shaders/AABB/vs_BasicAABB.glsl", "res/shaders/AABB/fs_BasicAABB.glsl")
 	{
-		//#Temp_Simple_Rendering_System
-		
+
 	}
 
 	void NotifyObservers(std::shared_ptr<ECSCoordinator> ECS_Coord, int* i) override
 	{
 		for (size_t i = 0; i < observerList.size(); ++i) //Iterate through every item in observerList
 		{
-			//#To_Complete_4
+			//#To_Complete_3
 		}
 	}
 
-	void Render(std::shared_ptr<I_Renderer> renderer, std::shared_ptr<I_API_Manager> apiManager, std::shared_ptr<ECSCoordinator> ECScoord)
-	{	
+	void UpdatePrePosData(std::shared_ptr<ECSCoordinator> ECScoord)
+	{
 		for (auto const& EID : m_EntitySet)
 		{
 			//If entities "modified" component is true, then call
-			if (ECScoord->GetComponentDataFromEntity<c_Modified>(EID).isModifed)
-			{
-				apiManager->SetupRenderData(EID, ECScoord);
-				apiManager->SetShaderForDataHandle(EID);
-
-			}
-
-			renderer->Render(apiManager->GetEntityDataHandle(EID), *ECScoord, EID);
+			c_Transform& transData = ECScoord->GetComponentDataFromEntity<c_Transform>(EID);
+			transData.prevPos = transData.pos;
+			
+			
 		}
 	}
 

@@ -181,11 +181,15 @@
     <ClInclude Include="src\ECS\I_System.h" />
     <ClInclude Include="src\ECS\SystemManager.h" />
     <ClInclude Include="src\ECS\Systems\CollisionDetectionAABBSystem.h" />
+    <ClInclude Include="src\ECS\Systems\PositionTrackerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderAABBSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderableSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderLightingSystem.h" />
     <ClInclude Include="src\ECS\Systems\SetupPointLightSystem.h" />
     <ClInclude Include="src\ECS\Systems\SetupSpotLightSystem.h" />
+    <ClInclude Include="src\ECS\Systems\SetUpWallAABBSystem.h" />
+    <ClInclude Include="src\ECS\Systems\SetUpWallColliderAABBSystem.h" />
+    <ClInclude Include="src\ECS\Systems\WallCollisionHandlingSystem.h" />
     <ClInclude Include="src\EventManager\CollisionResponseSystem.h" />
     <ClInclude Include="src\EventManager\I_Observer.h" />
     <ClInclude Include="src\EventManager\I_Subject.h" />
