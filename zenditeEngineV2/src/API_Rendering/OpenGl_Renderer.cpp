@@ -27,20 +27,34 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	cubeModel = glm::scale(cubeModel, trans.scale);
 	(DataHandle.shader)->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
+	std::shared_ptr<Shader> shader = DataHandle.shader;
 	
 	std::set<Entity>* SpotLightSet = ECScoord.GetSpotLightEntitiesPtr();
+	int nrSpotLights = SpotLightSet->size();
+	shader->setUniformInt("nrSpotLights", nrSpotLights);
 
-	//for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it)
-	//{
-	//	const c_SpotLightEmitter& spotLightData = ECScoord.GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
-	//}
-	std::shared_ptr<Shader> shader = DataHandle.shader;
+	int i = 0;
+	for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it, i++)
+	{
+		c_SpotLightEmitter& spotLightData = ECScoord.GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
+		c_Transform& spotLightTransform = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
+		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].position"), spotLightTransform.pos);
+		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].direction"), spotLightData.direction);
+		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].cutOff"), spotLightData.cutOff);
+		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].outerCutOff"), spotLightData.outerCutOff);
+		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].constant"), spotLightData.constant);
+		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].linear"), spotLightData.linear);
+		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].quadratic"), spotLightData.quadratic);
+		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].ambient"), spotLightData.ambient);
+		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].diffuse"), spotLightData.diffuse);
+		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].specular"), spotLightData.specular);
+	}
 
 	std::set<Entity>* PointLightSet = ECScoord.GetPointLightEntitiesPtr();
 	int nrPointLights = PointLightSet->size();
 	shader->setUniformInt("nrPointLights", nrPointLights);
 
-	int i = 0;
+	i = 0;
 	for (std::set<std::uint32_t>::iterator it = (*PointLightSet).begin(); it != (*PointLightSet).end(); ++it, ++i)
 	{
 		c_PointLightEmitter& pointLightData = ECScoord.GetComponentDataFromEntity<c_PointLightEmitter>(*it);

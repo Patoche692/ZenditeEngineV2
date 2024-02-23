@@ -418,7 +418,7 @@ int main(void)
 	tr_1.scale = glm::vec3(10.0f, 0.5f, 10.0f);
 	tr_2.pos = glm::vec3(-0.2f, 0.0f, -4.5f);
 	tr_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	tr_3.pos = glm::vec3(-2.0f, 1.0f, 1.0f);
+	tr_3.pos = glm::vec3(0.0f, 0.0f, 2.0f);
 	tr_3.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	c_RenderableComponent rc_0;
@@ -470,10 +470,13 @@ int main(void)
 	c_Wall wall_0;
 	c_WallCollider wallCollider_2;
 
-	c_PointLightEmitter ple_3;
+	c_SpotLightEmitter ple_3;
 	ple_3.ambient = glm::vec3(0.8f);
 	ple_3.diffuse = glm::vec3(0.8f);
 	ple_3.specular = glm::vec3(1.0f);
+	ple_3.direction = glm::vec3(0.0f, 0.0f, -2.0f);
+	ple_3.cutOff = glm::cos(glm::radians(12.5f));
+	ple_3.outerCutOff = glm::cos(glm::radians(15.0f));
 	ple_3.constant = 1.0f;
 	ple_3.linear = 0.09f;
 	ple_3.quadratic = 0.032f;
@@ -508,7 +511,7 @@ int main(void)
 
 	COORD.AddComponentToEntity<c_Transform>(entities[3], tr_2);
 	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
-	COORD.AddComponentToEntity<c_PointLightEmitter>(entities[3], ple_3);
+	COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], ple_3);
 	
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;

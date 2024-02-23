@@ -91,9 +91,9 @@ void Coordinator::SetUpSystemBitsets()
 	m_ECSCoord->SetSystemBitsetSignature<SetupPointLightSystem>(SetupPointLightSystemSig);
 
 	Signature SetupSpotLightSystemSig;
-	SetupPointLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
-	SetupPointLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_SpotLightEmitter>());
-	SetupPointLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
+	SetupSpotLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
+	SetupSpotLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_SpotLightEmitter>());
+	SetupSpotLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 	m_ECSCoord->SetSystemBitsetSignature<SetupSpotLightSystem>(SetupSpotLightSystemSig);
 
 	Signature SetUpWallAABBSystemSig;
