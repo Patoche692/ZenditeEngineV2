@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <GLFW/glfw3.h>
+#include <chrono>
 
 #include "vendor/stb_image/stb_image.h"
 #include "assimp/Importer.hpp"
@@ -26,6 +27,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+
+void moveEntityBackAndFourth(c_Transform& entTrans, float DT);
 
 // camera
 std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -581,10 +584,18 @@ int main(void)
 		//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 		//tr_0.pos.x = tr_0.pos.x + 1.0f;
 
+		moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
 
 		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
 
-		/* End Rendering Code */ // ----------------------------------------------
+		genMenu_1(
+			COORD.GetComponentDataFromEntity<c_Transform>(entities[0]),
+			texData,
+			modifiedData,
+			containerTexUnit,
+			rockySurfaceTexUnit,
+			COORD.GetComponentDataFromEntity<c_AABB>(entities[0])
+		);
 
 		//#Removed_1: 206 - 314
 
@@ -601,9 +612,6 @@ int main(void)
 
 		glfwPollEvents();
 
-		//c_Transform& posData, c_Texture& texData, c_Modified& modified, short int containerTexUnit, unsigned short int rockySurfaceTexUnit
-		genMenu_1(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), texData, modifiedData, containerTexUnit, rockySurfaceTexUnit, COORD.GetComponentDataFromEntity<c_AABB>(entities[0]));
-
 		processInput(window);
 
 		glfwSwapBuffers(window);
@@ -619,6 +627,18 @@ int main(void)
 	//std::cin.get();
 
 	return 0;
+}
+
+void moveEntityBackAndFourth(c_Transform& entTrans, float DT)
+{
+	if(entTrans.pos.z > (-4.0f))
+	{
+		entTrans.pos.z = entTrans.pos.z + (DT * (-0.4f));
+	}
+	else
+	{
+		entTrans.pos.z = entTrans.pos.z + (DT * 0.4f);
+	}
 }
 
 void processInput(GLFWwindow* window)
