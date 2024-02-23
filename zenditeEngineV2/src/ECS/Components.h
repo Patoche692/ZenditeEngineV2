@@ -68,18 +68,66 @@ struct c_Texture
 	size_t arraySize;
 };
 
-struct c_SpotLightEmitter
-{
-
-};
-
 struct c_PointLightEmitter
 {
+    glm::vec3 position;
+    
+    float constant;
+    float linear;
+    float quadratic;
+	
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+};
+
+struct c_SpotLightEmitter
+{
+    glm::vec3 position;
+    glm::vec3 direction;
+    float cutOff;
+    float outerCutOff;
+  
+    float constant;
+    float linear;
+    float quadratic;
+  
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;       
 
 };
 
 struct c_LightResponderMesh
 {
+	void setPosVertexArray(float* verts, size_t size)
+	{
+		posVertices = new float[size]; //#Memory_Leak_Potential
+
+		for (int i = 0; i < size; ++i)
+		{
+			posVertices[i] = verts[i];
+		}
+
+		posArraySize = size;
+	}
+
+	void setSurfaceNormalVertexArray(float* verts, size_t size)
+	{
+		surfaceNormalVertices = new float[size]; //#Memory_Leak_Potential
+
+		for (int i = 0; i < size; ++i)
+		{
+			surfaceNormalVertices[i] = verts[i];
+		}
+
+		snArraySize = size;
+	}
+
+	float* posVertices;
+	float* surfaceNormalVertices; //#HERE
+	size_t posArraySize;
+	size_t snArraySize;
 
 };
 

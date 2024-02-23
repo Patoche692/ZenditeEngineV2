@@ -14,8 +14,7 @@ public:
 		const c_Transform& trans) override;
 	void RenderLighting(const R_DataHandle& DataHandle,
 		const c_Transform& trans,
-		std::shared_ptr<ECSCoordinator> ECScoord
-	) override;
+		std::shared_ptr<ECSCoordinator> ECScoord) override;
 
 private:
 

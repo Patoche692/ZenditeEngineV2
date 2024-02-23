@@ -110,6 +110,8 @@ int main(void)
 
 	std::shared_ptr<Shader> sh_basicWithTex = std::make_shared<Shader>("res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
 		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl"); //#Shaders have not yet been abstracted into the API_Manger
+	std::shared_ptr<Shader> sh_shadows = std::make_shared<Shader>("res/shaders/Shadows/vs_multiLightShadowNoSpecular.glsl",
+		"res/shaders/Shadows/fs_multiLightShadowNoSpecular.glsl");
 
 
 	//#TODO Need to pass data read in from the model loader to the ECS system for rendering.
@@ -401,6 +403,7 @@ int main(void)
 	entities[0] = COORD.CreateEntity();
 	entities[1] = COORD.CreateEntity();
 	entities[2] = COORD.CreateEntity();
+	entities[3] = COORD.CreateEntity();
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
@@ -425,6 +428,10 @@ int main(void)
 	c_RenderableComponent rc_1;
 	rc_1.setPosVertexArray(oddShapeVertexData, sizeof(oddShapeVertexData));
 	rc_0.setSurfaceNormalVertexArray(oddShapedVDataNormals, sizeof(oddShapedVDataNormals));
+
+	c_LightResponderMesh lightResponder;
+	lightResponder.setPosVertexArray(vertexDataValues, sizeof(vertexDataValues));
+	lightResponder.setSurfaceNormalVertexArray(surfaceNormalValues, sizeof(surfaceNormalValues));
 
 	c_Texture tx_0;
 	tx_0.setTexCoordsVertexArray(textureCoords, sizeof(textureCoords));
@@ -451,6 +458,9 @@ int main(void)
 
 	c_Modified md_2;
 	md_2.isModifed = true;
+
+	c_Modified md_3;
+	md_3.isModifed = true;
 
 	c_AABB aabb_0;
 	aabb_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -485,6 +495,14 @@ int main(void)
 	COORD.SetUpRenderData(entities[2]);
 	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
 	COORD.StoreShaderInEntityDataHandle(entities[2]);
+
+	COORD.AddComponentToEntity<c_Transform>(entities[3], tr_2);
+	COORD.AddComponentToEntity<c_LightResponderMesh>(entities[3], lightResponder);
+	COORD.AddComponentToEntity<c_Texture>(entities[3], tx_1);
+	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
+	COORD.SetUpRenderData(entities[3]);
+	COORD.setShaderForEntity(entities[3], sh_shadows);
+	COORD.StoreShaderInEntityDataHandle(entities[3]);
 	
 	std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
