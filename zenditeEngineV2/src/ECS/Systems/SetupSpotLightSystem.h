@@ -36,6 +36,7 @@ public:
 		{
 			spotLights.push_back(EID);
 			//If entities "modified" component is true, then call
+			
 
 		}
 		ECScoord->SetSpotLightEntities(spotLights);

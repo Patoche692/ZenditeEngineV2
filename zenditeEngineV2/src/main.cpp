@@ -399,6 +399,7 @@ int main(void)
 	entities[1] = COORD.CreateEntity();
 	entities[2] = COORD.CreateEntity();
 
+
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
 	//unsigned short int heightMapTex = COORD.GenerateTexUnit("res/textures/heightmap.png", "PNG");
@@ -464,6 +465,8 @@ int main(void)
 	c_AABB aabb_3;
 	c_Wall wall_3;
 	c_Modified md_3;
+
+	c_SpotLightEmitter spl_3;
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);

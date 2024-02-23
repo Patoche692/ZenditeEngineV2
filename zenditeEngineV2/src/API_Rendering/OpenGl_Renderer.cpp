@@ -11,8 +11,10 @@ OpenGL_Renderer::OpenGL_Renderer(std::shared_ptr<Camera> cam) : I_Renderer(cam)
 	
 }
 
-void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, const c_Transform& trans)
+void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECScoord, Entity EID)
 {
+	c_Transform& trans = ECScoord.GetComponentDataFromEntity<c_Transform>(EID);
+
 	(DataHandle.shader)->bindProgram();
 	bindVao(DataHandle.VAO);
 	glm::mat4 cubeProjection = glm::perspective(glm::radians(cam->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -24,6 +26,8 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, const c_Transform& 
 	cubeModel = glm::translate(cubeModel, trans.pos);
 	cubeModel = glm::scale(cubeModel, trans.scale);
 	(DataHandle.shader)->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
+
+	
 
 	//(DataHandle.texture)->changeTexUnit(DataHandle.texUnit); //#unnecessary. Each texture is saved to a texture unit and is not changed throught the programs lifespan
 															   //			   This might be useful later if assigned texture units can be modified later during runtime
