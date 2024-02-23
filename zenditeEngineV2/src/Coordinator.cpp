@@ -100,7 +100,8 @@ void Coordinator::SetUpRenderData(Entity EID)
 {
 	// if ((entitySig & sysSig) == sysSig)
 
-	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>())
+	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>() ||
+	(m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>())
 	{
 		m_APImanager->SetupRenderData(EID, m_ECSCoord);
 	}
@@ -117,7 +118,8 @@ Entity Coordinator::CreateEntity()
 
 void Coordinator::setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader)
 {
-	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>())
+	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>() ||
+	(m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>())
 	{
 		m_APImanager->SetShaderForEntity(EID, shader);
 	}
@@ -129,7 +131,8 @@ void Coordinator::setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader)
 
 void Coordinator::StoreShaderInEntityDataHandle(Entity EID)
 {
-	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>())
+	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>() ||
+	(m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>())
 	{
 		m_APImanager->SetShaderForDataHandle(EID);
 	}
