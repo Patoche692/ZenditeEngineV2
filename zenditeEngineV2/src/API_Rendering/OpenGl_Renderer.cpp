@@ -91,6 +91,12 @@ void OpenGL_Renderer::RenderLighting(const R_DataHandle& DataHandle,
 	const c_Transform& trans,
 	std::shared_ptr<ECSCoordinator> ECScoord)
 {
-	const c_SpotLightEmitter& spotLightData = ECScoord->GetComponentDataFromEntity<c_SpotLightEmitter>(ECScoord->GetSpotLightEntities()[0]);
+	std::set<Entity>* SpotLightSet = ECScoord->GetSpotLightEntitiesPtr();
+
+	for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it)
+	{
+		const c_SpotLightEmitter& spotLightData = ECScoord->GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
+	}
+	
 	
 }
