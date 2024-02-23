@@ -31,14 +31,17 @@ public:
 
 	void Setup(std::shared_ptr<I_API_Manager> apiManager, std::shared_ptr<ECSCoordinator> ECScoord)
 	{	
-		std::vector<Entity> pointLights = std::vector<Entity>(10);
+		
 		for (auto const& EID : m_EntitySet)
 		{
-			pointLights.push_back(EID);
+			
 			//If entities "modified" component is true, then call
 
+			//Set up each point light here ------------------------:
+
 		}
-		ECScoord->SetSpotLightEntities(pointLights);
+
+		ECScoord->SetSpotLightEntitiesPtr(&m_EntitySet);
 	}
 
 private:
