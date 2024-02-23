@@ -28,23 +28,51 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	(DataHandle.shader)->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
 	
+	std::set<Entity>* SpotLightSet = ECScoord.GetSpotLightEntitiesPtr();
+
+	//for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it)
+	//{
+	//	const c_SpotLightEmitter& spotLightData = ECScoord.GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
+	//}
+	std::shared_ptr<Shader> shader = DataHandle.shader;
+
+	std::set<Entity>* PointLightSet = ECScoord.GetPointLightEntitiesPtr();
+	int nrPointLights = PointLightSet->size();
+	shader->setUniformInt("nrPointLights", nrPointLights);
+
+	int i = 0;
+	for (std::set<std::uint32_t>::iterator it = (*PointLightSet).begin(); it != (*PointLightSet).end(); ++it, ++i)
+	{
+		c_PointLightEmitter& pointLightData = ECScoord.GetComponentDataFromEntity<c_PointLightEmitter>(*it);
+		c_Transform& pointLightTransform = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
+		shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].position"), pointLightTransform.pos);
+		shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].constant"), pointLightData.constant);
+		shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].linear"), pointLightData.linear);
+		shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].quadratic"), pointLightData.quadratic);
+		shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].ambient"), pointLightData.ambient);
+		shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].diffuse"), pointLightData.diffuse);
+		shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].specular"), pointLightData.specular);
+	}
 
 	//(DataHandle.texture)->changeTexUnit(DataHandle.texUnit); //#unnecessary. Each texture is saved to a texture unit and is not changed throught the programs lifespan
 															   //			   This might be useful later if assigned texture units can be modified later during runtime
 															   //			   Although, all this does is take a texture and assign it to a texture unit.
 	glm::vec3 camPosition = cam->getPosition();
-	std::shared_ptr<Shader> shader = DataHandle.shader;
 	shader->setUniform3fv("viewPos", camPosition);
 	shader->setUniform3fv("lightPos", -8.0f, 7.0f, -4.0f);
 	shader->setUniform3fv("dirLight.direction", 8.0f, -7.0f, 4.0f);
-	shader->setUniform3fv("dirLight.ambient", 0.5f, 0.5f, 0.5f);
-	shader->setUniform3fv("dirLight.diffuse", 0.8f, 0.8f, 0.8f);
-	shader->setUniform3fv("dirLight.specular", 0.5f, 0.5f, 0.5f);
-	shader->setUniformInt("nrPointLights", 0);
+	//shader->setUniform3fv("dirLight.ambient", 0.5f, 0.5f, 0.5f);
+	//shader->setUniform3fv("dirLight.diffuse", 0.8f, 0.8f, 0.8f);
+	//shader->setUniform3fv("dirLight.specular", 0.5f, 0.5f, 0.5f);
 	shader->setUniformInt("nrSpotLights", 0);
 
 
 	(DataHandle.shader)->setUniformTextureUnit("colorTexture", DataHandle.texUnit);
+	(DataHandle.shader)->setUniformTextureUnit("material.diffuse", DataHandle.texUnit);
+	(DataHandle.shader)->setUniformTextureUnit("shadowMap", 1);
+	(DataHandle.shader)->setUniform3fv("material.specular", 0.5f, 0.5f, 0.5f);
+	(DataHandle.shader)->setUniformFloat("material.shininess", 32.0f);
+
 
 	GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 }

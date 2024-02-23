@@ -41,7 +41,7 @@ public:
 
 		}
 
-		ECScoord->SetSpotLightEntitiesPtr(&m_EntitySet);
+		ECScoord->SetPointLightEntitiesPtr(&m_EntitySet);
 	}
 
 private:

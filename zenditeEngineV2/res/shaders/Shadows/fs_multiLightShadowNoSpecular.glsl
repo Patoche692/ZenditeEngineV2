@@ -75,7 +75,7 @@ void main()
 	vec3 norm = normalize(fs_in.Normal);
     vec3 viewDir = normalize(viewPos - fs_in.FragPos);
 
-    float shadow = shadowCalculation();
+    float shadow = 0.0;//shadowCalculation();
 
     vec3 result = CalcDirLight(dirLight, norm, viewDir, shadow);
 
