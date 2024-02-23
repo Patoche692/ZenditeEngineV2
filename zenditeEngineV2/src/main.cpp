@@ -400,7 +400,6 @@ int main(void)
 	entities[0] = COORD.CreateEntity();
 	entities[1] = COORD.CreateEntity();
 	entities[2] = COORD.CreateEntity();
-	entities[3] = COORD.CreateEntity();
 
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");

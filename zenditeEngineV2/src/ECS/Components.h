@@ -80,10 +80,13 @@ struct c_Texture
 	size_t arraySize;
 };
 
+struct c_DirectionalLightEmitter
+{
+
+};
+
 struct c_PointLightEmitter
 {
-    glm::vec3 position;
-    
     float constant;
     float linear;
     float quadratic;
@@ -95,7 +98,6 @@ struct c_PointLightEmitter
 
 struct c_SpotLightEmitter
 {
-    glm::vec3 position;
     glm::vec3 direction;
     float cutOff;
     float outerCutOff;
