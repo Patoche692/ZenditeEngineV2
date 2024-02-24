@@ -78,7 +78,6 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	//shader->setUniform3fv("dirLight.ambient", 0.5f, 0.5f, 0.5f);
 	//shader->setUniform3fv("dirLight.diffuse", 0.8f, 0.8f, 0.8f);
 	//shader->setUniform3fv("dirLight.specular", 0.5f, 0.5f, 0.5f);
-	shader->setUniformInt("nrSpotLights", 0);
 
 
 	(DataHandle.shader)->setUniformTextureUnit("colorTexture", DataHandle.texUnit);

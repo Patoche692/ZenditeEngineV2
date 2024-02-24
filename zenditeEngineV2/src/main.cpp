@@ -418,7 +418,7 @@ int main(void)
 	tr_1.scale = glm::vec3(10.0f, 0.5f, 10.0f);
 	tr_2.pos = glm::vec3(-0.2f, 0.0f, -4.5f);
 	tr_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	tr_3.pos = glm::vec3(0.0f, 0.0f, 2.0f);
+	tr_3.pos = camera->getPosition();
 	tr_3.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	c_RenderableComponent rc_0;
@@ -474,7 +474,7 @@ int main(void)
 	ple_3.ambient = glm::vec3(0.8f);
 	ple_3.diffuse = glm::vec3(0.8f);
 	ple_3.specular = glm::vec3(1.0f);
-	ple_3.direction = glm::vec3(0.0f, 0.0f, -2.0f);
+	ple_3.direction = camera->Front;
 	ple_3.cutOff = glm::cos(glm::radians(12.5f));
 	ple_3.outerCutOff = glm::cos(glm::radians(15.0f));
 	ple_3.constant = 1.0f;
@@ -540,6 +540,11 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
+
+		c_Transform& flashLightTransform = COORD.GetComponentDataFromEntity<c_Transform>(entities[3]);
+		flashLightTransform.pos = camera->getPosition();
+		c_SpotLightEmitter& flashLightData = COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[3]);
+		flashLightData.direction = camera->Front;
 
 		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
 
