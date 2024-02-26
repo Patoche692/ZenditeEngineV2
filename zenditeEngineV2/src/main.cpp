@@ -57,7 +57,7 @@ int main(void)
 		return -1;
 	}
 	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Zen", NULL, NULL);
-	if (!window){
+	if (!window) {
 		glfwTerminate();
 		return -1;
 	}
@@ -244,47 +244,47 @@ int main(void)
 
 	float oddShapeVertexData[] = {
 		// positions          // normals           // texture coords
-		-0.5f, -1.5f, -0.5f,  
-		 0.5f, -1.5f, -0.5f,  
-		 0.5f,  1.5f, -0.5f,  
-		 0.5f,  1.5f, -0.5f,  
-		-0.5f,  1.5f, -0.5f,  
-		-0.5f, -1.5f, -0.5f,  
+		-0.5f, -1.5f, -0.5f,
+		 0.5f, -1.5f, -0.5f,
+		 0.5f,  1.5f, -0.5f,
+		 0.5f,  1.5f, -0.5f,
+		-0.5f,  1.5f, -0.5f,
+		-0.5f, -1.5f, -0.5f,
 
-		-0.5f, -1.5f,  0.5f,  
-		 0.5f, -1.5f,  0.5f,  
-		 0.5f,  1.5f,  0.5f,  
-		 0.5f,  1.5f,  0.5f,  
-		-0.5f,  1.5f,  0.5f,  
-		-0.5f, -1.5f,  0.5f,  
+		-0.5f, -1.5f,  0.5f,
+		 0.5f, -1.5f,  0.5f,
+		 0.5f,  1.5f,  0.5f,
+		 0.5f,  1.5f,  0.5f,
+		-0.5f,  1.5f,  0.5f,
+		-0.5f, -1.5f,  0.5f,
 
-		-0.5f,  1.5f,  0.5f,  
-		-0.5f,  1.5f, -0.5f,  
-		-0.5f, -1.5f, -0.5f,  
-		-0.5f, -1.5f, -0.5f,  
-		-0.5f, -1.5f,  0.5f,  
-		-0.5f,  1.5f,  0.5f,  
-				
-		 0.5f,  1.5f,  0.5f,  
-		 0.5f,  1.5f, -0.5f,  
-		 0.5f, -1.5f, -0.5f,  
-		 0.5f, -1.5f, -0.5f,  
-		 0.5f, -1.5f,  0.5f,  
-		 0.5f,  1.5f,  0.5f,  
-				
-		- 0.5f, -1.5f, -0.5f, 
-		 0.5f, -1.5f, -0.5f,  
-		 0.5f, -1.5f,  0.5f,  
-		 0.5f, -1.5f,  0.5f,  
-		-0.5f, -1.5f,  0.5f,  
-		-0.5f, -1.5f, -0.5f,  
-				
-		-0.5f,  1.5f, -0.5f,  
-		 0.5f,  1.5f, -0.5f,  
-		 0.5f,  1.5f,  0.5f,  
-		 0.5f,  1.5f,  0.5f,  
-		-0.5f,  1.5f,  0.5f,  
-		-0.5f,  1.5f, -0.5f  
+		-0.5f,  1.5f,  0.5f,
+		-0.5f,  1.5f, -0.5f,
+		-0.5f, -1.5f, -0.5f,
+		-0.5f, -1.5f, -0.5f,
+		-0.5f, -1.5f,  0.5f,
+		-0.5f,  1.5f,  0.5f,
+
+		 0.5f,  1.5f,  0.5f,
+		 0.5f,  1.5f, -0.5f,
+		 0.5f, -1.5f, -0.5f,
+		 0.5f, -1.5f, -0.5f,
+		 0.5f, -1.5f,  0.5f,
+		 0.5f,  1.5f,  0.5f,
+
+		-0.5f, -1.5f, -0.5f,
+		 0.5f, -1.5f, -0.5f,
+		 0.5f, -1.5f,  0.5f,
+		 0.5f, -1.5f,  0.5f,
+		-0.5f, -1.5f,  0.5f,
+		-0.5f, -1.5f, -0.5f,
+
+		-0.5f,  1.5f, -0.5f,
+		 0.5f,  1.5f, -0.5f,
+		 0.5f,  1.5f,  0.5f,
+		 0.5f,  1.5f,  0.5f,
+		-0.5f,  1.5f,  0.5f,
+		-0.5f,  1.5f, -0.5f
 	};
 
 	float oddShapedVDataNormals[] =
@@ -393,28 +393,27 @@ int main(void)
 	-1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f   // Edge 12
 	};
 
-	std::vector<Entity> entities(MAX_ENTITIES);
-	
-	entities[0] = COORD.CreateEntity();
-	entities[1] = COORD.CreateEntity();
-	entities[2] = COORD.CreateEntity();
-	entities[3] = COORD.CreateEntity();
+	std::vector<Entity> entities;
 
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
-<<<<<<< HEAD
-	
-=======
+
+
+
 	//unsigned short int heightMapTex = COORD.GenerateTexUnit("res/textures/heightmap.png", "PNG");
->>>>>>> GEA/ECSver3_sub1
+
 
 
 	c_Transform tr_0;
 	c_Transform tr_1;
 	c_Transform tr_2;
 	c_Transform tr_3;
-	tr_0.pos = glm::vec3(0.0f,0.0f,0.0f);
+	tr_0.pos = glm::vec3(0.0f, 0.0f, 0.0f);
 	tr_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	tr_1.pos = glm::vec3(-2.0f, 0.0f, 3.0f);
 	tr_1.scale = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -448,17 +447,17 @@ int main(void)
 	tx_2.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_2.texUnit = rockySurfaceTexUnit;
 
-<<<<<<< HEAD
+
 	c_Texture tx_3;
 	tx_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_3.texUnit = rockySurfaceTexUnit;
 
 
-=======
+
 	//c_Texture tex_3;
 	//tex_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	//tex_3.texUnit = heightMapTex;
->>>>>>> GEA/ECSver3_sub1
+
 
 	c_Modified md_0;
 	md_0.isModifed = true;
@@ -469,14 +468,14 @@ int main(void)
 	c_Modified md_2;
 	md_2.isModifed = true;
 
-<<<<<<< HEAD
+
 	c_Modified md_3;
 	md_3.isModifed = true;
-=======
+
 	c_AABB aabb_0;
 	aabb_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	aabb_0.vertices = AABBvertices;
->>>>>>> GEA/ECSver3_sub1
+
 
 	c_AABB aabb_2;
 	aabb_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -485,15 +484,24 @@ int main(void)
 	c_Wall wall_0;
 	c_WallCollider wallCollider_2;
 
-	c_Transform tr_3;
+
 	c_AABB aabb_3;
 	c_Wall wall_3;
-	c_Modified md_3;
+
 
 	c_SpotLightEmitter spl_3;
 
 	c_EntityInfo ei_0;
 	ei_0.name = "Basic cube";
+
+	c_EntityInfo ei_1;
+	ei_1.name = "fun";
+
+	c_EntityInfo ei_2;
+	ei_2.name = "round";
+
+	c_EntityInfo ei_3;
+	ei_3.name = "different";
 
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
@@ -511,6 +519,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[1], rc_1);
 	COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
 	COORD.SetUpRenderData(entities[1]);
 	COORD.setShaderForEntity(entities[1], sh_basicWithTex);
 	COORD.StoreShaderInEntityDataHandle(entities[1]);
@@ -521,6 +530,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_AABB>(entities[2], aabb_2);
 	COORD.AddComponentToEntity<c_Wall>(entities[2], wall_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[2], ei_2);
 	COORD.SetUpRenderData(entities[2]);
 	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
 	COORD.StoreShaderInEntityDataHandle(entities[2]);
@@ -529,14 +539,15 @@ int main(void)
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[3], rc_3);
 	COORD.AddComponentToEntity<c_Texture>(entities[3], tx_3);
 	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[3], ei_3);
 	COORD.SetUpRenderData(entities[3]);
 	COORD.setShaderForEntity(entities[3], sh_basicWithTex);
 	COORD.StoreShaderInEntityDataHandle(entities[3]);
-	
+
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
 
-	
+
 
 
 	std::cout << "\nImGui Version: " << IMGUI_VERSION << std::endl;
@@ -562,26 +573,22 @@ int main(void)
 
 		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
 
-		genMenu_1(
-			COORD.GetComponentDataFromEntity<c_Transform>(entities[0]),
-			texData,
-			modifiedData,
+		genMenu_1(entities,
+			COORD,
 			containerTexUnit,
-			rockySurfaceTexUnit,
-			COORD.GetComponentDataFromEntity<c_AABB>(entities[0]),
+			rockySurfaceTexUnit
 
-			infoData
 		);
 
 		//#Removed_1: 206 - 314
 
-		if (wireframe){
+		if (wireframe) {
 			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			//posData.pos.x = posData.pos.x + 0.2f;
 			//texData.texUnit = tx_2.texUnit;
 			//COORD.GetComponentDataFromEntity<c_Modified>(entities[0]).isModifed = true;
 		}
-		else{
+		else {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
@@ -592,7 +599,7 @@ int main(void)
 
 		glfwSwapBuffers(window);
 
-		
+
 	}
 
 	ImGui_ImplOpenGL3_Shutdown();
@@ -607,7 +614,7 @@ int main(void)
 
 void moveEntityBackAndFourth(c_Transform& entTrans, float DT)
 {
-	if(entTrans.pos.z > (-4.0f))
+	if (entTrans.pos.z > (-4.0f))
 	{
 		entTrans.pos.z = entTrans.pos.z + (DT * (-0.4f));
 	}
@@ -635,8 +642,8 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		camera->ProcessKeyboard(DOWN, deltaTime);
 
-	
-	if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{
 
 		//glfwGetCursorPos(window, &savedXpos, &savedYpos);
@@ -644,9 +651,9 @@ void processInput(GLFWwindow* window)
 		savedYpos = currentY;
 		trackMouseMovement = false;
 
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
-		
-		
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+
 	}
 	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
 	{
@@ -661,11 +668,11 @@ void processInput(GLFWwindow* window)
 		currentY = lastY;
 
 		glfwSetCursorPos(window, currentX, currentY);
-		 
+
 		trackMouseMovement = true;
-		
+
 	}
-	
+
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -681,7 +688,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-	
+
 	if (trackMouseMovement)
 	{
 
@@ -706,7 +713,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 		camera->ProcessMouseMovement(xoffset, yoffset);
 	}
-	
+
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called

@@ -3,6 +3,7 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+#include "Coordinator.h"
 #include "ECS/Components.h"
 
 #include <cstdlib>
@@ -13,38 +14,33 @@ int lastSelectedOption = selectedOption;
 
 void imGuiSetup(GLFWwindow* window)
 {
-	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 130"); // Use GLSL version 130
+    // Setup Platform/Renderer bindings
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 130"); // Use GLSL version 130
 
-	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
 }
 
 void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int containerTexUnit, unsigned short int rockySurfaceTexUnit)
 {
-	auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[0]);
-	auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[0]);
-	auto& modifiedData = COORD.GetComponentDataFromEntity<c_Modified>(entities[0]);
-
-	auto& infoData = COORD.GetComponentDataFromEntity<c_EntityInfo>(entities[0]);
-
-	// Start the Dear ImGui frame
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-
-	// Here, you can start using ImGui to create interfaces
-	ImGui::Begin("Hello, world!");
-	ImGui::Text("Name of Entity 0 = %s", infoData.name.c_str());
 
 
-	
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    // Here, you can start using ImGui to create interfaces
+
+
+
+
     const char* names[] = { "cube", "cuboid" };
 
     if (ImGui::Begin("Entities", nullptr))
@@ -54,11 +50,13 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
         static int selected = 0;
         {
             ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeX);
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < entities.size(); i++)
             {
                 // FIXME: Good candidate to use ImGuiSelectableFlags_SelectOnNav
-                char label[128];
-                sprintf_s(label, "Cube: %d", i);
+                char label[50];
+                std::string name = COORD.GetComponentDataFromEntity<c_EntityInfo>(entities[i]).name;
+
+                sprintf_s(label, "Cube: %s", name.c_str());
                 if (ImGui::Selectable(label, selected == i))
                     selected = i;
             }
@@ -69,6 +67,12 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 
         // Right
         {
+            auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[selected]);
+            auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[selected]);
+            auto& modified = COORD.GetComponentDataFromEntity<c_Modified>(entities[selected]);
+
+            auto& infoData = COORD.GetComponentDataFromEntity<c_EntityInfo>(entities[selected]);
+
             ImGui::BeginGroup();
             ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
             ImGui::Text("Cube: %d", selected);
@@ -78,7 +82,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
                 if (ImGui::BeginTabItem("Description"))
                 {
                     ImGui::TextUnformatted("Transform:");
-                    if (ImGui::SliderFloat3("Position XYZ", &posData.pos[0], -5.0f, 5.0f));  //Position
+                    if (ImGui::SliderFloat3("Position XYZ", &posData.pos[0], -10.0f, 5.0f));  //Position
                     {
                         // The slider was used; myVec3 has been updated.
                         // You can handle the change here if needed.
@@ -91,18 +95,18 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
                     }
                     ImGui::EndTabItem();
 
-					ImGui::NewLine();
-                       
+                    ImGui::NewLine();
+
                     // We were trying to add custom texture here via openLocalRepository() but it didn't work
 
                     ImGui::TextUnformatted("Texture:");
-                    
+
                     // Simple selection popup (if you want to show the current selection inside the Button itself,
                     // you may want to build a string using the "###" operator to preserve a constant ID with a variable label)
 
                     static int selected_fish = -1;
-                    const char* names[] = { "Wooden planks", "Rock"};
-                    static bool toggles[] = { true, false};
+                    const char* names[] = { "Wooden planks", "Rock" };
+                    static bool toggles[] = { true, false };
 
                     if (ImGui::Button("Select texture"))
                         ImGui::OpenPopup("my_select_popup");
@@ -112,7 +116,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
                     {
 
                         ImGui::SeparatorText("Default textures");
-                        for (int i = 0, j = 0; i < IM_ARRAYSIZE(names); i++) 
+                        for (int i = 0, j = 0; i < IM_ARRAYSIZE(names); i++)
                         {
                             if (ImGui::Selectable(names[i])) {
                                 selected_fish = i;
@@ -136,7 +140,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 
                         }
 
-                    ImGui::EndPopup();                      
+                        ImGui::EndPopup();
                     }
                 }
                 if (ImGui::BeginTabItem("Details"))
@@ -154,15 +158,15 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
         }
         ImGui::End();
     }
-	// Rendering
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    // Rendering
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 }
 
-void openLocalRepository(const std::string& repositoryPath) 
+void openLocalRepository(const std::string& repositoryPath)
 {
-    
+
 #ifdef _WIN32
     std::string command = "explorer \"" + repositoryPath + "\"";
 
@@ -170,4 +174,3 @@ void openLocalRepository(const std::string& repositoryPath)
     system(command.c_str());
 
 }
-
