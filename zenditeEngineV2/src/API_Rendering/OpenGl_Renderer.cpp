@@ -74,10 +74,10 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	glm::vec3 camPosition = cam->getPosition();
 	shader->setUniform3fv("viewPos", camPosition);
 	//shader->setUniform3fv("lightPos", -0.0f, 20.0f, -0.0f);
-	shader->setUniform3fv("dirLight.direction", 0.0f, 0.0f, 1.0f);
-	shader->setUniform3fv("dirLight.ambient", 0.5f, 0.5f, 0.5f);
-	shader->setUniform3fv("dirLight.diffuse", 0.8f, 0.8f, 0.8f);
-	shader->setUniform3fv("dirLight.specular", 0.5f, 0.5f, 0.5f);
+	//shader->setUniform3fv("dirLight.direction", 0.0f, 0.0f, 1.0f);
+	//shader->setUniform3fv("dirLight.ambient", 0.5f, 0.5f, 0.5f);
+	//shader->setUniform3fv("dirLight.diffuse", 0.8f, 0.8f, 0.8f);
+	//shader->setUniform3fv("dirLight.specular", 0.5f, 0.5f, 0.5f);
 
 
 	(DataHandle.shader)->setUniformTextureUnit("colorTexture", DataHandle.texUnit);

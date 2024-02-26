@@ -509,7 +509,7 @@ int main(void)
 
 	COORD.AddComponentToEntity<c_Transform>(entities[3], tr_2);
 	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
-	//COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], ple_3);
+	COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], ple_3);
 	
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
@@ -539,10 +539,10 @@ int main(void)
 
 		moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
 
-		//c_Transform& flashLightTransform = COORD.GetComponentDataFromEntity<c_Transform>(entities[3]);
-		//flashLightTransform.pos = camera->getPosition();
-		//c_SpotLightEmitter& flashLightData = COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[3]);
-		//flashLightData.direction = camera->Front;
+		c_Transform& flashLightTransform = COORD.GetComponentDataFromEntity<c_Transform>(entities[3]);
+		flashLightTransform.pos = camera->getPosition();
+		c_SpotLightEmitter& flashLightData = COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[3]);
+		flashLightData.direction = camera->Front;
 
 		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
 
