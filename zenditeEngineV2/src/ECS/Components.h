@@ -95,7 +95,12 @@ struct c_LightResponderMesh
 
 };
 
+struct c_EntityInfo
+{
+	std::string name;
 
+	
+};
 
 struct c_Modified
 {

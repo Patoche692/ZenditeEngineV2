@@ -468,11 +468,16 @@ int main(void)
 
 	c_SpotLightEmitter spl_3;
 
+	c_EntityInfo ei_0;
+	ei_0.name = "Basic cube";
+
+
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
 	COORD.AddComponentToEntity<c_AABB>(entities[0], aabb_0);
 	COORD.AddComponentToEntity<c_WallCollider>(entities[0], wallCollider_2);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[0], ei_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[0], md_0);
 	COORD.SetUpRenderData(entities[0]); //#NOTE: SetUpRenderData and setShaderForEntity will do nothing if the entity does no have a c_RenderableComponent
 	COORD.setShaderForEntity(entities[0], sh_basicWithTex); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
@@ -499,9 +504,7 @@ int main(void)
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
 
-	auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[0]);
-	auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[0]);
-	auto& modifiedData = COORD.GetComponentDataFromEntity<c_Modified>(entities[0]);
+	
 
 	std::cout << "\nImGui Version: " << IMGUI_VERSION << std::endl;
 
@@ -532,7 +535,9 @@ int main(void)
 			modifiedData,
 			containerTexUnit,
 			rockySurfaceTexUnit,
-			COORD.GetComponentDataFromEntity<c_AABB>(entities[0])
+			COORD.GetComponentDataFromEntity<c_AABB>(entities[0]),
+
+			infoData
 		);
 
 		//#Removed_1: 206 - 314
