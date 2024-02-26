@@ -81,6 +81,20 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
             {
                 if (ImGui::BeginTabItem("Description"))
                 {
+                    short int bitSetPos = COORD.GetComponentBitsetPos<c_RenderableComponent>();
+                    std::bitset<32> renderableBitset; // Create a bitset of size 32
+                    renderableBitset.set(bitSetPos);
+
+                    std::bitset<32> entitySig = COORD.GetEntitySignature(entities[selected]);
+
+                    if ((entitySig & renderableBitset) == renderableBitset) // If this entity has a texture component
+                    {
+                        //entity is renderable
+                    }
+                    else
+                    {
+                        //entity is not renderable
+                    }
                     ImGui::TextUnformatted("Transform:");
                     if (ImGui::SliderFloat3("Position XYZ", &posData.pos[0], -10.0f, 5.0f));  //Position
                     {
