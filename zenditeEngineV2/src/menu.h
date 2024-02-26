@@ -74,6 +74,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
             auto& modified = COORD.GetComponentDataFromEntity<c_Modified>(entities[selected]);
 
             auto& infoData = COORD.GetComponentDataFromEntity<c_EntityInfo>(entities[selected]);
+            auto& aabb = COORD.GetComponentDataFromEntity<c_AABB>(entities[selected]);
 
             ImGui::BeginGroup();
             ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
@@ -120,6 +121,15 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
                         // The slider was used; myVec3 has been updated.
                         // You can handle the change here if needed.
                     }
+
+                    ImGui::SeparatorText("Collider box:");
+
+                    if (ImGui::SliderFloat3("AABB scale", &aabb.scale[0], -5.0f, 5.0f));
+                    {
+                        // The slider was used; myVec3 has been updated.
+                        // You can handle the change here if needed.
+                    }
+
                     ImGui::EndTabItem();
 
                     ImGui::NewLine();

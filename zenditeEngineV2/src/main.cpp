@@ -1,6 +1,5 @@
 #include "utils.h"
 #include <GLFW/glfw3.h>
-#include <chrono>
 
 #include "vendor/stb_image/stb_image.h"
 #include "assimp/Importer.hpp"
@@ -19,7 +18,6 @@
 #include "ECS/Components.h"
 
 //ECS implementation ver 3.0
-const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
 
 namespace fs = std::filesystem;
 
@@ -27,8 +25,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
-
-void moveEntityBackAndFourth(c_Transform& entTrans, float DT);
 
 // camera
 std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -57,7 +53,7 @@ int main(void)
 		return -1;
 	}
 	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Zen", NULL, NULL);
-	if (!window) {
+	if (!window){
 		glfwTerminate();
 		return -1;
 	}
@@ -83,13 +79,19 @@ int main(void)
 		std::cout << "I'm am not GLEW_OK, I'm GLEW_SAD :(\n";
 	}
 
+
 	imGuiSetup(window);
+
 
 	stbi_set_flip_vertically_on_load(true); //#### THIS NEEDS TO BE ACTIVE ### or else image texture will be upside down.
 	//std::cout << "Current working directory: " << fs::current_path() << std::endl;
 	glEnable(GL_DEPTH_TEST);
 
+	//#Removed_3: 78 - 88
+
 	std::cout << glGetString(GL_VERSION) << "\n";
+
+	//#Removed_2: 92 - 184
 
 	//Check the number of texture units we can have on the GPU
 	GLint maxTextureUnits;
@@ -244,47 +246,47 @@ int main(void)
 
 	float oddShapeVertexData[] = {
 		// positions          // normals           // texture coords
-		-0.5f, -1.5f, -0.5f,
-		 0.5f, -1.5f, -0.5f,
-		 0.5f,  1.5f, -0.5f,
-		 0.5f,  1.5f, -0.5f,
-		-0.5f,  1.5f, -0.5f,
-		-0.5f, -1.5f, -0.5f,
+		-0.5f, -1.5f, -0.5f,  
+		 0.5f, -1.5f, -0.5f,  
+		 0.5f,  1.5f, -0.5f,  
+		 0.5f,  1.5f, -0.5f,  
+		-0.5f,  1.5f, -0.5f,  
+		-0.5f, -1.5f, -0.5f,  
 
-		-0.5f, -1.5f,  0.5f,
-		 0.5f, -1.5f,  0.5f,
-		 0.5f,  1.5f,  0.5f,
-		 0.5f,  1.5f,  0.5f,
-		-0.5f,  1.5f,  0.5f,
-		-0.5f, -1.5f,  0.5f,
+		-0.5f, -1.5f,  0.5f,  
+		 0.5f, -1.5f,  0.5f,  
+		 0.5f,  1.5f,  0.5f,  
+		 0.5f,  1.5f,  0.5f,  
+		-0.5f,  1.5f,  0.5f,  
+		-0.5f, -1.5f,  0.5f,  
 
-		-0.5f,  1.5f,  0.5f,
-		-0.5f,  1.5f, -0.5f,
-		-0.5f, -1.5f, -0.5f,
-		-0.5f, -1.5f, -0.5f,
-		-0.5f, -1.5f,  0.5f,
-		-0.5f,  1.5f,  0.5f,
-
-		 0.5f,  1.5f,  0.5f,
-		 0.5f,  1.5f, -0.5f,
-		 0.5f, -1.5f, -0.5f,
-		 0.5f, -1.5f, -0.5f,
-		 0.5f, -1.5f,  0.5f,
-		 0.5f,  1.5f,  0.5f,
-
-		-0.5f, -1.5f, -0.5f,
-		 0.5f, -1.5f, -0.5f,
-		 0.5f, -1.5f,  0.5f,
-		 0.5f, -1.5f,  0.5f,
-		-0.5f, -1.5f,  0.5f,
-		-0.5f, -1.5f, -0.5f,
-
-		-0.5f,  1.5f, -0.5f,
-		 0.5f,  1.5f, -0.5f,
-		 0.5f,  1.5f,  0.5f,
-		 0.5f,  1.5f,  0.5f,
-		-0.5f,  1.5f,  0.5f,
-		-0.5f,  1.5f, -0.5f
+		-0.5f,  1.5f,  0.5f,  
+		-0.5f,  1.5f, -0.5f,  
+		-0.5f, -1.5f, -0.5f,  
+		-0.5f, -1.5f, -0.5f,  
+		-0.5f, -1.5f,  0.5f,  
+		-0.5f,  1.5f,  0.5f,  
+				
+		 0.5f,  1.5f,  0.5f,  
+		 0.5f,  1.5f, -0.5f,  
+		 0.5f, -1.5f, -0.5f,  
+		 0.5f, -1.5f, -0.5f,  
+		 0.5f, -1.5f,  0.5f,  
+		 0.5f,  1.5f,  0.5f,  
+				
+		- 0.5f, -1.5f, -0.5f, 
+		 0.5f, -1.5f, -0.5f,  
+		 0.5f, -1.5f,  0.5f,  
+		 0.5f, -1.5f,  0.5f,  
+		-0.5f, -1.5f,  0.5f,  
+		-0.5f, -1.5f, -0.5f,  
+				
+		-0.5f,  1.5f, -0.5f,  
+		 0.5f,  1.5f, -0.5f,  
+		 0.5f,  1.5f,  0.5f,  
+		 0.5f,  1.5f,  0.5f,  
+		-0.5f,  1.5f,  0.5f,  
+		-0.5f,  1.5f, -0.5f  
 	};
 
 	float oddShapedVDataNormals[] =
@@ -379,48 +381,40 @@ int main(void)
 
 	//size 72 values
 	float AABBvertices[] = {
-	-1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  // Edge 1 (x max and x min)
-	 1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  // Edge 2 (y max and y min)
-	 1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  // Edge 3 (z max and z min)
+	-1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  // Edge 1
+	 1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  // Edge 2
+	 1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  // Edge 3
 	-1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  // Edge 4
 	-1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  // Edge 5
 	 1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  // Edge 6
 	 1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  // Edge 7
 	-1.0f,  1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  // Edge 8
-	 1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  // Edge 9
-	-1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f,  // Edge 10
+	-1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f,  // Edge 9
+	 1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  // Edge 10
 	 1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  // Edge 11
 	-1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f   // Edge 12
 	};
 
-	std::vector<Entity> entities;
-
-	entities.push_back(COORD.CreateEntity());
-	entities.push_back(COORD.CreateEntity());
-	entities.push_back(COORD.CreateEntity());
-	entities.push_back(COORD.CreateEntity());
+	std::vector<Entity> entities(MAX_ENTITIES);
+	
+	entities[0] = COORD.CreateEntity();
+	entities[1] = COORD.CreateEntity();
+	entities[2] = COORD.CreateEntity();
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
-
-
-
-	//unsigned short int heightMapTex = COORD.GenerateTexUnit("res/textures/heightmap.png", "PNG");
-
+	
 
 
 	c_Transform tr_0;
 	c_Transform tr_1;
 	c_Transform tr_2;
-	c_Transform tr_3;
-	tr_0.pos = glm::vec3(0.0f, 0.0f, 0.0f);
+	tr_0.pos = glm::vec3(0.0f,0.0f,0.0f);
 	tr_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	tr_1.pos = glm::vec3(-2.0f, 0.0f, 3.0f);
 	tr_1.scale = glm::vec3(0.5f, 0.5f, 0.5f);
-	tr_2.pos = glm::vec3(-0.2f, 0.0f, -4.5f);
+	tr_2.pos = glm::vec3(-0.2f, 0.0f, -2.5f);
 	tr_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	tr_3.pos = glm::vec3(0.0f, 0.0f, 0.0f);
-	tr_3.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	c_RenderableComponent rc_0;
 	rc_0.setPosVertexArray(vertexDataValues, sizeof(vertexDataValues));
@@ -431,12 +425,9 @@ int main(void)
 	rc_1.setPosVertexArray(oddShapeVertexData, sizeof(oddShapeVertexData));
 	rc_0.setSurfaceNormalVertexArray(oddShapedVDataNormals, sizeof(oddShapedVDataNormals));
 
-	c_RenderableComponent rc_3;
-	rc_3.setPosVertexArray(vertexDataValues, sizeof(vertexDataValues));
-	rc_0.setSurfaceNormalVertexArray(surfaceNormalValues, sizeof(surfaceNormalValues));
-
 	c_Texture tx_0;
 	tx_0.setTexCoordsVertexArray(textureCoords, sizeof(textureCoords));
+
 	tx_0.texUnit = containerTexUnit;
 
 	c_Texture tx_1;
@@ -447,18 +438,6 @@ int main(void)
 	tx_2.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_2.texUnit = rockySurfaceTexUnit;
 
-
-	c_Texture tx_3;
-	tx_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
-	tx_3.texUnit = rockySurfaceTexUnit;
-
-
-
-	//c_Texture tex_3;
-	//tex_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
-	//tex_3.texUnit = heightMapTex;
-
-
 	c_Modified md_0;
 	md_0.isModifed = true;
 
@@ -468,86 +447,58 @@ int main(void)
 	c_Modified md_2;
 	md_2.isModifed = true;
 
-
-	c_Modified md_3;
-	md_3.isModifed = true;
-
-	c_AABB aabb_0;
-	aabb_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	aabb_0.vertices = AABBvertices;
-
-
 	c_AABB aabb_2;
 	aabb_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	aabb_2.vertices = AABBvertices;
 
-	c_Wall wall_0;
-	c_WallCollider wallCollider_2;
-
-
-	c_AABB aabb_3;
-	c_Wall wall_3;
-
-
-	c_SpotLightEmitter spl_3;
-
-	c_EntityInfo ei_0;
-	ei_0.name = "Basic cube";
-
-	c_EntityInfo ei_1;
-	ei_1.name = "fun";
-
-	c_EntityInfo ei_2;
-	ei_2.name = "round";
-
-	c_EntityInfo ei_3;
-	ei_3.name = "different";
-
-
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
-	COORD.AddComponentToEntity<c_AABB>(entities[0], aabb_0);
-	COORD.AddComponentToEntity<c_WallCollider>(entities[0], wallCollider_2);
-	COORD.AddComponentToEntity<c_EntityInfo>(entities[0], ei_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[0], md_0);
 	COORD.SetUpRenderData(entities[0]); //#NOTE: SetUpRenderData and setShaderForEntity will do nothing if the entity does no have a c_RenderableComponent
 	COORD.setShaderForEntity(entities[0], sh_basicWithTex); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
 	COORD.StoreShaderInEntityDataHandle(entities[0]);
 
+
 	COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[1], rc_1);
-	COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
+
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
-	COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
 	COORD.SetUpRenderData(entities[1]);
 	COORD.setShaderForEntity(entities[1], sh_basicWithTex);
 	COORD.StoreShaderInEntityDataHandle(entities[1]);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[2], tr_2);
-	COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
-	COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
+	//COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
+	//COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
 	COORD.AddComponentToEntity<c_AABB>(entities[2], aabb_2);
-	COORD.AddComponentToEntity<c_Wall>(entities[2], wall_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
-	COORD.AddComponentToEntity<c_EntityInfo>(entities[2], ei_2);
 	COORD.SetUpRenderData(entities[2]);
 	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
 	COORD.StoreShaderInEntityDataHandle(entities[2]);
+	
+	std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
+	std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
 
-	COORD.AddComponentToEntity<c_Transform>(entities[3], tr_3);
-	COORD.AddComponentToEntity<c_RenderableComponent>(entities[3], rc_3);
-	COORD.AddComponentToEntity<c_Texture>(entities[3], tx_3);
-	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
-	COORD.AddComponentToEntity<c_EntityInfo>(entities[3], ei_3);
-	COORD.SetUpRenderData(entities[3]);
-	COORD.setShaderForEntity(entities[3], sh_basicWithTex);
-	COORD.StoreShaderInEntityDataHandle(entities[3]);
+	// END ECS - $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
-	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
+	// Old Rendering:
 
+	/*
+	Shader sh_basicWithTex("res/shaders/BasicShaders/vs_cubeWnormANDtex.glsl",
+		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl");
+	*/
 
+	unsigned int CubeVAO;
+	unsigned int CubeVBO;
+
+	GenerateCubeNoEBO(CubeVAO, CubeVBO);
+	Texture2D cubeTex("diffuse");
+	cubeTex.setupTexturePNG(0, "res/textures/container2.png");
+
+	auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[0]);
+	auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[0]);
+	auto& modifiedData = COORD.GetComponentDataFromEntity<c_Modified>(entities[0]);
 
 
 	std::cout << "\nImGui Version: " << IMGUI_VERSION << std::endl;
@@ -556,6 +507,12 @@ int main(void)
 	glfwGetVersion(&major, &minor, &revision);
 
 	std::cout << "GLFW Version: " << major << "." << minor << "." << revision << std::endl;
+
+	//glfwSetCursorPosCallback(window, nullptr);
+	//glfwSetCursorPosCallback(window, mouse_callback);
+
+	double xx = 0.0f;
+	double yy = 0.0f;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -569,37 +526,55 @@ int main(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
+		// ----------------------------------------------------------------------
+		
+		sh_basicWithTex->bindProgram();
+		bindVao(CubeVAO);
+		glm::mat4 cubeProjection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 cubeView = camera->GetViewMatrix();
+		sh_basicWithTex->setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
+		sh_basicWithTex->setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
+
+		glm::mat4 cubeModel = glm::mat4(1.0f);
+		cubeModel = glm::translate(cubeModel, glm::vec3(2.5f, 0.0f, -1.2f));
+		cubeModel = glm::scale(cubeModel, glm::vec3(1.0f, 1.0f, 1.0f));
+		sh_basicWithTex->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
+
+		//cubeTex.changeTexUnit(0);
+
+		sh_basicWithTex->setUniformTextureUnit("colorTexture", 0);
+
+		//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+		//tr_0.pos.x = tr_0.pos.x + 1.0f;
+
 
 		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
 
-		genMenu_1(entities,
-			COORD,
-			containerTexUnit,
-			rockySurfaceTexUnit
-
-		);
+		/* End Rendering Code */ // ----------------------------------------------
 
 		//#Removed_1: 206 - 314
 
-		if (wireframe) {
+		if (wireframe){
 			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			//posData.pos.x = posData.pos.x + 0.2f;
 			//texData.texUnit = tx_2.texUnit;
 			//COORD.GetComponentDataFromEntity<c_Modified>(entities[0]).isModifed = true;
 		}
-		else {
+		else{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
 
 		glfwPollEvents();
 
+		//c_Transform& posData, c_Texture& texData, c_Modified& modified, short int containerTexUnit, unsigned short int rockySurfaceTexUnit
+		genMenu_1(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), texData, modifiedData, containerTexUnit, rockySurfaceTexUnit);
+
 		processInput(window);
 
 		glfwSwapBuffers(window);
 
-
+		
 	}
 
 	ImGui_ImplOpenGL3_Shutdown();
@@ -607,21 +582,9 @@ int main(void)
 	ImGui::DestroyContext();
 	glfwTerminate();
 
-	//std::cin.get();
+	std::cin.get();
 
 	return 0;
-}
-
-void moveEntityBackAndFourth(c_Transform& entTrans, float DT)
-{
-	if (entTrans.pos.z > (-4.0f))
-	{
-		entTrans.pos.z = entTrans.pos.z + (DT * (-0.4f));
-	}
-	else
-	{
-		entTrans.pos.z = entTrans.pos.z + (DT * 0.4f);
-	}
 }
 
 void processInput(GLFWwindow* window)
@@ -642,8 +605,8 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		camera->ProcessKeyboard(DOWN, deltaTime);
 
-
-	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+	
+	if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{
 
 		//glfwGetCursorPos(window, &savedXpos, &savedYpos);
@@ -651,9 +614,9 @@ void processInput(GLFWwindow* window)
 		savedYpos = currentY;
 		trackMouseMovement = false;
 
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
-
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
+		
+		
 	}
 	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
 	{
@@ -668,11 +631,11 @@ void processInput(GLFWwindow* window)
 		currentY = lastY;
 
 		glfwSetCursorPos(window, currentX, currentY);
-
+		 
 		trackMouseMovement = true;
-
+		
 	}
-
+	
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -688,7 +651,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-
+	
 	if (trackMouseMovement)
 	{
 
@@ -713,7 +676,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 		camera->ProcessMouseMovement(xoffset, yoffset);
 	}
-
+	
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
