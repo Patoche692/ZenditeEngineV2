@@ -1046,6 +1046,9 @@
     <ClInclude Include="src\ECS\Systems\RenderAABBSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS\Systems\CollisionDetectionAABBSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vendor\glm\detail\func_common.inl">
@@ -1476,6 +1479,12 @@
     <None Include="res\shaders\BasicShaders\fs_cubeWnormANDtex.glsl" />
     <None Include="res\shaders\HeightMap\fs_basicHeightMap.glsl" />
     <None Include="res\shaders\HeightMap\vs_basicHeightMap.glsl" />
+    <None Include="res\shaders\Shadows\vs_multiLightShadow.glsl" />
+    <None Include="res\shaders\Shadows\fs_multilightShadow.glsl" />
+    <None Include="res\shaders\Shadows\fs_multiLightShadowNoSpecular.glsl" />
+    <None Include="res\shaders\Shadows\vs_multiLightShadowNoSpecular.glsl" />
+    <None Include="res\shaders\Shadows\fs_shadowMap.glsl" />
+    <None Include="res\shaders\Shadows\vs_shadowMap.glsl" />
     <None Include="res\shaders\AABB\vs_BasicAABB.glsl" />
     <None Include="res\shaders\AABB\fs_BasicAABB.glsl" />
   </ItemGroup>

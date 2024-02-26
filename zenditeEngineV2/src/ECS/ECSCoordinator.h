@@ -9,6 +9,11 @@ private:
 	std::shared_ptr<EntityManager> m_EntityManager;
 	std::shared_ptr<ComponentManager> m_ComponentManager;
 	std::shared_ptr<SystemManager> m_SystemManager;
+	std::set<Entity>* m_PointLightEntities;
+	std::set<Entity>* m_SpotLightEntities;
+
+	std::set<Entity>* m_set_WallAABBEntities;
+	std::set<Entity>* m_set_WallColliderAABBEntities;
 
 public:
 	ECSCoordinator()
@@ -16,6 +21,40 @@ public:
 		m_EntityManager = std::make_shared<EntityManager>();
 		m_ComponentManager = std::make_shared<ComponentManager>();
 		m_SystemManager = std::make_shared<SystemManager>();
+	}
+
+	std::set<Entity>* GetWallAABBEntitiesSetPtr()
+	{
+		return m_set_WallAABBEntities;
+	}
+	std::set<Entity>* GetWallCollidableAABBEntitiesSetPtr()
+	{
+		return m_set_WallColliderAABBEntities;
+	}
+	void SetWallAABBEntitiesSetPtr(std::set<Entity>* set_WallAABBEntities)
+	{
+		m_set_WallAABBEntities = set_WallAABBEntities;
+	}
+	void SetWallCollidableAABBEntitiesSetPtr(std::set<Entity>* set_WallColliderAABBEntities)
+	{
+		m_set_WallColliderAABBEntities = set_WallColliderAABBEntities;
+	}
+
+	std::set<Entity>* GetPointLightEntitiesPtr()
+	{
+		return m_PointLightEntities;
+	}
+	std::set<Entity>* GetSpotLightEntitiesPtr()
+	{
+		return m_SpotLightEntities;
+	}
+	void SetPointLightEntitiesPtr(std::set<Entity>* set)
+	{
+		m_PointLightEntities = set;
+	}
+	void SetSpotLightEntitiesPtr(std::set<Entity>* set)
+	{
+		m_SpotLightEntities = set;
 	}
 
 

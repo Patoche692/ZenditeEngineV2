@@ -26,8 +26,13 @@ void imGuiSetup(GLFWwindow* window)
 	ImGui::StyleColorsDark();
 }
 
-void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, short int containerTexUnit, unsigned short int rockySurfaceTexUnit)
+void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int containerTexUnit, unsigned short int rockySurfaceTexUnit)
 {
+	auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[0]);
+	auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[0]);
+	auto& modifiedData = COORD.GetComponentDataFromEntity<c_Modified>(entities[0]);
+
+	auto& infoData = COORD.GetComponentDataFromEntity<c_EntityInfo>(entities[0]);
 
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
@@ -35,6 +40,8 @@ void genMenu_1(c_Transform& posData, c_Texture& texData, c_Modified& modified, s
 	ImGui::NewFrame();
 
 	// Here, you can start using ImGui to create interfaces
+	ImGui::Begin("Hello, world!");
+	ImGui::Text("Name of Entity 0 = %s", infoData.name.c_str());
 
 
 	
