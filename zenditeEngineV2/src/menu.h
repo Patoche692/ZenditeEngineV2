@@ -116,7 +116,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
                         // You can handle the change here if needed.
                     }
 
-                    if (ImGui::InputFloat3("Scale XYZ", &posData.scale[0]));  //Scale
+                    if (ImGui::InputFloat3("Scale XYZ", &posData.scale[0]))  //Scale
                     {
                         // The slider was used; myVec3 has been updated.
                         // You can handle the change here if needed.
@@ -124,7 +124,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 
                     ImGui::SeparatorText("Collider box:");
 
-                    if (ImGui::SliderFloat3("AABB scale", &aabb.scale[0], -5.0f, 5.0f));
+                    if (ImGui::InputFloat3("AABB scale", &aabb.scale[0]))
                     {
                         // The slider was used; myVec3 has been updated.
                         // You can handle the change here if needed.
