@@ -5,7 +5,6 @@
 #include "ECS/Systems/SetupPointLightSystem.h"
 #include "ECS/Systems/SetupSpotLightSystem.h"
 #include "ECS/Systems/SetupDirLightSystem.h"
-#include "ECS/Systems/RenderLightingSystem.h"
 #include "ECS/Systems/CollisionDetectionAABBSystem.h"
 #include "ECS/Systems/PositionTrackerSystem.h"
 

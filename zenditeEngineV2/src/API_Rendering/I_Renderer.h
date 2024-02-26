@@ -24,9 +24,4 @@ public:
 		Shader& AABBShader,
 		const c_AABB& AABB_Data,
 		const c_Transform& trans) = 0;
-	virtual void RenderLighting(const R_DataHandle& DataHandle,
-		const c_Transform& trans,
-		std::shared_ptr<ECSCoordinator> ECScoord) = 0;
-
-
 };

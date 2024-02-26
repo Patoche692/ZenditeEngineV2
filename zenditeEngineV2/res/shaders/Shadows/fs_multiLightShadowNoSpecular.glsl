@@ -8,6 +8,7 @@ struct Material {
 };
 
 struct DirLight {
+    vec3 position;
     vec3 direction;
 	
     vec3 ambient;
@@ -165,7 +166,7 @@ float shadowCalculation() {
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(fs_in.Normal);
-    vec3 lightDir = normalize(lightPos - fs_in.FragPos);
+    vec3 lightDir = normalize(dirLight.position - fs_in.FragPos);
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // check whether current frag pos is in shadow
     // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;

@@ -184,7 +184,6 @@
     <ClInclude Include="src\ECS\Systems\PositionTrackerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderAABBSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderableSystem.h" />
-    <ClInclude Include="src\ECS\Systems\RenderLightingSystem.h" />
     <ClInclude Include="src\ECS\Systems\SetupDirLightSystem.h" />
     <ClInclude Include="src\ECS\Systems\SetupPointLightSystem.h" />
     <ClInclude Include="src\ECS\Systems\SetupSpotLightSystem.h" />

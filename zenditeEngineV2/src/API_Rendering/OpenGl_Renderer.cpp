@@ -38,7 +38,7 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	{
 		c_DirLightEmitter& dirLightData = ECScoord.GetComponentDataFromEntity<c_DirLightEmitter>(*it);
 		c_Transform& dirLightTransform = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
-		shader->setUniform3fv("lightPos", dirLightTransform.pos);
+		shader->setUniform3fv("dirLight.position", dirLightTransform.pos);
 		shader->setUniform3fv("dirLight.direction", dirLightData.direction);
 		shader->setUniform3fv("dirLight.ambient", dirLightData.ambient);
 		shader->setUniform3fv("dirLight.diffuse", dirLightData.diffuse);
@@ -89,11 +89,6 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 															   //			   Although, all this does is take a texture and assign it to a texture unit.
 	glm::vec3 camPosition = cam->getPosition();
 	shader->setUniform3fv("viewPos", camPosition);
-	//shader->setUniform3fv("lightPos", -0.0f, 20.0f, -0.0f);
-	//shader->setUniform3fv("dirLight.direction", 0.0f, 0.0f, 1.0f);
-	//shader->setUniform3fv("dirLight.ambient", 0.5f, 0.5f, 0.5f);
-	//shader->setUniform3fv("dirLight.diffuse", 0.8f, 0.8f, 0.8f);
-	//shader->setUniform3fv("dirLight.specular", 0.5f, 0.5f, 0.5f);
 
 
 	(DataHandle.shader)->setUniformTextureUnit("colorTexture", DataHandle.texUnit);
@@ -142,18 +137,4 @@ void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle,
 
 	GLCALL(glDrawArrays(GL_LINES, 0, 24));
 
-}
-
-void OpenGL_Renderer::RenderLighting(const R_DataHandle& DataHandle,
-	const c_Transform& trans,
-	std::shared_ptr<ECSCoordinator> ECScoord)
-{
-	std::set<Entity>* SpotLightSet = ECScoord->GetSpotLightEntitiesPtr();
-
-	for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it)
-	{
-		const c_SpotLightEmitter& spotLightData = ECScoord->GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
-	}
-	
-	
 }
