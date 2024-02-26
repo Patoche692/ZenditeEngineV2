@@ -401,6 +401,7 @@ int main(void)
 	entities[3] = COORD.CreateEntity();
 	entities[4] = COORD.CreateEntity();
 	entities[5] = COORD.CreateEntity();
+	entities[6] = COORD.CreateEntity();
 
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
@@ -414,6 +415,7 @@ int main(void)
 	c_Transform tr_3;
 	c_Transform tr_4;
 	c_Transform tr_5;
+	c_Transform tr_6;
 	tr_0.pos = glm::vec3(0.0f,0.0f,0.0f);
 	tr_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	tr_1.pos = glm::vec3(-2.0f, 0.0f, 3.0f);
@@ -426,6 +428,8 @@ int main(void)
 	tr_4.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	tr_5.pos = glm::vec3(-2.0f, 0.0f, 1.0f);
 	tr_5.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	tr_6.pos = glm::vec3(-5.0f, 5.0f, 1.0f);
+	tr_6.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	c_RenderableComponent rc_0;
 	rc_0.setPosVertexArray(vertexDataValues, sizeof(vertexDataValues));
@@ -471,6 +475,9 @@ int main(void)
 	c_Modified md_5;
 	md_5.isModifed = true;
 
+	c_Modified md_6;
+	md_6.isModifed = true;
+
 	c_AABB aabb_0;
 	aabb_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	aabb_0.vertices = AABBvertices;
@@ -509,6 +516,12 @@ int main(void)
 	ple_5.linear = 0.09f;
 	ple_5.quadratic = 0.032f;
 
+	c_DirLightEmitter dle_6;
+	dle_6.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
+	dle_6.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+	dle_6.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
+	dle_6.specular = glm::vec3(0.5f, 0.5f, 0.5f);
+
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
@@ -539,15 +552,19 @@ int main(void)
 
 	COORD.AddComponentToEntity<c_Transform>(entities[3], tr_3);
 	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
-	COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], sle_3);
+	//COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], sle_3);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[4], tr_4);
 	COORD.AddComponentToEntity<c_Modified>(entities[4], md_4);
-	COORD.AddComponentToEntity<c_PointLightEmitter>(entities[4], ple_4);
+	//COORD.AddComponentToEntity<c_PointLightEmitter>(entities[4], ple_4);
 	
 	COORD.AddComponentToEntity<c_Transform>(entities[5], tr_5);
 	COORD.AddComponentToEntity<c_Modified>(entities[5], md_5);
-	COORD.AddComponentToEntity<c_PointLightEmitter>(entities[5], ple_5);
+	//COORD.AddComponentToEntity<c_PointLightEmitter>(entities[5], ple_5);
+
+	COORD.AddComponentToEntity<c_Transform>(entities[6], tr_6);
+	COORD.AddComponentToEntity<c_Modified>(entities[6], md_6);
+	COORD.AddComponentToEntity<c_DirLightEmitter>(entities[6], dle_6);
 
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
@@ -577,10 +594,10 @@ int main(void)
 
 		moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
 
-		c_Transform& flashLightTransform = COORD.GetComponentDataFromEntity<c_Transform>(entities[3]);
-		flashLightTransform.pos = camera->getPosition();
-		c_SpotLightEmitter& flashLightData = COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[3]);
-		flashLightData.direction = camera->Front;
+		//c_Transform& flashLightTransform = COORD.GetComponentDataFromEntity<c_Transform>(entities[3]);
+		//flashLightTransform.pos = camera->getPosition();
+		//c_SpotLightEmitter& flashLightData = COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[3]);
+		//flashLightData.direction = camera->Front;
 
 		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
 

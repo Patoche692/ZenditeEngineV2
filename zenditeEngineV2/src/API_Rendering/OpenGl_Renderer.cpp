@@ -28,12 +28,28 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	(DataHandle.shader)->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
 	std::shared_ptr<Shader> shader = DataHandle.shader;
+
+	std::set<Entity>* DirLightSet = ECScoord.GetDirLightEntitiesPtr();
+	int nrDirLights = DirLightSet->size();
+	shader->setUniformInt("nrDirLights", nrDirLights);
+
+	int i = 0;
+	for (std::set<std::uint32_t>::iterator it = (*DirLightSet).begin(); it != (*DirLightSet).end(); ++it, i++)
+	{
+		c_DirLightEmitter& dirLightData = ECScoord.GetComponentDataFromEntity<c_DirLightEmitter>(*it);
+		c_Transform& dirLightTransform = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
+		shader->setUniform3fv("lightPos", dirLightTransform.pos);
+		shader->setUniform3fv("dirLight.direction", dirLightData.direction);
+		shader->setUniform3fv("dirLight.ambient", dirLightData.ambient);
+		shader->setUniform3fv("dirLight.diffuse", dirLightData.diffuse);
+		shader->setUniform3fv("dirLight.specular", dirLightData.specular);
+	}
 	
 	std::set<Entity>* SpotLightSet = ECScoord.GetSpotLightEntitiesPtr();
 	int nrSpotLights = SpotLightSet->size();
 	shader->setUniformInt("nrSpotLights", nrSpotLights);
 
-	int i = 0;
+	i = 0;
 	for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it, i++)
 	{
 		c_SpotLightEmitter& spotLightData = ECScoord.GetComponentDataFromEntity<c_SpotLightEmitter>(*it);

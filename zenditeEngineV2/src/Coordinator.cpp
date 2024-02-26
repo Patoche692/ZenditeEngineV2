@@ -36,6 +36,7 @@ void Coordinator::RegisterComponents()
 	m_ECSCoord->RegisterComponent<c_Modified>();
 	m_ECSCoord->RegisterComponent<c_PointLightEmitter>();
 	m_ECSCoord->RegisterComponent<c_SpotLightEmitter>();
+	m_ECSCoord->RegisterComponent<c_DirLightEmitter>();
 	m_ECSCoord->RegisterComponent<c_Wall>();
 	m_ECSCoord->RegisterComponent<c_WallCollider>();
 
@@ -47,6 +48,7 @@ void Coordinator::RegisterSystems() //And add them to the system manager list
 
 	m_SetupPointLightSystem = std::static_pointer_cast<SetupPointLightSystem>(m_ECSCoord->RegisterSystem<SetupPointLightSystem>());
 	m_SetupSpotLightSystem = std::static_pointer_cast<SetupSpotLightSystem>(m_ECSCoord->RegisterSystem<SetupSpotLightSystem>());
+	m_SetupDirLightSystem = std::static_pointer_cast<SetupDirLightSystem>(m_ECSCoord->RegisterSystem<SetupDirLightSystem>());
 	m_CollisionDetectionAABBSystem = std::static_pointer_cast<CollisionDetectionAABBSystem>(m_ECSCoord->RegisterSystem<CollisionDetectionAABBSystem>());
 	m_RenderAABBSystem = std::static_pointer_cast<RenderAABBSystem>(m_ECSCoord->RegisterSystem<RenderAABBSystem>());
 	m_SetUpWallAABBSystem = std::static_pointer_cast<SetUpWallAABBSystem>(m_ECSCoord->RegisterSystem<SetUpWallAABBSystem>());
@@ -96,6 +98,12 @@ void Coordinator::SetUpSystemBitsets()
 	SetupSpotLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 	m_ECSCoord->SetSystemBitsetSignature<SetupSpotLightSystem>(SetupSpotLightSystemSig);
 
+	Signature SetupDirLightSystemSig;
+	SetupDirLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
+	SetupDirLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_DirLightEmitter>());
+	SetupDirLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
+	m_ECSCoord->SetSystemBitsetSignature<SetupDirLightSystem>(SetupDirLightSystemSig);
+
 	Signature SetUpWallAABBSystemSig;
 	SetUpWallAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
 	SetUpWallAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_AABB>());
@@ -122,8 +130,7 @@ void Coordinator::SetUpRenderData(Entity EID)
 {
 	// if ((entitySig & sysSig) == sysSig)
 
-	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>() ||
-	(m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>())
+	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>())
 	{
 		m_APImanager->SetupRenderData(EID, m_ECSCoord);
 	}
@@ -140,8 +147,7 @@ Entity Coordinator::CreateEntity()
 
 void Coordinator::setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader)
 {
-	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>() ||
-	(m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>())
+	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>())
 	{
 		m_APImanager->SetShaderForEntity(EID, shader);
 	}
@@ -153,8 +159,7 @@ void Coordinator::setShaderForEntity(Entity EID, std::shared_ptr<Shader> shader)
 
 void Coordinator::StoreShaderInEntityDataHandle(Entity EID)
 {
-	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>() ||
-	(m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderLightingSystem>())
+	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderableSystem>())
 	{
 		m_APImanager->SetShaderForDataHandle(EID);
 	}
@@ -173,6 +178,7 @@ void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)
 {
 	m_SetupPointLightSystem->Setup(m_APImanager, m_ECSCoord);
 	m_SetupSpotLightSystem->Setup(m_APImanager, m_ECSCoord);
+	m_SetupDirLightSystem->Setup(m_APImanager, m_ECSCoord);
 	m_RenderableSystem->Render(m_Renderer, m_APImanager, m_ECSCoord);
 	m_CollisionDetectionAABBSystem->checkCollisions(m_ECSCoord);
 	

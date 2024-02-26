@@ -4,6 +4,7 @@
 #include "ECS/Systems/RenderAABBSystem.h"
 #include "ECS/Systems/SetupPointLightSystem.h"
 #include "ECS/Systems/SetupSpotLightSystem.h"
+#include "ECS/Systems/SetupDirLightSystem.h"
 #include "ECS/Systems/RenderLightingSystem.h"
 #include "ECS/Systems/CollisionDetectionAABBSystem.h"
 #include "ECS/Systems/PositionTrackerSystem.h"
@@ -31,6 +32,7 @@ private:
 	std::shared_ptr<RenderAABBSystem> m_RenderAABBSystem;
 	std::shared_ptr<SetupPointLightSystem> m_SetupPointLightSystem;
 	std::shared_ptr<SetupSpotLightSystem> m_SetupSpotLightSystem;
+	std::shared_ptr<SetupDirLightSystem> m_SetupDirLightSystem;
 	std::shared_ptr<SetUpWallAABBSystem> m_SetUpWallAABBSystem;
 	std::shared_ptr<SetUpWallColliderAABBSystem> m_SetUpWallColliderAABBSystem;
 	std::shared_ptr<WallCollisionHandlingSystem> m_WallCollisionHandlingSystem;

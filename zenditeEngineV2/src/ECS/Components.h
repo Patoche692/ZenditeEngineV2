@@ -80,9 +80,13 @@ struct c_Texture
 	size_t arraySize;
 };
 
-struct c_DirectionalLightEmitter
+struct c_DirLightEmitter
 {
+    glm::vec3 direction;
 
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
 };
 
 struct c_PointLightEmitter

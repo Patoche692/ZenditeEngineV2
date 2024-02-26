@@ -42,6 +42,7 @@ struct SpotLight {
     vec3 specular;       
 };
 
+#define MAX_DIR_LIGHTS 10
 #define MAX_POINT_LIGHTS 10
 #define MAX_SPOT_LIGHTS 10
 
@@ -53,6 +54,7 @@ in VS_OUT {
 } fs_in;
 
 uniform DirLight dirLight;
+uniform DirLight dirLights[MAX_DIR_LIGHTS];
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
@@ -60,6 +62,7 @@ uniform Material material;
 uniform vec3 viewPos;
 uniform vec3 lightPos;
 
+uniform int nrDirLights;
 uniform int nrPointLights;
 uniform int nrSpotLights;
 
