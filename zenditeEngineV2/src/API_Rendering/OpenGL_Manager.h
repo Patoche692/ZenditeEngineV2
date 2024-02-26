@@ -25,8 +25,10 @@ public:
 		R_DataHandle DH;
 		c_RenderableComponent posVertexData = ECScoord->GetComponentDataFromEntity<c_RenderableComponent>(EID);
 		float* posVertices = posVertexData.posVertices;
+		float* surfaceNormalVertices = posVertexData.surfaceNormalVertices;
 		//#HERE CREATE a surface normal vertex array.
 		size_t posArraySize = posVertexData.posArraySize;
+		size_t snArraySize = posVertexData.snArraySize;
 
 		//#NOTE Use the DH.bitset value to determine what data to setup for the vertex data passed in
 		// (For this version do a simple set up for testing purposes.
@@ -45,7 +47,7 @@ public:
 
 		//Surface Normal Data:
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.surfaceNormalVBO));
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, posArraySize, posVertices, GL_STATIC_DRAW));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, snArraySize, surfaceNormalVertices, GL_STATIC_DRAW));
 		GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
 		GLCALL(glEnableVertexAttribArray(1));
 
