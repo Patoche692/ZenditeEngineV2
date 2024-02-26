@@ -400,21 +400,25 @@ int main(void)
 	entities[0] = COORD.CreateEntity();
 	entities[1] = COORD.CreateEntity();
 	entities[2] = COORD.CreateEntity();
+	entities[3] = COORD.CreateEntity();
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
-	unsigned short int heightMapTex = COORD.GenerateTexUnit("res/textures/heightmap.png", "PNG");
+	
 
 
 	c_Transform tr_0;
 	c_Transform tr_1;
 	c_Transform tr_2;
+	c_Transform tr_3;
 	tr_0.pos = glm::vec3(0.0f,0.0f,0.0f);
 	tr_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	tr_1.pos = glm::vec3(-2.0f, 0.0f, 3.0f);
 	tr_1.scale = glm::vec3(0.5f, 0.5f, 0.5f);
 	tr_2.pos = glm::vec3(-0.2f, 0.0f, -2.5f);
 	tr_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	tr_3.pos = glm::vec3(0.0f, 0.0f, 0.0f);
+	tr_3.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	c_RenderableComponent rc_0;
 	rc_0.setPosVertexArray(vertexDataValues, sizeof(vertexDataValues));
@@ -425,9 +429,12 @@ int main(void)
 	rc_1.setPosVertexArray(oddShapeVertexData, sizeof(oddShapeVertexData));
 	rc_0.setSurfaceNormalVertexArray(oddShapedVDataNormals, sizeof(oddShapedVDataNormals));
 
+	c_RenderableComponent rc_3;
+	rc_3.setPosVertexArray(vertexDataValues, sizeof(vertexDataValues));
+	rc_0.setSurfaceNormalVertexArray(surfaceNormalValues, sizeof(surfaceNormalValues));
+
 	c_Texture tx_0;
 	tx_0.setTexCoordsVertexArray(textureCoords, sizeof(textureCoords));
-
 	tx_0.texUnit = containerTexUnit;
 
 	c_Texture tx_1;
@@ -438,9 +445,11 @@ int main(void)
 	tx_2.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_2.texUnit = rockySurfaceTexUnit;
 
-	c_Texture tex_3;
-	tex_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
-	tex_3.texUnit = heightMapTex;
+	c_Texture tx_3;
+	tx_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_3.texUnit = rockySurfaceTexUnit;
+
+
 
 	c_Modified md_0;
 	md_0.isModifed = true;
@@ -450,6 +459,9 @@ int main(void)
 
 	c_Modified md_2;
 	md_2.isModifed = true;
+
+	c_Modified md_3;
+	md_3.isModifed = true;
 
 	c_AABB aabb_2;
 	aabb_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -466,7 +478,7 @@ int main(void)
 
 	COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[1], rc_1);
-	COORD.AddComponentToEntity<c_Texture>(entities[1], tex_3);
+	COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
 	COORD.SetUpRenderData(entities[1]);
 	COORD.setShaderForEntity(entities[1], sh_basicWithTex);
@@ -480,6 +492,14 @@ int main(void)
 	COORD.SetUpRenderData(entities[2]);
 	COORD.setShaderForEntity(entities[2], sh_basicWithTex);
 	COORD.StoreShaderInEntityDataHandle(entities[2]);
+
+	COORD.AddComponentToEntity<c_Transform>(entities[3], tr_3);
+	COORD.AddComponentToEntity<c_RenderableComponent>(entities[3], rc_3);
+	COORD.AddComponentToEntity<c_Texture>(entities[3], tx_3);
+	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
+	COORD.SetUpRenderData(entities[3]);
+	COORD.setShaderForEntity(entities[3], sh_basicWithTex);
+	COORD.StoreShaderInEntityDataHandle(entities[3]);
 	
 	std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;

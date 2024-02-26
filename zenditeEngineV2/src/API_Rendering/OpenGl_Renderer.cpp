@@ -29,6 +29,8 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, const c_Transform& 
 															   //			   This might be useful later if assigned texture units can be modified later during runtime
 															   //			   Although, all this does is take a texture and assign it to a texture unit.
 
+	
+
 	(DataHandle.shader)->setUniformTextureUnit("colorTexture", DataHandle.texUnit);
 
 	GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
