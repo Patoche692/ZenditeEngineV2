@@ -45,6 +45,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 
     if (ImGui::Begin("Entities", nullptr))
     {
+        
         ImGui::SetNextWindowSize(ImVec2(500, 440), ImGuiCond_FirstUseEver);
 
         static int selected = 0;
@@ -62,6 +63,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
             }
             ImGui::EndChild();
 
+
         }
         ImGui::SameLine();
 
@@ -75,7 +77,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 
             ImGui::BeginGroup();
             ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
-            ImGui::Text("Cube: %d", selected);
+            ImGui::Text("Cube: %d", selected); 
             ImGui::Separator();
             if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
             {
@@ -89,20 +91,31 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 
                     if ((entitySig & renderableBitset) == renderableBitset) // If this entity has a texture component
                     {
-                        //entity is renderable
+                        // Entity is renderable
+                        ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.2f, 0.8f), "Entity is renderable");
+                       
+                        
                     }
                     else
                     {
                         //entity is not renderable
+                        ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "Entity is not renderable");
                     }
-                    ImGui::TextUnformatted("Transform:");
-                    if (ImGui::SliderFloat3("Position XYZ", &posData.pos[0], -10.0f, 5.0f));  //Position
+                    
+
+                    ImGui::SeparatorText("Transform:");
+
+                    ImGui::Separator;
+
+
+                    if (ImGui::InputFloat3("Position XYZ", & posData.pos[0]))  //Position
                     {
+                      
                         // The slider was used; myVec3 has been updated.
                         // You can handle the change here if needed.
                     }
 
-                    if (ImGui::SliderFloat3("Scale XYZ", &posData.scale[0], -5.0f, 5.0f));  //Scale
+                    if (ImGui::InputFloat3("Scale XYZ", &posData.scale[0]));  //Scale
                     {
                         // The slider was used; myVec3 has been updated.
                         // You can handle the change here if needed.
@@ -113,7 +126,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 
                     // We were trying to add custom texture here via openLocalRepository() but it didn't work
 
-                    ImGui::TextUnformatted("Texture:");
+                    ImGui::SeparatorText("Texture:");
 
                     // Simple selection popup (if you want to show the current selection inside the Button itself,
                     // you may want to build a string using the "###" operator to preserve a constant ID with a variable label)
