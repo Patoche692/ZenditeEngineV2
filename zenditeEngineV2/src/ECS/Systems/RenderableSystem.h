@@ -54,13 +54,11 @@ public:
 		glViewport(0, 0, SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT);
 
 		std::set<Entity>* DirLightSet = ECScoord->GetDirLightEntitiesPtr();
-		int nrDirLights = DirLightSet->size();
 
 		depthShader.bindProgram();
 
-		int i = 0;
 		glm::mat4 lightProjection, lightView, lightSpaceMatrix;
-		for (std::set<std::uint32_t>::iterator it = (*DirLightSet).begin(); it != (*DirLightSet).end(); ++it, i++)
+		for (std::set<std::uint32_t>::iterator it = (*DirLightSet).begin(); it != (*DirLightSet).end(); ++it)
 		{
 			c_Transform& dirLightTransform = ECScoord->GetComponentDataFromEntity<c_Transform>(*it);
 			c_DirLightEmitter& dirLightData = ECScoord->GetComponentDataFromEntity<c_DirLightEmitter>(*it);

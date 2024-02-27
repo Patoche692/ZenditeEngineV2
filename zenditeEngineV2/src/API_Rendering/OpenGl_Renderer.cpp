@@ -47,7 +47,9 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 		shader->setUniform3fv("dirLight.ambient", dirLightData.ambient);
 		shader->setUniform3fv("dirLight.diffuse", dirLightData.diffuse);
 		shader->setUniform3fv("dirLight.specular", dirLightData.specular);
-		shader->setUniformTextureUnit("shadowMap", dirLightData.depthMapUnit);
+		shader->setUniformTextureUnit("shadowMap", 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, dirLightData.depthMapUnit);
 	}
 	
 	std::set<Entity>* SpotLightSet = ECScoord.GetSpotLightEntitiesPtr();
@@ -96,10 +98,12 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	shader->setUniform3fv("viewPos", camPosition);
 
 
-	shader->setUniformTextureUnit("colorTexture", DataHandle.texUnit);
-	shader->setUniformTextureUnit("material.diffuse", DataHandle.texUnit);
+	shader->setUniformTextureUnit("colorTexture", 0);
+	shader->setUniformTextureUnit("material.diffuse", 0);
 	shader->setUniform3fv("material.specular", 0.5f, 0.5f, 0.5f);
 	shader->setUniformFloat("material.shininess", 32.0f);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, DataHandle.texUnit + 1);
 
 
 	GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));

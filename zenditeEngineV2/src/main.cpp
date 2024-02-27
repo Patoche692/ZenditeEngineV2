@@ -426,7 +426,7 @@ int main(void)
 	tr_4.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	tr_5.pos = glm::vec3(-2.0f, 0.0f, 1.0f);
 	tr_5.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	tr_6.pos = glm::vec3(-5.0f, 5.0f, 1.0f);
+	tr_6.pos = glm::vec3(0.0f, 5.0f, 1.0f);
 	tr_6.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	c_RenderableComponent rc_0;
@@ -515,7 +515,7 @@ int main(void)
 	ple_5.quadratic = 0.032f;
 
 	c_DirLightEmitter dle_6;
-	dle_6.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
+	dle_6.direction = -tr_6.pos;
 	dle_6.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
 	dle_6.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
 	dle_6.specular = glm::vec3(0.5f, 0.5f, 0.5f);
