@@ -402,6 +402,9 @@ int main(void)
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
+	unsigned short int waterTexUnit = COORD.GenerateTexUnit("res/textures/water.jpg", "JPG");
+	unsigned short int grassTexUnit = COORD.GenerateTexUnit("res/textures/grass.jpg", "JPG");
+	unsigned short int lavaTexUnit = COORD.GenerateTexUnit("res/textures/lava.jpg", "JPG");
 
 
 
@@ -452,6 +455,33 @@ int main(void)
 	tx_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_3.texUnit = rockySurfaceTexUnit;
 
+	c_Texture tx_4;
+	tx_4.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_4.texUnit = grassTexUnit;
+
+	c_Texture tx_5;
+	tx_5.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_5.texUnit = grassTexUnit;
+
+	c_Texture tx_6;
+	tx_6.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_6.texUnit = waterTexUnit;
+
+	c_Texture tx_7;
+	tx_7.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_7.texUnit = waterTexUnit;
+
+	c_Texture tx_8;
+	tx_8.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_8.texUnit = lavaTexUnit;
+
+	c_Texture tx_9;
+	tx_9.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_9.texUnit = lavaTexUnit;
+
+
+
+
 
 
 	//c_Texture tex_3;
@@ -492,16 +522,16 @@ int main(void)
 	c_SpotLightEmitter spl_3;
 
 	c_EntityInfo ei_0;
-	ei_0.name = "Basic cube";
+	ei_0.name = "Moving cube";
 
 	c_EntityInfo ei_1;
-	ei_1.name = "fun";
+	ei_1.name = "Long cube";
 
 	c_EntityInfo ei_2;
-	ei_2.name = "round";
+	ei_2.name = "Wall cube";
 
 	c_EntityInfo ei_3;
-	ei_3.name = "different";
+	ei_3.name = "Test cube";
 
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
@@ -576,7 +606,10 @@ int main(void)
 		genMenu_1(entities,
 			COORD,
 			containerTexUnit,
-			rockySurfaceTexUnit
+			rockySurfaceTexUnit,
+			waterTexUnit,
+			grassTexUnit,
+			lavaTexUnit
 
 		);
 

@@ -27,9 +27,8 @@ void imGuiSetup(GLFWwindow* window)
     ImGui::StyleColorsDark();
 }
 
-void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int containerTexUnit, unsigned short int rockySurfaceTexUnit)
+void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int containerTexUnit, unsigned short int rockySurfaceTexUnit, unsigned short int grassTexUnit, unsigned short int waterTexUnit, unsigned short int lavaTexUnit)
 {
-
 
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
@@ -41,7 +40,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 
 
 
-    const char* names[] = { "cube", "cuboid" };
+
 
     if (ImGui::Begin("Entities", nullptr))
     {
@@ -57,12 +56,11 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
                 char label[50];
                 std::string name = COORD.GetComponentDataFromEntity<c_EntityInfo>(entities[i]).name;
 
-                sprintf_s(label, "Cube: %s", name.c_str());
+                sprintf_s(label, " %s", name.c_str());
                 if (ImGui::Selectable(label, selected == i))
                     selected = i;
             }
             ImGui::EndChild();
-
 
         }
         ImGui::SameLine();
@@ -76,9 +74,11 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
             auto& infoData = COORD.GetComponentDataFromEntity<c_EntityInfo>(entities[selected]);
             auto& aabb = COORD.GetComponentDataFromEntity<c_AABB>(entities[selected]);
 
+            const char* names[] = { "Moving cube", "Long cube", "Wall cube", "Test cube" };
+
             ImGui::BeginGroup();
             ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
-            ImGui::Text("Cube: %d", selected); 
+            ImGui::Text("%s", names[selected]);
             ImGui::Separator();
             if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
             {
@@ -142,7 +142,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
                     // you may want to build a string using the "###" operator to preserve a constant ID with a variable label)
 
                     static int selected_fish = -1;
-                    const char* names[] = { "Wooden planks", "Rock" };
+                    const char* names[] = { "Wooden planks", "Rock" , "water", "grass", "lava"};
                     static bool toggles[] = { true, false };
 
                     if (ImGui::Button("Select texture"))
@@ -165,6 +165,21 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 
                                 case 1:
                                     texData.texUnit = rockySurfaceTexUnit;
+                                    modified.isModifed = true;
+                                    break;
+
+                                case 2:
+                                    texData.texUnit = grassTexUnit;
+                                    modified.isModifed = true;
+                                    break;
+
+                                case 3:
+                                    texData.texUnit = waterTexUnit;
+                                    modified.isModifed = true;
+                                    break;
+
+                                case 4:
+                                    texData.texUnit = lavaTexUnit;
                                     modified.isModifed = true;
                                     break;
 
