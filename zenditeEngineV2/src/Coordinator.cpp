@@ -176,7 +176,7 @@ unsigned short int Coordinator::GenerateTexUnit(std::string texFilePath, std::st
 
 void Coordinator::GenerateShadowMapForEntity(Entity EID) {
 	c_DirLightEmitter& DirLightData = m_ECSCoord->GetComponentDataFromEntity<c_DirLightEmitter>(EID);
-	m_APImanager->GenerateDepthMap(DirLightData.DepthMapFBO, DirLightData.DepthMapUnit);
+	m_APImanager->GenerateDepthMap(DirLightData.depthMapFBO, DirLightData.depthMapUnit);
 }
 
 void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)

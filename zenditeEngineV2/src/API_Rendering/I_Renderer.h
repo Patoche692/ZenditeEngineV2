@@ -2,6 +2,7 @@
 #include "../Camera.h"
 #include "../utils.h"
 #include "../ECS/ECSUtils.h"
+#include "../Shader.h"
 
 class ECSCoordinator;
 class c_Transform;
@@ -24,4 +25,5 @@ public:
 		Shader& AABBShader,
 		const c_AABB& AABB_Data,
 		const c_Transform& trans) = 0;
+	virtual void RenderShadowMap(const R_DataHandle& DataHandle, ECSCoordinator& ECScoord, Shader& shader, Entity EID) = 0;
 };

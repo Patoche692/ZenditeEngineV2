@@ -3,9 +3,6 @@
 #include "../ECS/Components.h"
 #include "../TextureData.h"
 
-#define SHADOWMAP_WIDTH 4096
-#define SHADOWMAP_HEIGHT 4096
-
 class OpenGL_Manager : public I_API_Manager
 {
 private:

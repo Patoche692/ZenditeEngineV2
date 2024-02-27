@@ -61,7 +61,6 @@ uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 uniform Material material;
 uniform vec3 viewPos;
-uniform vec3 lightPos;
 
 uniform int nrDirLights;
 uniform int nrPointLights;
@@ -79,7 +78,7 @@ void main()
 	vec3 norm = normalize(fs_in.Normal);
     vec3 viewDir = normalize(viewPos - fs_in.FragPos);
 
-    float shadow = 0.0;//shadowCalculation();
+    float shadow = shadowCalculation();
 
     vec3 result = CalcDirLight(dirLight, norm, viewDir, shadow);
 

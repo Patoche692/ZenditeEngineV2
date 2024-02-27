@@ -12,7 +12,6 @@ public:
 		Shader& AABBShader,
 		const c_AABB& AABB_Data, 
 		const c_Transform& trans) override;
+	void RenderShadowMap(const R_DataHandle& DataHandle, ECSCoordinator& ECScoord, Shader& shader, Entity EID) override;
 private:
-
-
 };

@@ -1,14 +1,12 @@
 #include "../utils.h"
 #include "OpenGl_Renderer.h"
 #include "../ECS/ECSCoordinator.h"
-#include "../Shader.h"
 #include "../geometrySetup.h"
 #include "../TextureData.h"
 #include "../ECS/Components.h"
 
 OpenGL_Renderer::OpenGL_Renderer(std::shared_ptr<Camera> cam) : I_Renderer(cam)
 {
-	
 }
 
 void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECScoord, Entity EID)
@@ -34,16 +32,22 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	shader->setUniformInt("nrDirLights", nrDirLights);
 
 	int i = 0;
+	glm::mat4 lightProjection, lightView, lightSpaceMatrix;
 	for (std::set<std::uint32_t>::iterator it = (*DirLightSet).begin(); it != (*DirLightSet).end(); ++it, i++)
 	{
 		c_DirLightEmitter& dirLightData = ECScoord.GetComponentDataFromEntity<c_DirLightEmitter>(*it);
 		c_Transform& dirLightTransform = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
+		lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 20.0f);
+		lightView = glm::lookAt(dirLightTransform.pos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		lightSpaceMatrix = lightProjection * lightView;
+
+		shader->setUniformMat4("lightSpaceMatrix", GL_FALSE, glm::value_ptr(lightSpaceMatrix));
 		shader->setUniform3fv("dirLight.position", dirLightTransform.pos);
 		shader->setUniform3fv("dirLight.direction", dirLightData.direction);
 		shader->setUniform3fv("dirLight.ambient", dirLightData.ambient);
 		shader->setUniform3fv("dirLight.diffuse", dirLightData.diffuse);
 		shader->setUniform3fv("dirLight.specular", dirLightData.specular);
-		//shader->setUniformTextureUnit("shadowMap", dirLightData.DepthMapUnit);
+		shader->setUniformTextureUnit("shadowMap", dirLightData.depthMapUnit);
 	}
 	
 	std::set<Entity>* SpotLightSet = ECScoord.GetSpotLightEntitiesPtr();
@@ -137,4 +141,20 @@ void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle,
 
 	GLCALL(glDrawArrays(GL_LINES, 0, 24));
 
+}
+
+void OpenGL_Renderer::RenderShadowMap(const R_DataHandle& DataHandle, ECSCoordinator& ECScoord, Shader& shader, Entity EID)
+{
+	shader.bindProgram();
+
+	bindVao(DataHandle.VAO);
+
+	c_Transform& trans = ECScoord.GetComponentDataFromEntity<c_Transform>(EID);
+
+	glm::mat4 cubeModel = glm::mat4(1.0f);
+	cubeModel = glm::translate(cubeModel, trans.pos);
+	cubeModel = glm::scale(cubeModel, trans.scale);
+	shader.setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
+
+	GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 }
