@@ -593,10 +593,10 @@ int main(void)
 
 		moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
 
-		//c_Transform& flashLightTransform = COORD.GetComponentDataFromEntity<c_Transform>(entities[3]);
-		//flashLightTransform.pos = camera->getPosition();
-		//c_SpotLightEmitter& flashLightData = COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[3]);
-		//flashLightData.direction = camera->Front;
+		c_Transform& flashLightTransform = COORD.GetComponentDataFromEntity<c_Transform>(entities[3]);
+		flashLightTransform.pos = camera->getPosition();
+		c_SpotLightEmitter& flashLightData = COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[3]);
+		flashLightData.direction = camera->Front;
 
 		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
 
