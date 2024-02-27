@@ -103,6 +103,7 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	shader->setUniform3fv("material.specular", 0.5f, 0.5f, 0.5f);
 	shader->setUniformFloat("material.shininess", 32.0f);
 	glActiveTexture(GL_TEXTURE0);
+	// To fix: texture units starting from 1
 	glBindTexture(GL_TEXTURE_2D, DataHandle.texUnit + 1);
 
 

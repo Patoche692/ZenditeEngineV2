@@ -416,8 +416,8 @@ int main(void)
 	c_Transform tr_6;
 	tr_0.pos = glm::vec3(0.0f,0.0f,0.0f);
 	tr_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	tr_1.pos = glm::vec3(-2.0f, 0.0f, 3.0f);
-	tr_1.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	tr_1.pos = glm::vec3(-2.0f, -1.5f, 3.0f);
+	tr_1.scale = glm::vec3(20.0f, 0.1f, 20.0f);
 	tr_2.pos = glm::vec3(-0.2f, 0.0f, -4.5f);
 	tr_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	tr_3.pos = camera->getPosition();
@@ -550,15 +550,15 @@ int main(void)
 
 	COORD.AddComponentToEntity<c_Transform>(entities[3], tr_3);
 	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
-	//COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], sle_3);
+	COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], sle_3);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[4], tr_4);
 	COORD.AddComponentToEntity<c_Modified>(entities[4], md_4);
-	//COORD.AddComponentToEntity<c_PointLightEmitter>(entities[4], ple_4);
+	COORD.AddComponentToEntity<c_PointLightEmitter>(entities[4], ple_4);
 	
 	COORD.AddComponentToEntity<c_Transform>(entities[5], tr_5);
 	COORD.AddComponentToEntity<c_Modified>(entities[5], md_5);
-	//COORD.AddComponentToEntity<c_PointLightEmitter>(entities[5], ple_5);
+	COORD.AddComponentToEntity<c_PointLightEmitter>(entities[5], ple_5);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[6], tr_6);
 	COORD.AddComponentToEntity<c_Modified>(entities[6], md_6);
