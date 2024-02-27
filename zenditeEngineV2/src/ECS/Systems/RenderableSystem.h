@@ -45,6 +45,11 @@ public:
 		}
 	}
 
+	void RenderShadowMaps()
+	{
+
+	}
+
 private:
 
 };

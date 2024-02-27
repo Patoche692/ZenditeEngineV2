@@ -95,4 +95,5 @@ public:
 
 	unsigned short int GenerateTexUnit(std::string texFilePath, std::string fileType);
 
+	void GenerateShadowMapForEntity(Entity EID);
 };

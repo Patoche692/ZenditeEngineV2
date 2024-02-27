@@ -15,19 +15,19 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 {
 	c_Transform& trans = ECScoord.GetComponentDataFromEntity<c_Transform>(EID);
 
-	(DataHandle.shader)->bindProgram();
+	std::shared_ptr<Shader> shader = DataHandle.shader;
+
+	shader->bindProgram();
 	bindVao(DataHandle.VAO);
 	glm::mat4 cubeProjection = glm::perspective(glm::radians(cam->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	glm::mat4 cubeView = cam->GetViewMatrix();
-	(DataHandle.shader)->setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
-	(DataHandle.shader)->setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
+	shader->setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
+	shader->setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
 
 	glm::mat4 cubeModel = glm::mat4(1.0f);
 	cubeModel = glm::translate(cubeModel, trans.pos);
 	cubeModel = glm::scale(cubeModel, trans.scale);
-	(DataHandle.shader)->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
-
-	std::shared_ptr<Shader> shader = DataHandle.shader;
+	shader->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
 	std::set<Entity>* DirLightSet = ECScoord.GetDirLightEntitiesPtr();
 	int nrDirLights = DirLightSet->size();
@@ -43,6 +43,7 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 		shader->setUniform3fv("dirLight.ambient", dirLightData.ambient);
 		shader->setUniform3fv("dirLight.diffuse", dirLightData.diffuse);
 		shader->setUniform3fv("dirLight.specular", dirLightData.specular);
+		//shader->setUniformTextureUnit("shadowMap", dirLightData.DepthMapUnit);
 	}
 	
 	std::set<Entity>* SpotLightSet = ECScoord.GetSpotLightEntitiesPtr();
@@ -91,11 +92,10 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	shader->setUniform3fv("viewPos", camPosition);
 
 
-	(DataHandle.shader)->setUniformTextureUnit("colorTexture", DataHandle.texUnit);
-	(DataHandle.shader)->setUniformTextureUnit("material.diffuse", DataHandle.texUnit);
-	(DataHandle.shader)->setUniformTextureUnit("shadowMap", 1);
-	(DataHandle.shader)->setUniform3fv("material.specular", 0.5f, 0.5f, 0.5f);
-	(DataHandle.shader)->setUniformFloat("material.shininess", 32.0f);
+	shader->setUniformTextureUnit("colorTexture", DataHandle.texUnit);
+	shader->setUniformTextureUnit("material.diffuse", DataHandle.texUnit);
+	shader->setUniform3fv("material.specular", 0.5f, 0.5f, 0.5f);
+	shader->setUniformFloat("material.shininess", 32.0f);
 
 
 	GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));

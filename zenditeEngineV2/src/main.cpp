@@ -19,8 +19,6 @@
 #include "ECS/Components.h"
 
 //ECS implementation ver 3.0
-const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
-
 namespace fs = std::filesystem;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -565,6 +563,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_Transform>(entities[6], tr_6);
 	COORD.AddComponentToEntity<c_Modified>(entities[6], md_6);
 	COORD.AddComponentToEntity<c_DirLightEmitter>(entities[6], dle_6);
+	COORD.GenerateShadowMapForEntity(entities[6]);
 
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;

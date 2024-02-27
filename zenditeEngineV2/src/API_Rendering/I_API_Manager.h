@@ -23,6 +23,7 @@ public:
 	virtual void SetShaderForEntity(Entity EID, std::shared_ptr<Shader> shader) = 0;
 
 	virtual unsigned short int GenerateTexUnit(std::string texFilePath, std::string fileType) = 0;
+	virtual void GenerateDepthMap(unsigned int& depthMapFBO, unsigned int& depthMap) = 0;
 
 
 };

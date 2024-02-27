@@ -87,6 +87,9 @@ struct c_DirLightEmitter
     glm::vec3 ambient;
     glm::vec3 diffuse;
     glm::vec3 specular;
+
+	unsigned int DepthMapFBO;
+	unsigned int DepthMapUnit;
 };
 
 struct c_PointLightEmitter
