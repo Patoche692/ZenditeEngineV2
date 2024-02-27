@@ -492,7 +492,7 @@ int main(void)
 	sle_3.diffuse = glm::vec3(0.8f);
 	sle_3.specular = glm::vec3(1.0f);
 	sle_3.direction = camera->Front;
-	sle_3.cutOff = glm::cos(glm::radians(12.5f));
+	sle_3.cutOff = glm::cos(glm::radians(10.5f));
 	sle_3.outerCutOff = glm::cos(glm::radians(15.0f));
 	sle_3.constant = 1.0f;
 	sle_3.linear = 0.09f;
