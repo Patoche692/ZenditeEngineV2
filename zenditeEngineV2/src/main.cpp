@@ -391,15 +391,15 @@ int main(void)
 	-1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f   // Edge 12
 	};
 
-	std::vector<Entity> entities(MAX_ENTITIES);
+	std::vector<Entity> entities;
 	
-	entities[0] = COORD.CreateEntity();
-	entities[1] = COORD.CreateEntity();
-	entities[2] = COORD.CreateEntity();
-	entities[3] = COORD.CreateEntity();
-	entities[4] = COORD.CreateEntity();
-	entities[5] = COORD.CreateEntity();
-	entities[6] = COORD.CreateEntity();
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
@@ -575,7 +575,16 @@ int main(void)
 	ei_2.name = "Wall cube";
 
 	c_EntityInfo ei_3;
-	ei_3.name = "Test cube";
+	ei_3.name = "Camera flash light";
+
+	c_EntityInfo ei_4;
+	ei_4.name = "Red point light";
+
+	c_EntityInfo ei_5;
+	ei_5.name = "Blue point light";
+
+	c_EntityInfo ei_6;
+	ei_6.name = "Directional light";
 
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
@@ -612,19 +621,23 @@ int main(void)
 	COORD.AddComponentToEntity<c_Transform>(entities[3], tr_3);
 	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
 	COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], sle_3);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[3], ei_3);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[4], tr_4);
 	COORD.AddComponentToEntity<c_Modified>(entities[4], md_4);
 	COORD.AddComponentToEntity<c_PointLightEmitter>(entities[4], ple_4);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[4], ei_4);
 	
 	COORD.AddComponentToEntity<c_Transform>(entities[5], tr_5);
 	COORD.AddComponentToEntity<c_Modified>(entities[5], md_5);
 	COORD.AddComponentToEntity<c_PointLightEmitter>(entities[5], ple_5);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[5], ei_5);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[6], tr_6);
 	COORD.AddComponentToEntity<c_Modified>(entities[6], md_6);
 	COORD.AddComponentToEntity<c_DirLightEmitter>(entities[6], dle_6);
 	COORD.GenerateShadowMapForEntity(entities[6]);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[6], ei_6);
 
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
@@ -651,7 +664,7 @@ int main(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
+		//moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
 
 		c_Transform& flashLightTransform = COORD.GetComponentDataFromEntity<c_Transform>(entities[3]);
 		flashLightTransform.pos = camera->getPosition();
