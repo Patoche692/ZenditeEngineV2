@@ -517,8 +517,8 @@ int main(void)
 
 	c_DirLightEmitter dle_6;
 	dle_6.direction = -tr_6.pos;
-	dle_6.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
-	dle_6.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
+	dle_6.ambient = glm::vec3(0.02f, 0.02f, 0.02f);
+	dle_6.diffuse = glm::vec3(0.6f, 0.6f, 0.6f);
 	dle_6.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
