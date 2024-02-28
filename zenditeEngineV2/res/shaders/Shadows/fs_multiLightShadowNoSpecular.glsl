@@ -56,7 +56,6 @@ in VS_OUT {
     vec4 FragPosLightSpace[MAX_DIR_LIGHTS];
 } fs_in;
 
-uniform DirLight dirLight;
 uniform DirLight dirLights[MAX_DIR_LIGHTS];
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
@@ -169,7 +168,7 @@ float shadowCalculation(int dirLightIndex) {
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(fs_in.Normal);
-    vec3 lightDir = normalize(dirLight.position - fs_in.FragPos);
+    vec3 lightDir = normalize(dirLights[dirLightIndex].position - fs_in.FragPos);
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // PCF
     float shadow = 0.0;
