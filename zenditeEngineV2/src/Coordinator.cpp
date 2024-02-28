@@ -39,6 +39,8 @@ void Coordinator::RegisterComponents()
 	m_ECSCoord->RegisterComponent<c_DirLightEmitter>();
 	m_ECSCoord->RegisterComponent<c_Wall>();
 	m_ECSCoord->RegisterComponent<c_WallCollider>();
+	m_ECSCoord->RegisterComponent<c_EntityInfo>();
+
 
 }
 

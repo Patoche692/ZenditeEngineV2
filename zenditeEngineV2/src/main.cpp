@@ -55,7 +55,7 @@ int main(void)
 		return -1;
 	}
 	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Zen", NULL, NULL);
-	if (!window){
+	if (!window) {
 		glfwTerminate();
 		return -1;
 	}
@@ -242,19 +242,19 @@ int main(void)
 
 	float oddShapeVertexData[] = {
 		// positions          // normals           // texture coords
-		-0.5f, -1.5f, -0.5f,  
-		 0.5f, -1.5f, -0.5f,  
-		 0.5f,  1.5f, -0.5f,  
-		 0.5f,  1.5f, -0.5f,  
-		-0.5f,  1.5f, -0.5f,  
-		-0.5f, -1.5f, -0.5f,  
+		-0.5f, -1.5f, -0.5f,
+		 0.5f, -1.5f, -0.5f,
+		 0.5f,  1.5f, -0.5f,
+		 0.5f,  1.5f, -0.5f,
+		-0.5f,  1.5f, -0.5f,
+		-0.5f, -1.5f, -0.5f,
 
-		-0.5f, -1.5f,  0.5f,  
-		 0.5f, -1.5f,  0.5f,  
-		 0.5f,  1.5f,  0.5f,  
-		 0.5f,  1.5f,  0.5f,  
-		-0.5f,  1.5f,  0.5f,  
-		-0.5f, -1.5f,  0.5f,  
+		-0.5f, -1.5f,  0.5f,
+		 0.5f, -1.5f,  0.5f,
+		 0.5f,  1.5f,  0.5f,
+		 0.5f,  1.5f,  0.5f,
+		-0.5f,  1.5f,  0.5f,
+		-0.5f, -1.5f,  0.5f,
 
 		-0.5f,  1.5f,  0.5f,  
 		-0.5f,  1.5f, -0.5f,  
@@ -401,10 +401,16 @@ int main(void)
 	entities[5] = COORD.CreateEntity();
 	entities[6] = COORD.CreateEntity();
 
-
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
+	unsigned short int waterTexUnit = COORD.GenerateTexUnit("res/textures/water.jpg", "JPG");
+	unsigned short int grassTexUnit = COORD.GenerateTexUnit("res/textures/grass.jpg", "JPG");
+	unsigned short int lavaTexUnit = COORD.GenerateTexUnit("res/textures/lava.jpg", "JPG");
+
+
+
 	//unsigned short int heightMapTex = COORD.GenerateTexUnit("res/textures/heightmap.png", "PNG");
+
 
 
 	c_Transform tr_0;
@@ -438,9 +444,12 @@ int main(void)
 	rc_1.setPosVertexArray(oddShapeVertexData, sizeof(oddShapeVertexData));
 	rc_1.setSurfaceNormalVertexArray(oddShapedVDataNormals, sizeof(oddShapedVDataNormals));
 
+	c_RenderableComponent rc_3;
+	rc_3.setPosVertexArray(vertexDataValues, sizeof(vertexDataValues));
+	rc_0.setSurfaceNormalVertexArray(surfaceNormalValues, sizeof(surfaceNormalValues));
+
 	c_Texture tx_0;
 	tx_0.setTexCoordsVertexArray(textureCoords, sizeof(textureCoords));
-
 	tx_0.texUnit = containerTexUnit;
 
 	c_Texture tx_1;
@@ -451,9 +460,44 @@ int main(void)
 	tx_2.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_2.texUnit = rockySurfaceTexUnit;
 
+
+	c_Texture tx_3;
+	tx_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_3.texUnit = rockySurfaceTexUnit;
+
+	c_Texture tx_4;
+	tx_4.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_4.texUnit = grassTexUnit;
+
+	c_Texture tx_5;
+	tx_5.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_5.texUnit = grassTexUnit;
+
+	c_Texture tx_6;
+	tx_6.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_6.texUnit = waterTexUnit;
+
+	c_Texture tx_7;
+	tx_7.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_7.texUnit = waterTexUnit;
+
+	c_Texture tx_8;
+	tx_8.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_8.texUnit = lavaTexUnit;
+
+	c_Texture tx_9;
+	tx_9.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
+	tx_9.texUnit = lavaTexUnit;
+
+
+
+
+
+
 	//c_Texture tex_3;
 	//tex_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	//tex_3.texUnit = heightMapTex;
+
 
 	c_Modified md_0;
 	md_0.isModifed = true;
@@ -479,6 +523,7 @@ int main(void)
 	c_AABB aabb_0;
 	aabb_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	aabb_0.vertices = AABBvertices;
+
 
 	c_AABB aabb_2;
 	aabb_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -520,11 +565,25 @@ int main(void)
 	dle_6.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
 	dle_6.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
+	c_EntityInfo ei_0;
+	ei_0.name = "Moving cube";
+
+	c_EntityInfo ei_1;
+	ei_1.name = "Long cube";
+
+	c_EntityInfo ei_2;
+	ei_2.name = "Wall cube";
+
+	c_EntityInfo ei_3;
+	ei_3.name = "Test cube";
+
+
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
 	COORD.AddComponentToEntity<c_AABB>(entities[0], aabb_0);
 	COORD.AddComponentToEntity<c_WallCollider>(entities[0], wallCollider_2);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[0], ei_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[0], md_0);
 	COORD.SetUpRenderData(entities[0]); //#NOTE: SetUpRenderData and setShaderForEntity will do nothing if the entity does no have a c_RenderableComponent
 	COORD.setShaderForEntity(entities[0], sh_shadows); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
@@ -534,6 +593,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_RenderableComponent>(entities[1], rc_1);
 	COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
 	COORD.SetUpRenderData(entities[1]);
 	COORD.setShaderForEntity(entities[1], sh_shadows);
 	COORD.StoreShaderInEntityDataHandle(entities[1]);
@@ -544,6 +604,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_AABB>(entities[2], aabb_2);
 	COORD.AddComponentToEntity<c_Wall>(entities[2], wall_0);
 	COORD.AddComponentToEntity<c_Modified>(entities[2], md_2);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[2], ei_2);
 	COORD.SetUpRenderData(entities[2]);
 	COORD.setShaderForEntity(entities[2], sh_shadows);
 	COORD.StoreShaderInEntityDataHandle(entities[2]);
@@ -568,9 +629,8 @@ int main(void)
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
 
-	auto& posData = COORD.GetComponentDataFromEntity<c_Transform>(entities[0]);
-	auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[0]);
-	auto& modifiedData = COORD.GetComponentDataFromEntity<c_Modified>(entities[0]);
+
+
 
 	std::cout << "\nImGui Version: " << IMGUI_VERSION << std::endl;
 
@@ -600,24 +660,25 @@ int main(void)
 
 		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
 
-		genMenu_1(
-			COORD.GetComponentDataFromEntity<c_Transform>(entities[0]),
-			texData,
-			modifiedData,
+		genMenu_1(entities,
+			COORD,
 			containerTexUnit,
 			rockySurfaceTexUnit,
-			COORD.GetComponentDataFromEntity<c_AABB>(entities[0])
+			waterTexUnit,
+			grassTexUnit,
+			lavaTexUnit
+
 		);
 
 		//#Removed_1: 206 - 314
 
-		if (wireframe){
+		if (wireframe) {
 			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			//posData.pos.x = posData.pos.x + 0.2f;
 			//texData.texUnit = tx_2.texUnit;
 			//COORD.GetComponentDataFromEntity<c_Modified>(entities[0]).isModifed = true;
 		}
-		else{
+		else {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
@@ -628,7 +689,7 @@ int main(void)
 
 		glfwSwapBuffers(window);
 
-		
+
 	}
 
 	ImGui_ImplOpenGL3_Shutdown();
@@ -643,7 +704,7 @@ int main(void)
 
 void moveEntityBackAndFourth(c_Transform& entTrans, float DT)
 {
-	if(entTrans.pos.z > (-4.0f))
+	if (entTrans.pos.z > (-4.0f))
 	{
 		entTrans.pos.z = entTrans.pos.z + (DT * (-0.4f));
 	}
@@ -671,8 +732,8 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		camera->ProcessKeyboard(DOWN, deltaTime);
 
-	
-	if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 	{
 
 		//glfwGetCursorPos(window, &savedXpos, &savedYpos);
@@ -680,9 +741,9 @@ void processInput(GLFWwindow* window)
 		savedYpos = currentY;
 		trackMouseMovement = false;
 
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
-		
-		
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+
 	}
 	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
 	{
@@ -697,11 +758,11 @@ void processInput(GLFWwindow* window)
 		currentY = lastY;
 
 		glfwSetCursorPos(window, currentX, currentY);
-		 
+
 		trackMouseMovement = true;
-		
+
 	}
-	
+
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -717,7 +778,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-	
+
 	if (trackMouseMovement)
 	{
 
@@ -742,7 +803,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 		camera->ProcessMouseMovement(xoffset, yoffset);
 	}
-	
+
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called

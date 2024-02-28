@@ -105,6 +105,15 @@ struct c_PointLightEmitter
 
 struct c_SpotLightEmitter
 {
+
+};
+
+struct c_EntityInfo
+{
+	std::string name;
+
+	
+};
     glm::vec3 direction;
     float cutOff;
     float outerCutOff;
