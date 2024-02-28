@@ -72,7 +72,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
             auto& modified = COORD.GetComponentDataFromEntity<c_Modified>(entities[selected]);
 
             auto& infoData = COORD.GetComponentDataFromEntity<c_EntityInfo>(entities[selected]);
-            auto& aabb = COORD.GetComponentDataFromEntity<c_AABB>(entities[selected]);
+            //auto& aabb = COORD.GetComponentDataFromEntity<c_AABB>(entities[selected]);
 
             const char* names[] = { "Moving cube", "Long cube", "Wall cube", "Test cube" };
 
@@ -124,11 +124,11 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 
                     ImGui::SeparatorText("Collider box:");
 
-                    if (ImGui::InputFloat3("AABB scale", &aabb.scale[0]))
-                    {
-                        // The slider was used; myVec3 has been updated.
-                        // You can handle the change here if needed.
-                    }
+                    //if (ImGui::InputFloat3("AABB scale", &aabb.scale[0]))
+                    //{
+                    //    // The slider was used; myVec3 has been updated.
+                    //    // You can handle the change here if needed.
+                    //}
 
                     ImGui::EndTabItem();
 
