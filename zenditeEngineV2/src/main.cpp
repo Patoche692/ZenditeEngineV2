@@ -400,7 +400,6 @@ int main(void)
 	entities[4] = COORD.CreateEntity();
 	entities[5] = COORD.CreateEntity();
 	entities[6] = COORD.CreateEntity();
-	entities[7] = COORD.CreateEntity();
 
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
@@ -502,7 +501,7 @@ int main(void)
 	c_PointLightEmitter ple_4;
 	ple_4.ambient = glm::vec3(0.0f, 0.0f, 0.0f);
 	ple_4.diffuse = glm::vec3(1.0f, 0.0f, 0.0f);
-	ple_4.specular = glm::vec3(1.0f, 0.0f, 0.0f);
+	ple_4.specular = glm::vec3(0.5f, 0.0f, 0.0f);
 	ple_4.constant = 1.0f;
 	ple_4.linear = 0.09f;
 	ple_4.quadratic = 0.032f;
@@ -510,7 +509,7 @@ int main(void)
 	c_PointLightEmitter ple_5;
 	ple_5.ambient = glm::vec3(0.0f, 0.0f, 0.0f);
 	ple_5.diffuse = glm::vec3(0.0f, 0.0f, 1.0f);
-	ple_5.specular = glm::vec3(0.0f, 0.0f, 1.0f);
+	ple_5.specular = glm::vec3(0.0f, 0.0f, 0.5f);
 	ple_5.constant = 1.0f;
 	ple_5.linear = 0.09f;
 	ple_5.quadratic = 0.032f;
@@ -518,7 +517,7 @@ int main(void)
 	c_DirLightEmitter dle_6;
 	dle_6.direction = -tr_6.pos;
 	dle_6.ambient = glm::vec3(0.02f, 0.02f, 0.02f);
-	dle_6.diffuse = glm::vec3(0.6f, 0.6f, 0.6f);
+	dle_6.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
 	dle_6.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
@@ -565,13 +564,6 @@ int main(void)
 	COORD.AddComponentToEntity<c_Modified>(entities[6], md_6);
 	COORD.AddComponentToEntity<c_DirLightEmitter>(entities[6], dle_6);
 	COORD.GenerateShadowMapForEntity(entities[6]);
-
-	tr_6.pos = glm::vec3(5, 5, 5);
-	dle_6.direction = -tr_6.pos;
-	COORD.AddComponentToEntity<c_Transform>(entities[7], tr_6);
-	COORD.AddComponentToEntity<c_Modified>(entities[7], md_6);
-	COORD.AddComponentToEntity<c_DirLightEmitter>(entities[7], dle_6);
-	COORD.GenerateShadowMapForEntity(entities[7]);
 
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
