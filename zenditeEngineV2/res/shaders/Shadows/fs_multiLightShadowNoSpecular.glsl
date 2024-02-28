@@ -14,6 +14,8 @@ struct DirLight {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+	sampler2D shadowMap;
 };
 
 struct PointLight {
@@ -51,7 +53,7 @@ in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
     vec2 TexCoords;
-    vec4 FragPosLightSpace;
+    vec4 FragPosLightSpace[MAX_DIR_LIGHTS];
 } fs_in;
 
 uniform DirLight dirLight;
@@ -66,21 +68,23 @@ uniform int nrDirLights;
 uniform int nrPointLights;
 uniform int nrSpotLights;
 
-uniform sampler2D shadowMap;
-
 vec3 CalcDirLight(DirLight light,vec3 normal, vec3 viewDir, float shadow);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir);
-float shadowCalculation();
+float shadowCalculation(int dirLightIndex);
 
 void main()
 {
 	vec3 norm = normalize(fs_in.Normal);
     vec3 viewDir = normalize(viewPos - fs_in.FragPos);
 
-    float shadow = shadowCalculation();
 
-    vec3 result = CalcDirLight(dirLight, norm, viewDir, shadow);
+    vec3 result = vec3(0.0, 0.0, 0.0);
+
+    for (int i = 0; i < nrDirLights; i++) {
+		float shadow = shadowCalculation(i);
+		result += CalcDirLight(dirLights[i], norm, viewDir, shadow);
+    }
 
     for (int i = 0; i < nrPointLights; i++) {
         result += CalcPointLight(pointLights[i], norm, viewDir);
@@ -154,13 +158,13 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir)
     return (ambient + diffuse + specular);
 }
 
-float shadowCalculation() {
+float shadowCalculation(int dirLightIndex) {
 	// perform perspective divide
-    vec3 projCoords = fs_in.FragPosLightSpace.xyz / fs_in.FragPosLightSpace.w;
+    vec3 projCoords = fs_in.FragPosLightSpace[dirLightIndex].xyz / fs_in.FragPosLightSpace[dirLightIndex].w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(shadowMap, projCoords.xy).r;
+    float closestDepth = texture(dirLights[dirLightIndex].shadowMap, projCoords.xy).r;
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
@@ -169,12 +173,12 @@ float shadowCalculation() {
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // PCF
     float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    vec2 texelSize = 1.0 / textureSize(dirLights[dirLightIndex].shadowMap, 0);
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
-            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+            float pcfDepth = texture(dirLights[dirLightIndex].shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
             shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
         }    
     }

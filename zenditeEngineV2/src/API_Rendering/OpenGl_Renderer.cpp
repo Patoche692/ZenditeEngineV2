@@ -41,14 +41,14 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 		lightView = glm::lookAt(dirLightTransform.pos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		lightSpaceMatrix = lightProjection * lightView;
 
-		shader->setUniformMat4("lightSpaceMatrix", GL_FALSE, glm::value_ptr(lightSpaceMatrix));
-		shader->setUniform3fv("dirLight.position", dirLightTransform.pos);
-		shader->setUniform3fv("dirLight.direction", dirLightData.direction);
-		shader->setUniform3fv("dirLight.ambient", dirLightData.ambient);
-		shader->setUniform3fv("dirLight.diffuse", dirLightData.diffuse);
-		shader->setUniform3fv("dirLight.specular", dirLightData.specular);
-		shader->setUniformTextureUnit("shadowMap", 1);
-		glActiveTexture(GL_TEXTURE1);
+		shader->setUniformMat4(("lightSpaceMatrixes[" + std::to_string(i) + "]"), GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].position"), dirLightTransform.pos);
+		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].direction"), dirLightData.direction);
+		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].ambient"), dirLightData.ambient);
+		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].diffuse"), dirLightData.diffuse);
+		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].specular"), dirLightData.specular);
+		shader->setUniformTextureUnit(("dirLights[" + std::to_string(i) + "].shadowMap"), 1 + i);
+		glActiveTexture(GL_TEXTURE1 + i);
 		glBindTexture(GL_TEXTURE_2D, dirLightData.depthMapUnit);
 	}
 	
