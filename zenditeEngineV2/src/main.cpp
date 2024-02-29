@@ -358,7 +358,7 @@ int main(void)
 	tx_0.texUnit = containerTexUnit;
 
 	c_Texture tx_1;
-	tx_1.texUnit = containerTexUnit;
+	tx_1.texUnit = waterTexUnit;
 
 	c_Texture tx_2;
 	tx_2.texUnit = rockySurfaceTexUnit;
@@ -438,7 +438,7 @@ int main(void)
 	ple_4.ambient = glm::vec3(0.0f, 0.0f, 0.0f);
 	ple_4.diffuse = glm::vec3(1.0f, 0.0f, 0.0f);
 	ple_4.specular = glm::vec3(0.5f, 0.0f, 0.0f);
-	ple_4.constant = 1.0f;
+	ple_4.constant = 0.5f;
 	ple_4.linear = 0.09f;
 	ple_4.quadratic = 0.032f;
 
@@ -446,7 +446,7 @@ int main(void)
 	ple_5.ambient = glm::vec3(0.0f, 0.0f, 0.0f);
 	ple_5.diffuse = glm::vec3(0.0f, 0.0f, 1.0f);
 	ple_5.specular = glm::vec3(0.0f, 0.0f, 0.5f);
-	ple_5.constant = 1.0f;
+	ple_5.constant = 0.2f;
 	ple_5.linear = 0.09f;
 	ple_5.quadratic = 0.032f;
 
@@ -458,8 +458,8 @@ int main(void)
 	tr_6_pos.z = tr_6.modelMat[0][3][2];
 
 	dle_6.direction = -tr_6_pos;
-	dle_6.ambient = glm::vec3(0.02f, 0.02f, 0.02f);
-	dle_6.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
+	dle_6.ambient = glm::vec3(0.4f, 0.4f, 0.4f);
+	dle_6.diffuse = glm::vec3(0.7f, 0.7f, 0.7f);
 	dle_6.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
 	c_EntityInfo ei_0;
