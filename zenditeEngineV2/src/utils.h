@@ -56,7 +56,7 @@ struct R_DataHandle
 	unsigned VBO;
 	unsigned EBO;
 	std::shared_ptr<Shader> shader;
-	//std::shared_ptr<TextureData> texture; //(No need to contain a textureData object, only the tex unit is needed as it does not change)
+	std::shared_ptr<TextureData> texture; //(No need to contain a textureData object, only the tex unit is needed as it does not change)
 	uint32_t texUnit;
 
 	//std::bitset<32> signature;

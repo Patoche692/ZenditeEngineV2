@@ -54,8 +54,8 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].ambient"), dirLightData.ambient);
 		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].diffuse"), dirLightData.diffuse);
 		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].specular"), dirLightData.specular);
-		shader->setUniformTextureUnit(("dirLights[" + std::to_string(i) + "].shadowMap"), 1 + i);
-		glActiveTexture(GL_TEXTURE1 + i);
+		shader->setUniformTextureUnit(("dirLights[" + std::to_string(i) + "].shadowMap"), 8 + i);
+		glActiveTexture(GL_TEXTURE8 + i);
 		glBindTexture(GL_TEXTURE_2D, dirLightData.depthMapUnit);
 	}
 	
@@ -117,8 +117,8 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	shader->setUniform3fv("viewPos", camPosition);
 
 
-	shader->setUniformTextureUnit("colorTexture", 0);
-	shader->setUniformTextureUnit("material.diffuse", 0);
+	//shader->setUniformTextureUnit("colorTexture", DataHandle.texUnit);
+	shader->setUniformTextureUnit("material.diffuse", DataHandle.texUnit);
 	shader->setUniform3fv("material.specular", 0.5f, 0.5f, 0.5f);
 	shader->setUniformFloat("material.shininess", 32.0f);
 	glActiveTexture(GL_TEXTURE0);
