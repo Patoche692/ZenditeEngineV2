@@ -170,7 +170,7 @@ int main(void)
 		-1.0f,  0.0f,  0.0f,
 		-1.0f,  0.0f,  0.0f,
 		-1.0f,  0.0f,  0.0f,
-		 1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
 
 		 0.0f,  1.0f,  0.0f,
 		 0.0f,  1.0f,  0.0f,
@@ -317,7 +317,7 @@ int main(void)
 
 	//tr_4
 	glm::mat4 mm_tr4 = glm::mat4(1.0f);
-	glm::vec3 pos_tr4(-0.2f, 1.0f, -5.0f);
+	glm::vec3 pos_tr4(-0.2f, 1.5f, -5.0f);
 	glm::vec3 scale_tr4(1.0f, 1.0f, 1.0f);
 	mm_tr4 = glm::translate(mm_tr4, pos_tr4);
 	mm_tr4 = glm::scale(mm_tr4, scale_tr4);
@@ -325,7 +325,7 @@ int main(void)
 
 	//tr_5
 	glm::mat4 mm_tr5 = glm::mat4(1.0f);
-	glm::vec3 pos_tr5(-2.0f, 0.0f, 1.0f);
+	glm::vec3 pos_tr5(-2.0f, 1.5f, 1.0f);
 	glm::vec3 scale_tr5(1.0f, 1.0f, 1.0f);
 	mm_tr5 = glm::translate(mm_tr5, pos_tr5);
 	mm_tr5 = glm::scale(mm_tr5, scale_tr5);
@@ -488,20 +488,16 @@ int main(void)
 	COORD.setShaderForEntity(entities[0], sh_shadows); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
 	COORD.StoreShaderInEntityDataHandle(entities[0]);
 
-	/*
 		
-		COORD.AddComponentToEntity<c_RenderableComponent>(entities[1], rc_1);
-		
-		
-		COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
-		COORD.SetUpRenderData(entities[1]);
-		COORD.setShaderForEntity(entities[1], sh_shadows);
-		COORD.StoreShaderInEntityDataHandle(entities[1]);
-	*/
+	//COORD.AddComponentToEntity<c_Renderable>(entities[1], rc_0);
+	//COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
 	//COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
 	//COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
 	//COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
+	//COORD.SetUpRenderData(entities[1]);
+	//COORD.setShaderForEntity(entities[1], sh_shadows);
+	//COORD.StoreShaderInEntityDataHandle(entities[1]);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[2], tr_2);
 	COORD.AddComponentToEntity<c_Renderable>(entities[2], rc_0);
