@@ -6,7 +6,7 @@
 #include "assimp/Importer.hpp"
 
 #include "Shader.h"
-#include "Texture2D.h"
+//#include "Texture2D.h"
 #include "geometrySetup.h"
 #include "menu.h"
 #include "Camera.h"
@@ -270,11 +270,11 @@ int main(void)
 	entities.push_back(COORD.CreateEntity());
 	entities.push_back(COORD.CreateEntity());
 
-	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "png");
-	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "png");
-	unsigned short int waterTexUnit = COORD.GenerateTexUnit("res/textures/water.jpg", "jpg");
-	unsigned short int grassTexUnit = COORD.GenerateTexUnit("res/textures/grass.jpg", "jpg");
-	unsigned short int lavaTexUnit = COORD.GenerateTexUnit("res/textures/lava.jpg", "jpg");
+	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "png");		 // tx Unit = 0
+	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "png");	 // tx Unit = 1
+	unsigned short int waterTexUnit = COORD.GenerateTexUnit("res/textures/water.jpg", "jpg");				 // tx Unit = 2
+	unsigned short int grassTexUnit = COORD.GenerateTexUnit("res/textures/grass.jpg", "jpg");				 // tx Unit = 3
+	unsigned short int lavaTexUnit = COORD.GenerateTexUnit("res/textures/lava.jpg", "jpg");					 // tx Unit = 4
 
 
 
@@ -364,25 +364,13 @@ int main(void)
 	tx_2.texUnit = rockySurfaceTexUnit;
 
 	c_Texture tx_3;
-	tx_3.texUnit = rockySurfaceTexUnit;
+	tx_3.texUnit = grassTexUnit;
 
 	c_Texture tx_4;
-	tx_4.texUnit = grassTexUnit;
+	tx_4.texUnit = waterTexUnit;
 
 	c_Texture tx_5;
-	tx_5.texUnit = grassTexUnit;
-
-	c_Texture tx_6;
-	tx_6.texUnit = waterTexUnit;
-
-	c_Texture tx_7;
-	tx_7.texUnit = waterTexUnit;
-
-	c_Texture tx_8;
-	tx_8.texUnit = lavaTexUnit;
-
-	c_Texture tx_9;
-	tx_9.texUnit = lavaTexUnit;
+	tx_5.texUnit = lavaTexUnit;
 
 
 	//c_Texture tex_3;
@@ -541,6 +529,20 @@ int main(void)
 
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
+
+	glm::mat4 ES0_mm = glm::mat4(1.0f);
+	glm::vec3 ES0_pos(3.0f, 0.0f, 0.0f);
+	glm::vec3 ES0_scale(1.0f, 1.0f, 1.0f);
+	ES0_mm = glm::translate(ES0_mm, ES0_pos);
+	ES0_mm = glm::scale(ES0_mm, ES0_scale);
+
+	EntityScene ES_0 = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_basicWithTex, 1);
+	std::vector<Entity> tmpEntStorage = ES_0.GetSceneEntities();
+	for (int i = 0; i < tmpEntStorage.size(); ++i)
+	{
+		entities.push_back(tmpEntStorage[i]);
+	}
+
 
 	std::cout << "\nImGui Version: " << IMGUI_VERSION << std::endl;
 	std::cout << "\n Number of active entities: " << COORD.GetActiveEntities() << std::endl;
