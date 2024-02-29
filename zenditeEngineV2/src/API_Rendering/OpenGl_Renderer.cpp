@@ -61,7 +61,7 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	
 	std::set<Entity>* SpotLightSet = ECScoord.GetSpotLightEntitiesPtr();
 	int nrSpotLights = SpotLightSet->size();
-	shader->setUniformInt("nrSpotLights", 0);
+	shader->setUniformInt("nrSpotLights", nrSpotLights);
 
 	i = 0;
 	for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it, i++)
