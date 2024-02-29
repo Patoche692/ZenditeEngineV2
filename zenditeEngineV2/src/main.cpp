@@ -471,6 +471,18 @@ int main(void)
 	c_EntityInfo ei_6;
 	ei_6.name = "Directional light";
 
+	glm::mat4 ES0_mm = glm::mat4(1.0f);
+	glm::vec3 ES0_pos(3.0f, 0.0f, 0.0f);
+	glm::vec3 ES0_scale(1.0f, 1.0f, 1.0f);
+	ES0_mm = glm::translate(ES0_mm, ES0_pos);
+	ES0_mm = glm::scale(ES0_mm, ES0_scale);
+
+	EntityScene ES_0 = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_basicWithTex, 1);
+	std::vector<Entity> tmpEntStorage = ES_0.GetSceneEntities();
+	for (int i = 0; i < tmpEntStorage.size(); ++i)
+	{
+		entities.push_back(tmpEntStorage[i]);
+	}
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_Renderable>(entities[0], rc_0);
@@ -529,20 +541,6 @@ int main(void)
 
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
-
-	glm::mat4 ES0_mm = glm::mat4(1.0f);
-	glm::vec3 ES0_pos(3.0f, 0.0f, 0.0f);
-	glm::vec3 ES0_scale(1.0f, 1.0f, 1.0f);
-	ES0_mm = glm::translate(ES0_mm, ES0_pos);
-	ES0_mm = glm::scale(ES0_mm, ES0_scale);
-
-	EntityScene ES_0 = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_basicWithTex, 1);
-	std::vector<Entity> tmpEntStorage = ES_0.GetSceneEntities();
-	for (int i = 0; i < tmpEntStorage.size(); ++i)
-	{
-		entities.push_back(tmpEntStorage[i]);
-	}
-
 
 	std::cout << "\nImGui Version: " << IMGUI_VERSION << std::endl;
 	std::cout << "\n Number of active entities: " << COORD.GetActiveEntities() << std::endl;
