@@ -17,33 +17,37 @@ public:
 	void SetupRenderData(Entity EID, std::shared_ptr<ECSCoordinator> ECScoord) override
 	{
 		R_DataHandle DH;
-		c_RenderableComponent posVertexData = ECScoord->GetComponentDataFromEntity<c_RenderableComponent>(EID);
-		float* posVertices = posVertexData.posVertices;
-		float* surfaceNormalVertices = posVertexData.surfaceNormalVertices;
-		//#HERE CREATE a surface normal vertex array.
-		size_t posArraySize = posVertexData.posArraySize;
-		size_t snArraySize = posVertexData.snArraySize;
+
+		//std::vector<Vertex>& vertexData = 
+
+		c_Renderable& RData = ECScoord->GetComponentDataFromEntity<c_Renderable>(EID);
 
 		//#NOTE Use the DH.bitset value to determine what data to setup for the vertex data passed in
-		// (For this version do a simple set up for testing purposes.
+		// (For this version do a simple set up for testing purposes.)
 
 		GLCALL(glGenVertexArrays(1, &(DH.VAO)));
 		GLCALL(glBindVertexArray(DH.VAO));
 
-		GLCALL(glGenBuffers(1, &(DH.posVBO)));
-		GLCALL(glGenBuffers(1, &(DH.surfaceNormalVBO)));
+		GLCALL(glGenBuffers(1, &(DH.VBO)));
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.VBO));
 
-		//Position data:
-		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.posVBO));
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, posArraySize, posVertices, GL_STATIC_DRAW));
-		GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
+		//Buffer VBO data (Which includes position, normal and texCoord data):
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, RData.vertices.size() * sizeof(Vertex), &(RData.vertices[0]), GL_STATIC_DRAW));
+
+		//Buffer EBO data:
+		GLCALL(glGenBuffers(1, &(DH.EBO)));
+		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, DH.EBO));
+		GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, RData.indices.size() * sizeof(unsigned int), &(RData.indices[0]), GL_STATIC_DRAW));
+
+		//setup position vertex attribute array
+		GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0));
 		GLCALL(glEnableVertexAttribArray(0));
 
-		//Surface Normal Data:
-		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.surfaceNormalVBO));
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, snArraySize, surfaceNormalVertices, GL_STATIC_DRAW));
-		GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
+		//setup normal vertex attribute array:
+		GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal)));
 		GLCALL(glEnableVertexAttribArray(1));
+
+		//Set up tex vertex attribute array (if texture is a component of the entity)
 
 		short int bitSetPos = ECScoord->GetComponentBitsetPos<c_Texture>();
 		std::bitset<32> textureBitset; // Create a bitset of size 32
@@ -53,26 +57,21 @@ public:
 
 		if ((entitySig & textureBitset) == textureBitset) // If this entity has a texture component
 		{
-			c_Texture texVertexData = ECScoord->GetComponentDataFromEntity<c_Texture>(EID);
-			size_t textureArraySize = texVertexData.arraySize;
-
-			GLCALL(glGenBuffers(1, &(DH.texCoordVBO)));
-			GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.texCoordVBO));
-
-			GLCALL(glBufferData(GL_ARRAY_BUFFER, textureArraySize, texVertexData.texCoords, GL_STATIC_DRAW));
-			GLCALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0));
+			GLCALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords)));
 			GLCALL(glEnableVertexAttribArray(2));
 
-			DH.texUnit = texVertexData.texUnit; //#TexUNIT_Set
-			DH.texture = textures[texVertexData.texUnit];
+			c_Texture& texData = ECScoord->GetComponentDataFromEntity<c_Texture>(EID);
+
+			DH.texUnit = texData.texUnit; //#TexUNIT_Set
+			//DH.texture = textures[texData.texUnit];
 		}
 		else
 		{
-			
+			//#Give_a_default tex unit value perhaps. then remove the system requirement for renderables to have a texture.
 		}
 
 		m_Map_ENTITYtoHANDLE[EID] = DH; //Insert modified DH into the map.
-	
+
 		GLCALL(glBindVertexArray(0)); //Unbind the VAO
 	}
 
@@ -162,7 +161,7 @@ public:
 		{
 			textures.push_back(std::make_shared<TextureData>(texFilePath));
 
-			if(fileType == "JPG")
+			if(fileType == "jpg")
 			{
 				(textures[No_texUnits])->setupTextureJPG(No_texUnits, texFilePath);
 			}

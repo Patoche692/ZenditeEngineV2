@@ -130,7 +130,7 @@ void MinimalSceneFactory::ProcessMesh(std::string dir, aiMesh* mesh, const aiSce
 	unsigned int texUnit = COORD.GenerateTexUnit(texFilePath, fileExtension); //Assume jpg but will need to make dynamic in future.
 	
 	c_tx.texUnit = texUnit;
-	c_tx.type = fileExtension;
+	//c_tx.type = fileExtension;
 
 }
 

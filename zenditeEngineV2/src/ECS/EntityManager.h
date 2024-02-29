@@ -41,6 +41,11 @@ public:
 		--m_activeEntities;
 	}
 
+	uint32_t GetActiveEntites() const
+	{
+		return m_activeEntities;
+	}
+
 	void SetEntitySignature(Entity EID, Signature sig)
 	{
 		DEBUG_ASSERT(EID < MAX_ENTITIES, "Entity out of range. (needs to be smaller than MAX_ENTITIES)");

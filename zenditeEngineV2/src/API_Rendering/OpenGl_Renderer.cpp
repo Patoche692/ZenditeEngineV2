@@ -12,6 +12,7 @@ OpenGL_Renderer::OpenGL_Renderer(std::shared_ptr<Camera> cam) : I_Renderer(cam)
 void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECScoord, Entity EID)
 {
 	c_Transform& trans = ECScoord.GetComponentDataFromEntity<c_Transform>(EID);
+	c_Renderable& rendData = ECScoord.GetComponentDataFromEntity<c_Renderable>(EID);
 
 	std::shared_ptr<Shader> shader = DataHandle.shader;
 
@@ -22,10 +23,10 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	shader->setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
 	shader->setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
 
-	glm::mat4 cubeModel = glm::mat4(1.0f);
-	cubeModel = glm::translate(cubeModel, trans.pos);
-	cubeModel = glm::scale(cubeModel, trans.scale);
-	shader->setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
+	//glm::mat4 cubeModel = glm::mat4(1.0f);
+	//cubeModel = glm::translate(cubeModel, trans.pos);
+	//cubeModel = glm::scale(cubeModel, trans.scale);
+	shader->setUniformMat4("model", GL_FALSE, glm::value_ptr(trans.modelMat[0]));
 
 	std::set<Entity>* DirLightSet = ECScoord.GetDirLightEntitiesPtr();
 	int nrDirLights = DirLightSet->size();
@@ -36,13 +37,19 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	for (std::set<std::uint32_t>::iterator it = (*DirLightSet).begin(); it != (*DirLightSet).end(); ++it, i++)
 	{
 		c_DirLightEmitter& dirLightData = ECScoord.GetComponentDataFromEntity<c_DirLightEmitter>(*it);
-		c_Transform& dirLightTransform = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
+		c_Transform& dirLightMM = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
 		lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 20.0f);
-		lightView = glm::lookAt(dirLightTransform.pos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+		glm::vec3 dirLightTransform;
+		dirLightTransform.y = dirLightMM.modelMat[0][3][1];
+		dirLightTransform.x = dirLightMM.modelMat[0][3][0];
+		dirLightTransform.z = dirLightMM.modelMat[0][3][2];
+
+		lightView = glm::lookAt(dirLightTransform, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		lightSpaceMatrix = lightProjection * lightView;
 
 		shader->setUniformMat4(("lightSpaceMatrixes[" + std::to_string(i) + "]"), GL_FALSE, glm::value_ptr(lightSpaceMatrix));
-		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].position"), dirLightTransform.pos);
+		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].position"), dirLightTransform);
 		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].direction"), dirLightData.direction);
 		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].ambient"), dirLightData.ambient);
 		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].diffuse"), dirLightData.diffuse);
@@ -60,8 +67,14 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it, i++)
 	{
 		c_SpotLightEmitter& spotLightData = ECScoord.GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
-		c_Transform& spotLightTransform = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
-		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].position"), spotLightTransform.pos);
+		c_Transform& spotLightMM = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
+
+		glm::vec3 spotLightTransform;
+		spotLightTransform.x = spotLightMM.modelMat[0][3][0];
+		spotLightTransform.y = spotLightMM.modelMat[0][3][1];
+		spotLightTransform.z = spotLightMM.modelMat[0][3][2];
+
+		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].position"), spotLightTransform);
 		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].direction"), spotLightData.direction);
 		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].cutOff"), spotLightData.cutOff);
 		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].outerCutOff"), spotLightData.outerCutOff);
@@ -81,8 +94,14 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	for (std::set<std::uint32_t>::iterator it = (*PointLightSet).begin(); it != (*PointLightSet).end(); ++it, ++i)
 	{
 		c_PointLightEmitter& pointLightData = ECScoord.GetComponentDataFromEntity<c_PointLightEmitter>(*it);
-		c_Transform& pointLightTransform = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
-		shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].position"), pointLightTransform.pos);
+		c_Transform& pointLightMM = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
+
+		glm::vec3 pointLightTransform;
+		pointLightTransform.x = pointLightMM.modelMat[0][3][0];
+		pointLightTransform.y = pointLightMM.modelMat[0][3][1];
+		pointLightTransform.z = pointLightMM.modelMat[0][3][2];
+
+		shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].position"), pointLightTransform);
 		shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].constant"), pointLightData.constant);
 		shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].linear"), pointLightData.linear);
 		shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].quadratic"), pointLightData.quadratic);
@@ -106,8 +125,14 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	// To fix: texture units starting from 1
 	glBindTexture(GL_TEXTURE_2D, DataHandle.texUnit + 1);
 
+	for (int i = 0; i < trans.modelMat.size(); ++i)
+	{
+		(DataHandle.shader)->setUniformMat4("model", GL_FALSE, glm::value_ptr((trans.modelMat)[i]));
 
-	GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+		GLCALL(glDrawElements(GL_TRIANGLES, (rendData.indices).size(), GL_UNSIGNED_INT, 0));
+	}
+
+	//GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 }
 
 void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle, 
@@ -123,14 +148,21 @@ void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle,
 	AABBShader.setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
 	AABBShader.setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
 
+	glm::vec3 AABBpos;
+
+	// Always use position 0 in the first []
+	AABBpos.x = trans.modelMat[0][3][0];
+	AABBpos.y = trans.modelMat[0][3][1];
+	AABBpos.z = trans.modelMat[0][3][2]; //#NOTE: We extract the x, y and z data to avoid also attempting to copy the rotation.
+
 	glm::mat4 cubeModel = glm::mat4(1.0f);
-	cubeModel = glm::translate(cubeModel, trans.pos);
+	cubeModel = glm::translate(cubeModel, AABBpos);
 	cubeModel = glm::scale(cubeModel, AABB_Data.scale);
 	AABBShader.setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
 
 	if (AABB_Data.isColliding == true)
 	{
-		if(AABB_Data.isWallColliding == true)
+		if (AABB_Data.isWallColliding == true)
 		{
 			AABBShader.setUniform4f("lineColor", 0.0f, 1.0f, 0.0f, 1.0f);
 		}
@@ -156,10 +188,10 @@ void OpenGL_Renderer::RenderShadowMap(const R_DataHandle& DataHandle, ECSCoordin
 
 	c_Transform& trans = ECScoord.GetComponentDataFromEntity<c_Transform>(EID);
 
-	glm::mat4 cubeModel = glm::mat4(1.0f);
-	cubeModel = glm::translate(cubeModel, trans.pos);
-	cubeModel = glm::scale(cubeModel, trans.scale);
-	shader.setUniformMat4("model", GL_FALSE, glm::value_ptr(cubeModel));
+	//glm::mat4 cubeModel = glm::mat4(1.0f);
+	//cubeModel = glm::translate(cubeModel, trans.pos);
+	//cubeModel = glm::scale(cubeModel, trans.scale);
+	shader.setUniformMat4("model", GL_FALSE, glm::value_ptr(trans.modelMat[0]));
 
 	GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
 }

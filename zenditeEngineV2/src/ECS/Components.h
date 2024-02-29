@@ -4,11 +4,53 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+//Helper Data Types:
+
+#define MAX_BONE_INFLUENCE 4
+
+struct Vertex {
+	Vertex()
+	{
+
+	}
+
+	Vertex(glm::vec3 pos,
+		glm::vec3 norm,
+		glm::vec2 txCoord,
+		glm::vec3 tang,
+		glm::vec3 btan)
+		:
+		Position(pos),
+		Normal(norm),
+		TexCoords(txCoord),
+		Tangent(tang),
+		Bitangent(btan)
+	{ }
+
+	glm::vec3 Position;
+	glm::vec3 Normal;
+	glm::vec2 TexCoords;
+	glm::vec3 Tangent;
+	glm::vec3 Bitangent;
+
+	//bone indexes which will influence this vertex
+	int m_BoneIDs[MAX_BONE_INFLUENCE];
+	//weights from each bone
+	float m_Weights[MAX_BONE_INFLUENCE];
+};
+
+
+
+//COMPONENTS:
+
 struct c_Transform
 {
-	glm::vec3 pos;
-	glm::vec3 prevPos;
-	glm::vec3 scale;
+	//std::vector<glm::vec3> pos;
+	//glm::vec3 prevPos;
+	//glm::vec3 scale;
+
+	glm::mat4 prevModelMat;
+	std::vector<glm::mat4> modelMat;
 };
 
 struct c_AABB
@@ -27,6 +69,12 @@ struct c_Wall
 struct c_WallCollider
 {
 
+};
+
+struct c_Renderable
+{
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
 };
 
 struct c_RenderableComponent
@@ -63,21 +111,8 @@ struct c_RenderableComponent
 
 struct c_Texture
 {
-	void setTexCoordsVertexArray(float* verts, size_t size)
-	{
-		texCoords = new float[size]; //#EXCEPTION_THROWN_RANDOMLY_HERE
-
-		for (int i = 0; i < size; ++i)
-		{
-			texCoords[i] = verts[i];
-		}
-
-		arraySize = size;
-	}
-
 	unsigned short int texUnit;
-	float* texCoords;
-	size_t arraySize;
+	//std::string type;
 };
 
 struct c_DirLightEmitter

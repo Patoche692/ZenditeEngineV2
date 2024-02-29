@@ -80,6 +80,10 @@ public:
 		m_SystemManager->EntityDestroyed(EID);
 	}
 
+	uint32_t GetActiveEntities() const
+	{
+		return m_EntityManager->GetActiveEntites();
+	}
 
 	//Component Member Functions:
 	template<typename T>

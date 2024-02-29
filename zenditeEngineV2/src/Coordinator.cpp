@@ -30,7 +30,7 @@ Coordinator::Coordinator(std::string API_Type, std::string Render_Type, std::sha
 void Coordinator::RegisterComponents()
 {
 	m_ECSCoord->RegisterComponent<c_Transform>();
-	m_ECSCoord->RegisterComponent<c_RenderableComponent>();
+	m_ECSCoord->RegisterComponent<c_Renderable>();
 	m_ECSCoord->RegisterComponent<c_Texture>();
 	m_ECSCoord->RegisterComponent<c_AABB>();
 	m_ECSCoord->RegisterComponent<c_Modified>();
@@ -68,7 +68,7 @@ void Coordinator::SetUpSystemBitsets()
 
 	Signature RenerableSysSig;
 	RenerableSysSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
-	RenerableSysSig.set(m_ECSCoord->GetComponentBitsetPos<c_RenderableComponent>());
+	RenerableSysSig.set(m_ECSCoord->GetComponentBitsetPos<c_Renderable>());
 	RenerableSysSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 	m_ECSCoord->SetSystemBitsetSignature<RenderableSystem>(RenerableSysSig);
 
@@ -179,6 +179,11 @@ unsigned short int Coordinator::GenerateTexUnit(std::string texFilePath, std::st
 void Coordinator::GenerateShadowMapForEntity(Entity EID) {
 	c_DirLightEmitter& DirLightData = m_ECSCoord->GetComponentDataFromEntity<c_DirLightEmitter>(EID);
 	m_APImanager->GenerateDepthMap(DirLightData.depthMapFBO, DirLightData.depthMapUnit);
+}
+
+uint32_t Coordinator::GetActiveEntities() const
+{
+	return m_ECSCoord->GetActiveEntities();
 }
 
 void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)

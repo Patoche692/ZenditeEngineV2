@@ -40,6 +40,7 @@ public:
 
 	}
 
+	//itteration 68?
 	T& GetSpecificComponentData(Entity EID)
 	{
 		DEBUG_ASSERT(m_map_EntityToIndex.find(EID) != m_map_EntityToIndex.end(), "Entity requested does not contain component data of this type.");

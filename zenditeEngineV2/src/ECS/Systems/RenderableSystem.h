@@ -60,10 +60,16 @@ public:
 		glm::mat4 lightProjection, lightView, lightSpaceMatrix;
 		for (std::set<std::uint32_t>::iterator it = (*DirLightSet).begin(); it != (*DirLightSet).end(); ++it)
 		{
-			c_Transform& dirLightTransform = ECScoord->GetComponentDataFromEntity<c_Transform>(*it);
+			c_Transform& dirLightMM = ECScoord->GetComponentDataFromEntity<c_Transform>(*it);
+
+			glm::vec3 dirLightTransform;
+			dirLightTransform.x = dirLightMM.modelMat[0][3][0];
+			dirLightTransform.y = dirLightMM.modelMat[0][3][1];
+			dirLightTransform.z = dirLightMM.modelMat[0][3][2];
+
 			c_DirLightEmitter& dirLightData = ECScoord->GetComponentDataFromEntity<c_DirLightEmitter>(*it);
 			lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 20.0f);
-			lightView = glm::lookAt(dirLightTransform.pos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			lightView = glm::lookAt(dirLightTransform, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			lightSpaceMatrix = lightProjection * lightView;
 
 			depthShader.setUniformMat4("lightSpaceMatrix", GL_FALSE, glm::value_ptr(lightSpaceMatrix));

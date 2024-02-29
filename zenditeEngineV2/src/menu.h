@@ -29,18 +29,13 @@ void imGuiSetup(GLFWwindow* window)
 
 void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int containerTexUnit, unsigned short int rockySurfaceTexUnit, unsigned short int grassTexUnit, unsigned short int waterTexUnit, unsigned short int lavaTexUnit)
 {
-
+    /*
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
     // Here, you can start using ImGui to create interfaces
-
-
-
-
-
 
     if (ImGui::Begin("Entities", nullptr))
     {
@@ -108,7 +103,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 
                     ImGui::Separator;
 
-
+                    
                     if (ImGui::InputFloat3("Position XYZ", & posData.pos[0]))  //Position
                     {
                       
@@ -121,6 +116,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
                         // The slider was used; myVec3 has been updated.
                         // You can handle the change here if needed.
                     }
+                    
 
                     ImGui::SeparatorText("Collider box:");
 
@@ -213,7 +209,7 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
     // Rendering
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+    */
 }
 
 void openLocalRepository(const std::string& repositoryPath)

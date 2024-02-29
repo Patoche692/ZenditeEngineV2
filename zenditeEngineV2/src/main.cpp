@@ -11,12 +11,12 @@
 #include "menu.h"
 #include "Camera.h"
 
-//#include "Helper/Model.h"
-
 #include <filesystem>
 
 #include "Coordinator.h"
 #include "ECS/Components.h"
+
+#include "Model_Loading/MinimalSceneFactory.h"
 
 //ECS implementation ver 3.0
 namespace fs = std::filesystem;
@@ -26,7 +26,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
-void moveEntityBackAndFourth(c_Transform& entTrans, float DT);
+void addDataToRenderable(c_Renderable& rc, float* vertCubePosData, float* vertCubeNormData, float* vertCubeTexCoordData, unsigned int* indices, size_t sizeofVertCubePosData, size_t sizeofIndices);
 
 // camera
 std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -46,7 +46,8 @@ bool toggle = true;
 bool wireframe = false;
 bool rotation = false;
 
-//Coordinator:
+
+
 
 int main(void)
 {
@@ -107,272 +108,140 @@ int main(void)
 		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl"); //#Shaders have not yet been abstracted into the API_Manger
 	std::shared_ptr<Shader> sh_shadows = std::make_shared<Shader>("res/shaders/Shadows/vs_multiLightShadowNoSpecular.glsl",
 		"res/shaders/Shadows/fs_multiLightShadowNoSpecular.glsl");
-
+		
+	std::unique_ptr<I_SceneFactory> sceneFactory = std::make_unique<MinimalSceneFactory>(COORD);
 
 	//#TODO Need to pass data read in from the model loader to the ECS system for rendering.
-	float vertexDataValues[] = {
-		// positions          
-		-0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
+	float vertCubePosData[] = {
+		// Positions        // Normals
+		// Front face
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
 
-		-0.5f, -0.5f,  0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-		-0.5f, -0.5f,  0.5f,
+		// Back face
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
 
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
+		//Right Face
+		 1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
 
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
+		 //LeftFace
+		 -1.0f, -1.0f,  1.0f,
+		 -1.0f, -1.0f, -1.0f,
+		 -1.0f,  1.0f, -1.0f,
+		 -1.0f,  1.0f,  1.0f,
 
-		-0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f, -0.5f,  0.5f,
-		-0.5f, -0.5f,  0.5f,
-		-0.5f, -0.5f, -0.5f,
+		 //Top Face
+		 -1.0f,  1.0f,  1.0f,
+		  1.0f,  1.0f,  1.0f,
+		  1.0f,  1.0f, -1.0f,
+		 -1.0f,  1.0f, -1.0f,
 
-		-0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f
+		 //Bottom Face
+		 -1.0f, -1.0f,  1.0f,
+		  1.0f, -1.0f,  1.0f,
+		  1.0f, -1.0f, -1.0f,
+		 -1.0f, -1.0f, -1.0f
 	};
 
-	float surfaceNormalValues[] =
+	float vertCubeNormData[] = {
+		 0.0f,  0.0f,  1.0f,
+		 0.0f,  0.0f,  1.0f,
+		 0.0f,  0.0f,  1.0f,
+		 0.0f,  0.0f,  1.0f,
+
+		 0.0f,  0.0f, -1.0f,
+		 0.0f,  0.0f, -1.0f,
+		 0.0f,  0.0f, -1.0f,
+		 0.0f,  0.0f, -1.0f,
+
+		 1.0f,  0.0f,  0.0f,
+		 1.0f,  0.0f,  0.0f,
+		 1.0f,  0.0f,  0.0f,
+		 1.0f,  0.0f,  0.0f,
+
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		 1.0f,  0.0f,  0.0f,
+
+		 0.0f,  1.0f,  0.0f,
+		 0.0f,  1.0f,  0.0f,
+		 0.0f,  1.0f,  0.0f,
+		 0.0f,  1.0f,  0.0f,
+
+		 0.0f, -1.0f,  0.0f,
+		 0.0f, -1.0f,  0.0f,
+		 0.0f, -1.0f,  0.0f,
+		 0.0f, -1.0f,  0.0f
+	};
+
+	float vertCubeTexCoordData[] =
 	{
-		0.0f,  0.0f, -1.0f,
-		0.0f,  0.0f, -1.0f,
-		0.0f,  0.0f, -1.0f,
-		0.0f,  0.0f, -1.0f,
-		0.0f,  0.0f, -1.0f,
-		0.0f,  0.0f, -1.0f,
+		 0.0f, 0.0f,
+		 1.0f, 0.0f,
+		 1.0f, 1.0f,
+		 0.0f, 1.0f,
 
-		0.0f,  0.0f,  1.0f,
-		0.0f,  0.0f,  1.0f,
-		0.0f,  0.0f,  1.0f,
-		0.0f,  0.0f,  1.0f,
-		0.0f,  0.0f,  1.0f,
-		0.0f,  0.0f,  1.0f,
+		 0.0f, 0.0f,
+		 1.0f, 0.0f,
+		 1.0f, 1.0f,
+		 0.0f, 1.0f,
 
-		-1.0f,  0.0f,  0.0f,
-		-1.0f,  0.0f,  0.0f,
-		-1.0f,  0.0f,  0.0f,
-		-1.0f,  0.0f,  0.0f,
-		-1.0f,  0.0f,  0.0f,
-		-1.0f,  0.0f,  0.0f,
+		 0.0f, 0.0f,
+		 1.0f, 0.0f,
+		 1.0f, 1.0f,
+		 0.0f, 1.0f,
 
-		1.0f,  0.0f,  0.0f,
-		1.0f,  0.0f,  0.0f,
-		1.0f,  0.0f,  0.0f,
-		1.0f,  0.0f,  0.0f,
-		1.0f,  0.0f,  0.0f,
-		1.0f,  0.0f,  0.0f,
+		 0.0f, 0.0f,
+		 1.0f, 0.0f,
+		 1.0f, 1.0f,
+		 0.0f, 1.0f,
 
-		0.0f, -1.0f,  0.0f,
-		0.0f, -1.0f,  0.0f,
-		0.0f, -1.0f,  0.0f,
-		0.0f, -1.0f,  0.0f,
-		0.0f, -1.0f,  0.0f,
-		0.0f, -1.0f,  0.0f,
+		 0.0f, 0.0f,
+		 1.0f, 0.0f,
+		 1.0f, 1.0f,
+		 0.0f, 1.0f,
 
-		0.0f,  1.0f,  0.0f,
-		0.0f,  1.0f,  0.0f,
-		0.0f,  1.0f,  0.0f,
-		0.0f,  1.0f,  0.0f,
-		0.0f,  1.0f,  0.0f,
-		0.0f,  1.0f,  0.0f
+		 0.0f, 0.0f,
+		 1.0f, 0.0f,
+		 1.0f, 1.0f,
+		 0.0f, 1.0f,
 	};
 
-	float textureCoords[] =
+	unsigned int indices[] =
 	{
-		 0.0f,  0.0f,
-		 1.0f,  0.0f,
-		 1.0f,  1.0f,
-		 1.0f,  1.0f,
-		 0.0f,  1.0f,
-		 0.0f,  0.0f,
-		 0.0f,  0.0f,
-		 1.0f,  0.0f,
-		 1.0f,  1.0f,
-		 1.0f,  1.0f,
-		 0.0f,  1.0f,
-		 0.0f,  0.0f,
-		 1.0f,  0.0f,
-		 1.0f,  1.0f,
-		 0.0f,  1.0f,
-		 0.0f,  1.0f,
-		 0.0f,  0.0f,
-		 1.0f,  0.0f,
-		 1.0f,  0.0f,
-		 1.0f,  1.0f,
-		 0.0f,  1.0f,
-		 0.0f,  1.0f,
-		 0.0f,  0.0f,
-		 1.0f,  0.0f,
-		 0.0f,  1.0f,
-		 1.0f,  1.0f,
-		 1.0f,  0.0f,
-		 1.0f,  0.0f,
-		 0.0f,  0.0f,
-		 0.0f,  1.0f,
-		 0.0f,  1.0f,
-		 1.0f,  1.0f,
-		 1.0f,  0.0f,
-		 1.0f,  0.0f,
-		 0.0f,  0.0f,
-		 0.0f,  1.0f
-	};
+		//front face
+		0, 1, 2,
+		2, 3, 0,
 
-	float oddShapeVertexData[] = {
-		// positions          // normals           // texture coords
-		-0.5f, -1.5f, -0.5f,
-		 0.5f, -1.5f, -0.5f,
-		 0.5f,  1.5f, -0.5f,
-		 0.5f,  1.5f, -0.5f,
-		-0.5f,  1.5f, -0.5f,
-		-0.5f, -1.5f, -0.5f,
+		//back face
+		4, 5, 6,
+		6, 7, 4,
 
-		-0.5f, -1.5f,  0.5f,
-		 0.5f, -1.5f,  0.5f,
-		 0.5f,  1.5f,  0.5f,
-		 0.5f,  1.5f,  0.5f,
-		-0.5f,  1.5f,  0.5f,
-		-0.5f, -1.5f,  0.5f,
+		//right face
+		8, 9, 10,
+		10, 11, 8,
 
-		-0.5f,  1.5f,  0.5f,  
-		-0.5f,  1.5f, -0.5f,  
-		-0.5f, -1.5f, -0.5f,  
-		-0.5f, -1.5f, -0.5f,  
-		-0.5f, -1.5f,  0.5f,  
-		-0.5f,  1.5f,  0.5f,  
-				
-		 0.5f,  1.5f,  0.5f,  
-		 0.5f,  1.5f, -0.5f,  
-		 0.5f, -1.5f, -0.5f,  
-		 0.5f, -1.5f, -0.5f,  
-		 0.5f, -1.5f,  0.5f,  
-		 0.5f,  1.5f,  0.5f,  
-				
-		-0.5f, -1.5f, -0.5f, 
-		 0.5f, -1.5f, -0.5f,  
-		 0.5f, -1.5f,  0.5f,  
-		 0.5f, -1.5f,  0.5f,  
-		-0.5f, -1.5f,  0.5f,  
-		-0.5f, -1.5f, -0.5f,  
-				
-		-0.5f,  1.5f, -0.5f,  
-		 0.5f,  1.5f, -0.5f,  
-		 0.5f,  1.5f,  0.5f,  
-		 0.5f,  1.5f,  0.5f,  
-		-0.5f,  1.5f,  0.5f,  
-		-0.5f,  1.5f, -0.5f  
-	};
+		//left face
+		12, 13, 14,
+		14, 15, 12,
 
-	float oddShapedVDataNormals[] =
-	{
-		0.0f,  0.0f, -1.0f,
-		0.0f,  0.0f, -1.0f,
-		0.0f,  0.0f, -1.0f,
-		0.0f,  0.0f, -1.0f,
-		0.0f,  0.0f, -1.0f,
-		0.0f,  0.0f, -1.0f,
+		//top face:
+		16, 17, 18,
+		18, 19, 16,
 
-		0.0f,  0.0f,  1.0f,
-		0.0f,  0.0f,  1.0f,
-		0.0f,  0.0f,  1.0f,
-		0.0f,  0.0f,  1.0f,
-		0.0f,  0.0f,  1.0f,
-		0.0f,  0.0f,  1.0f,
+		//bottom face
+		20, 21, 22,
+		22, 23, 20
 
-		-1.0f,  0.0f,  0.0f,
-		-1.0f,  0.0f,  0.0f,
-		-1.0f,  0.0f,  0.0f,
-		-1.0f,  0.0f,  0.0f,
-		-1.0f,  0.0f,  0.0f,
-		-1.0f,  0.0f,  0.0f,
-
-		1.0f,  0.0f,  0.0f,
-		1.0f,  0.0f,  0.0f,
-		1.0f,  0.0f,  0.0f,
-		1.0f,  0.0f,  0.0f,
-		1.0f,  0.0f,  0.0f,
-		1.0f,  0.0f,  0.0f,
-
-		0.0f, -1.0f,  0.0f,
-		0.0f, -1.0f,  0.0f,
-		0.0f, -1.0f,  0.0f,
-		0.0f, -1.0f,  0.0f,
-		0.0f, -1.0f,  0.0f,
-		0.0f, -1.0f,  0.0f,
-
-		0.0f,  1.0f,  0.0f,
-		0.0f,  1.0f,  0.0f,
-		0.0f,  1.0f,  0.0f,
-		0.0f,  1.0f,  0.0f,
-		0.0f,  1.0f,  0.0f,
-		0.0f,  1.0f,  0.0f
-	};
-
-	float oddShapedTexCoordData[] =
-	{
-		0.0f,  0.0f,
-		1.0f,  0.0f,
-		1.0f,  1.0f,
-		1.0f,  1.0f,
-		0.0f,  1.0f,
-		0.0f,  0.0f,
-
-		0.0f,  0.0f,
-		1.0f,  0.0f,
-		1.0f,  1.0f,
-		1.0f,  1.0f,
-		0.0f,  1.0f,
-		0.0f,  0.0f,
-
-		1.0f,  0.0f,
-		1.0f,  1.0f,
-		0.0f,  1.0f,
-		0.0f,  1.0f,
-		0.0f,  0.0f,
-		1.0f,  0.0f,
-
-		1.0f,  0.0f,
-		1.0f,  1.0f,
-		0.0f,  1.0f,
-		0.0f,  1.0f,
-		0.0f,  0.0f,
-		1.0f,  0.0f,
-
-		0.0f,  1.0f,
-		1.0f,  1.0f,
-		1.0f,  0.0f,
-		1.0f,  0.0f,
-		0.0f,  0.0f,
-		0.0f,  1.0f,
-
-		0.0f,  1.0f,
-		1.0f,  1.0f,
-		1.0f,  0.0f,
-		1.0f,  0.0f,
-		0.0f,  0.0f,
-		0.0f,  1.0f
 	};
 
 	//size 72 values
@@ -401,11 +270,11 @@ int main(void)
 	entities.push_back(COORD.CreateEntity());
 	entities.push_back(COORD.CreateEntity());
 
-	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "PNG");
-	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "PNG");
-	unsigned short int waterTexUnit = COORD.GenerateTexUnit("res/textures/water.jpg", "JPG");
-	unsigned short int grassTexUnit = COORD.GenerateTexUnit("res/textures/grass.jpg", "JPG");
-	unsigned short int lavaTexUnit = COORD.GenerateTexUnit("res/textures/lava.jpg", "JPG");
+	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "png");
+	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "png");
+	unsigned short int waterTexUnit = COORD.GenerateTexUnit("res/textures/water.jpg", "jpg");
+	unsigned short int grassTexUnit = COORD.GenerateTexUnit("res/textures/grass.jpg", "jpg");
+	unsigned short int lavaTexUnit = COORD.GenerateTexUnit("res/textures/lava.jpg", "jpg");
 
 
 
@@ -420,78 +289,93 @@ int main(void)
 	c_Transform tr_4;
 	c_Transform tr_5;
 	c_Transform tr_6;
-	tr_0.pos = glm::vec3(0.0f,0.0f,0.0f);
-	tr_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	tr_1.pos = glm::vec3(-2.0f, -1.5f, 3.0f);
-	tr_1.scale = glm::vec3(20.0f, 0.1f, 20.0f);
-	tr_2.pos = glm::vec3(-0.2f, 0.0f, -4.5f);
-	tr_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	tr_3.pos = camera->getPosition();
-	tr_3.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	tr_4.pos = glm::vec3(-0.2f, 1.0f, -5.0f);
-	tr_4.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	tr_5.pos = glm::vec3(-2.0f, 0.0f, 1.0f);
-	tr_5.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	tr_6.pos = glm::vec3(0.0f, 5.0f, 1.0f);
-	tr_6.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	c_RenderableComponent rc_0;
-	rc_0.setPosVertexArray(vertexDataValues, sizeof(vertexDataValues));
-	rc_0.setSurfaceNormalVertexArray(surfaceNormalValues, sizeof(surfaceNormalValues));
-	//rc_0.vertices = vertexDataValues;
+	//tr_0
+	glm::mat4 mm_tr0 = glm::mat4(1.0f);
+	glm::vec3 pos_tr0(0.0f, 0.0f, 0.0f);
+	glm::vec3 scale_tr0(1.0f, 1.0f, 1.0f);
+	mm_tr0 = glm::translate(mm_tr0, pos_tr0);
+	mm_tr0 = glm::scale(mm_tr0, scale_tr0);
+	tr_0.modelMat.push_back(mm_tr0);
 
-	c_RenderableComponent rc_1;
-	rc_1.setPosVertexArray(oddShapeVertexData, sizeof(oddShapeVertexData));
-	rc_1.setSurfaceNormalVertexArray(oddShapedVDataNormals, sizeof(oddShapedVDataNormals));
 
-	c_RenderableComponent rc_3;
-	rc_3.setPosVertexArray(vertexDataValues, sizeof(vertexDataValues));
-	rc_0.setSurfaceNormalVertexArray(surfaceNormalValues, sizeof(surfaceNormalValues));
+	//tr_2
+	glm::mat4 mm_tr2 = glm::mat4(1.0f);
+	glm::vec3 pos_tr2(-0.2f, 0.0f, -4.5f);
+	glm::vec3 scale_tr2(1.0f, 1.0f, 1.0f);
+	mm_tr2 = glm::translate(mm_tr2, pos_tr2);
+	mm_tr2 = glm::scale(mm_tr2, scale_tr2);
+	tr_2.modelMat.push_back(mm_tr2);
+
+	//tr_3
+	glm::mat4 mm_tr3 = glm::mat4(1.0f);
+	glm::vec3 pos_tr3(camera->getPosition());
+	glm::vec3 scale_tr3(1.0f, 1.0f, 1.0f);
+	mm_tr3 = glm::translate(mm_tr3, pos_tr3);
+	mm_tr3 = glm::scale(mm_tr3, scale_tr3);
+	tr_3.modelMat.push_back(mm_tr3);
+
+	//tr_4
+	glm::mat4 mm_tr4 = glm::mat4(1.0f);
+	glm::vec3 pos_tr4(-0.2f, 1.0f, -5.0f);
+	glm::vec3 scale_tr4(1.0f, 1.0f, 1.0f);
+	mm_tr4 = glm::translate(mm_tr4, pos_tr4);
+	mm_tr4 = glm::scale(mm_tr4, scale_tr4);
+	tr_4.modelMat.push_back(mm_tr4);
+
+	//tr_5
+	glm::mat4 mm_tr5 = glm::mat4(1.0f);
+	glm::vec3 pos_tr5(-2.0f, 0.0f, 1.0f);
+	glm::vec3 scale_tr5(1.0f, 1.0f, 1.0f);
+	mm_tr5 = glm::translate(mm_tr5, pos_tr5);
+	mm_tr5 = glm::scale(mm_tr5, scale_tr5);
+	tr_5.modelMat.push_back(mm_tr5);
+
+	//tr_6
+	glm::mat4 mm_tr6 = glm::mat4(1.0f);
+	glm::vec3 pos_tr6(0.0f, 5.0f, 1.0f);
+	glm::vec3 scale_tr6(1.0f, 1.0f, 1.0f);
+	mm_tr6 = glm::translate(mm_tr6, pos_tr6);
+	mm_tr6 = glm::scale(mm_tr6, scale_tr6);
+	tr_6.modelMat.push_back(mm_tr6);
+
+
+	c_Renderable rc_0;
+	addDataToRenderable(rc_0, vertCubePosData, vertCubeNormData, vertCubeTexCoordData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+
+	c_Renderable rc_3;
+	addDataToRenderable(rc_3, vertCubePosData, vertCubeNormData, vertCubeTexCoordData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+
 
 	c_Texture tx_0;
-	tx_0.setTexCoordsVertexArray(textureCoords, sizeof(textureCoords));
 	tx_0.texUnit = containerTexUnit;
 
 	c_Texture tx_1;
-	tx_1.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_1.texUnit = containerTexUnit;
 
 	c_Texture tx_2;
-	tx_2.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_2.texUnit = rockySurfaceTexUnit;
 
-
 	c_Texture tx_3;
-	tx_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_3.texUnit = rockySurfaceTexUnit;
 
 	c_Texture tx_4;
-	tx_4.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_4.texUnit = grassTexUnit;
 
 	c_Texture tx_5;
-	tx_5.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_5.texUnit = grassTexUnit;
 
 	c_Texture tx_6;
-	tx_6.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_6.texUnit = waterTexUnit;
 
 	c_Texture tx_7;
-	tx_7.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_7.texUnit = waterTexUnit;
 
 	c_Texture tx_8;
-	tx_8.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_8.texUnit = lavaTexUnit;
 
 	c_Texture tx_9;
-	tx_9.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	tx_9.texUnit = lavaTexUnit;
-
-
-
-
 
 
 	//c_Texture tex_3;
@@ -560,7 +444,13 @@ int main(void)
 	ple_5.quadratic = 0.032f;
 
 	c_DirLightEmitter dle_6;
-	dle_6.direction = -tr_6.pos;
+
+	glm::vec3 tr_6_pos;
+	tr_6_pos.x = tr_6.modelMat[0][3][0];
+	tr_6_pos.y = tr_6.modelMat[0][3][1];
+	tr_6_pos.z = tr_6.modelMat[0][3][2];
+
+	dle_6.direction = -tr_6_pos;
 	dle_6.ambient = glm::vec3(0.02f, 0.02f, 0.02f);
 	dle_6.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
 	dle_6.specular = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -588,7 +478,7 @@ int main(void)
 
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
-	COORD.AddComponentToEntity<c_RenderableComponent>(entities[0], rc_0);
+	COORD.AddComponentToEntity<c_Renderable>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
 	COORD.AddComponentToEntity<c_AABB>(entities[0], aabb_0);
 	COORD.AddComponentToEntity<c_WallCollider>(entities[0], wallCollider_2);
@@ -598,17 +488,23 @@ int main(void)
 	COORD.setShaderForEntity(entities[0], sh_shadows); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
 	COORD.StoreShaderInEntityDataHandle(entities[0]);
 
-	COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
-	COORD.AddComponentToEntity<c_RenderableComponent>(entities[1], rc_1);
-	COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
+	/*
+		
+		COORD.AddComponentToEntity<c_RenderableComponent>(entities[1], rc_1);
+		
+		
+		COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
+		COORD.SetUpRenderData(entities[1]);
+		COORD.setShaderForEntity(entities[1], sh_shadows);
+		COORD.StoreShaderInEntityDataHandle(entities[1]);
+	*/
+	//COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
+	//COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
+	//COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
-	COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
-	COORD.SetUpRenderData(entities[1]);
-	COORD.setShaderForEntity(entities[1], sh_shadows);
-	COORD.StoreShaderInEntityDataHandle(entities[1]);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[2], tr_2);
-	COORD.AddComponentToEntity<c_RenderableComponent>(entities[2], rc_0);
+	COORD.AddComponentToEntity<c_Renderable>(entities[2], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[2], tx_2);
 	COORD.AddComponentToEntity<c_AABB>(entities[2], aabb_2);
 	COORD.AddComponentToEntity<c_Wall>(entities[2], wall_0);
@@ -642,10 +538,8 @@ int main(void)
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
 
-
-
-
 	std::cout << "\nImGui Version: " << IMGUI_VERSION << std::endl;
+	std::cout << "\n Number of active entities: " << COORD.GetActiveEntities() << std::endl;
 
 	int major, minor, revision;
 	glfwGetVersion(&major, &minor, &revision);
@@ -666,8 +560,10 @@ int main(void)
 
 		//moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
 
-		c_Transform& flashLightTransform = COORD.GetComponentDataFromEntity<c_Transform>(entities[3]);
-		flashLightTransform.pos = camera->getPosition();
+		c_Transform& flashLightMM = COORD.GetComponentDataFromEntity<c_Transform>(entities[3]);
+		flashLightMM.modelMat[0][3][0] = camera->getPosition().x;
+		flashLightMM.modelMat[0][3][1] = camera->getPosition().y;
+		flashLightMM.modelMat[0][3][2] = camera->getPosition().z;
 		c_SpotLightEmitter& flashLightData = COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[3]);
 		flashLightData.direction = camera->Front;
 
@@ -680,7 +576,6 @@ int main(void)
 			waterTexUnit,
 			grassTexUnit,
 			lavaTexUnit
-
 		);
 
 		//#Removed_1: 206 - 314
@@ -715,15 +610,35 @@ int main(void)
 	return 0;
 }
 
-void moveEntityBackAndFourth(c_Transform& entTrans, float DT)
+void addDataToRenderable(c_Renderable& rc, float* vertCubePosData, float* vertCubeNormData, float* vertCubeTexCoordData, unsigned int* indices, size_t sizeofVertCubePosData, size_t sizeofIndices)
 {
-	if (entTrans.pos.z > (-4.0f))
+	for (int i = 0; i < sizeofVertCubePosData; i = i + 3)
 	{
-		entTrans.pos.z = entTrans.pos.z + (DT * (-0.4f));
+		Vertex vert;
+		glm::vec3 pos;
+		pos.x = vertCubePosData[i];
+		pos.y = vertCubePosData[i + 1];
+		pos.z = vertCubePosData[i + 2];
+
+		glm::vec3 norm;
+		norm.x = vertCubeNormData[i];
+		norm.y = vertCubeNormData[i + 1];
+		norm.z = vertCubeNormData[i + 2];
+
+		glm::vec2 texCoord;
+		texCoord.x = vertCubeTexCoordData[2 * (i / 3)];
+		texCoord.y = vertCubeTexCoordData[2 * (i / 3) + 1];
+
+		vert.Position = pos;
+		vert.Normal = norm;
+		vert.TexCoords = texCoord;
+
+		rc.vertices.push_back(vert);
 	}
-	else
+
+	for (int i = 0; i < sizeofIndices; ++i)
 	{
-		entTrans.pos.z = entTrans.pos.z + (DT * 0.4f);
+		rc.indices.push_back(indices[i]);
 	}
 }
 
