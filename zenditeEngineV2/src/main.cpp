@@ -477,7 +477,7 @@ int main(void)
 	ES0_mm = glm::translate(ES0_mm, ES0_pos);
 	ES0_mm = glm::scale(ES0_mm, ES0_scale);
 
-	EntityScene ES_0 = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_basicWithTex, 1);
+	EntityScene ES_0 = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_shadows, 1);
 	std::vector<Entity> tmpEntStorage = ES_0.GetSceneEntities();
 	for (int i = 0; i < tmpEntStorage.size(); ++i)
 	{
