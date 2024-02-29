@@ -298,6 +298,13 @@ int main(void)
 	mm_tr0 = glm::scale(mm_tr0, scale_tr0);
 	tr_0.modelMat.push_back(mm_tr0);
 
+	//tr_1
+	glm::mat4 mm_tr1 = glm::mat4(1.0f);
+	glm::vec3 pos_tr1(-5.0f, -2.5f, -5.0f);
+	glm::vec3 scale_tr1(10.0f, 0.2f, 10.0f);
+	mm_tr1 = glm::translate(mm_tr1, pos_tr1);
+	mm_tr1 = glm::scale(mm_tr1, scale_tr1);
+	tr_1.modelMat.push_back(mm_tr1);
 
 	//tr_2
 	glm::mat4 mm_tr2 = glm::mat4(1.0f);
@@ -333,7 +340,7 @@ int main(void)
 
 	//tr_6
 	glm::mat4 mm_tr6 = glm::mat4(1.0f);
-	glm::vec3 pos_tr6(0.0f, 5.0f, 1.0f);
+	glm::vec3 pos_tr6(2.0f, 5.0f, 1.0f);
 	glm::vec3 scale_tr6(1.0f, 1.0f, 1.0f);
 	mm_tr6 = glm::translate(mm_tr6, pos_tr6);
 	mm_tr6 = glm::scale(mm_tr6, scale_tr6);
@@ -489,15 +496,16 @@ int main(void)
 	COORD.StoreShaderInEntityDataHandle(entities[0]);
 
 		
-	//COORD.AddComponentToEntity<c_Renderable>(entities[1], rc_0);
-	//COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
-	//COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
-	//COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
-	//COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
+	COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
+	COORD.AddComponentToEntity<c_Renderable>(entities[1], rc_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
+	//COORD.AddComponentToEntity<c_AABB>(entities[1], aabb_0);
+	//COORD.AddComponentToEntity<c_WallCollider>(entities[1], wallCollider_2);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[1], ei_1);
 	COORD.AddComponentToEntity<c_Modified>(entities[1], md_1);
-	//COORD.SetUpRenderData(entities[1]);
-	//COORD.setShaderForEntity(entities[1], sh_shadows);
-	//COORD.StoreShaderInEntityDataHandle(entities[1]);
+	COORD.SetUpRenderData(entities[1]);
+	COORD.setShaderForEntity(entities[1], sh_shadows);
+	COORD.StoreShaderInEntityDataHandle(entities[1]);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[2], tr_2);
 	COORD.AddComponentToEntity<c_Renderable>(entities[2], rc_0);

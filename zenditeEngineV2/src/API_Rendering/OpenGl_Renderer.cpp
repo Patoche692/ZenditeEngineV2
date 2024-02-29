@@ -187,11 +187,12 @@ void OpenGL_Renderer::RenderShadowMap(const R_DataHandle& DataHandle, ECSCoordin
 	bindVao(DataHandle.VAO);
 
 	c_Transform& trans = ECScoord.GetComponentDataFromEntity<c_Transform>(EID);
+	c_Renderable& rendData = ECScoord.GetComponentDataFromEntity<c_Renderable>(EID);
 
-	//glm::mat4 cubeModel = glm::mat4(1.0f);
-	//cubeModel = glm::translate(cubeModel, trans.pos);
-	//cubeModel = glm::scale(cubeModel, trans.scale);
-	shader.setUniformMat4("model", GL_FALSE, glm::value_ptr(trans.modelMat[0]));
+	for (int i = 0; i < trans.modelMat.size(); ++i)
+	{
+		shader.setUniformMat4("model", GL_FALSE, glm::value_ptr((trans.modelMat)[i]));
 
-	GLCALL(glDrawArrays(GL_TRIANGLES, 0, 36));
+		GLCALL(glDrawElements(GL_TRIANGLES, (rendData.indices).size(), GL_UNSIGNED_INT, 0));
+	}
 }
