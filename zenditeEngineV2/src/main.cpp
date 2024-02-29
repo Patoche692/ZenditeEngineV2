@@ -430,9 +430,9 @@ int main(void)
 	sle_3.direction = camera->Front;
 	sle_3.cutOff = glm::cos(glm::radians(10.5f));
 	sle_3.outerCutOff = glm::cos(glm::radians(15.0f));
-	sle_3.constant = 1.0f;
-	sle_3.linear = 0.09f;
-	sle_3.quadratic = 0.032f;
+	sle_3.constant = 0.3f;
+	sle_3.linear = 0.02f;
+	sle_3.quadratic = 0.0019f;
 
 	c_PointLightEmitter ple_4;
 	ple_4.ambient = glm::vec3(0.0f, 0.0f, 0.0f);
