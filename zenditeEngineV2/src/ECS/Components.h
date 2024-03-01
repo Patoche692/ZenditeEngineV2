@@ -39,6 +39,10 @@ struct Vertex {
 	float m_Weights[MAX_BONE_INFLUENCE];
 };
 
+struct LightweightVertex
+{
+	glm::vec3 Position;
+};
 
 
 //COMPONENTS:
@@ -77,42 +81,17 @@ struct c_Renderable
 	std::vector<unsigned int> indices;
 };
 
-struct c_RenderableComponent
-{
-	void setPosVertexArray(float* verts, size_t size)
-	{
-		posVertices = new float[size]; //#Memory_Leak_Potential
-
-		for (int i = 0; i < size; ++i)
-		{
-			posVertices[i] = verts[i];
-		}
-
-		posArraySize = size;
-	}
-
-	void setSurfaceNormalVertexArray(float* verts, size_t size)
-	{
-		surfaceNormalVertices = new float[size]; //#Memory_Leak_Potential
-
-		for (int i = 0; i < size; ++i)
-		{
-			surfaceNormalVertices[i] = verts[i];
-		}
-
-		snArraySize = size;
-	}
-
-	float* posVertices;
-	float* surfaceNormalVertices; //#HERE
-	size_t posArraySize;
-	size_t snArraySize;
-};
-
 struct c_Texture
 {
 	unsigned short int texUnit;
 	//std::string type;
+};
+
+struct c_LightRenderable
+{
+	std::vector<LightweightVertex> vertices;
+	std::vector<unsigned int> indices;
+	bool active;
 };
 
 struct c_DirLightEmitter

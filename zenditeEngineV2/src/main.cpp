@@ -27,6 +27,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 void addDataToRenderable(c_Renderable& rc, float* vertCubePosData, float* vertCubeNormData, float* vertCubeTexCoordData, unsigned int* indices, size_t sizeofVertCubePosData, size_t sizeofIndices);
+void addDataToLightRenderable(c_LightRenderable& rc, float* vertCubePosData, unsigned int* indices, size_t sizeofVertCubePosData, size_t sizeofIndices);
 
 // camera
 std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -105,6 +106,8 @@ int main(void)
 		"res/shaders/BasicShaders/fs_cubeWnormANDtex.glsl"); //#Shaders have not yet been abstracted into the API_Manger
 	std::shared_ptr<Shader> sh_shadows = std::make_shared<Shader>("res/shaders/Shadows/vs_multiLightShadowNoSpecular.glsl",
 		"res/shaders/Shadows/fs_multiLightShadowNoSpecular.glsl");
+	std::shared_ptr<Shader> sh_LightSource = std::make_shared<Shader>("res/shaders/LightingShaders/vs_LightSource.glsl",
+		"res/shaders/LightingShaders/fs_LightSource.glsl");
 		
 	std::unique_ptr<I_SceneFactory> sceneFactory = std::make_unique<MinimalSceneFactory>(COORD);
 
@@ -273,11 +276,7 @@ int main(void)
 	unsigned short int grassTexUnit = COORD.GenerateTexUnit("res/textures/grass.jpg", "jpg");				 // tx Unit = 3
 	unsigned short int lavaTexUnit = COORD.GenerateTexUnit("res/textures/lava.jpg", "jpg");					 // tx Unit = 4
 
-
-
 	//unsigned short int heightMapTex = COORD.GenerateTexUnit("res/textures/heightmap.png", "PNG");
-
-
 
 	c_Transform tr_0;
 	c_Transform tr_1;
@@ -529,24 +528,45 @@ int main(void)
 	COORD.setShaderForEntity(entities[2], sh_shadows);
 	COORD.StoreShaderInEntityDataHandle(entities[2]);
 
+	c_LightRenderable lr_3;
+	c_LightRenderable lr_4;
+	c_LightRenderable lr_5;
+	c_LightRenderable lr_6;
+
+	addDataToLightRenderable(lr_3, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+	lr_3.active = true;
+
+	addDataToLightRenderable(lr_4, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+	lr_4.active = true;
+
+	addDataToLightRenderable(lr_5, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+	lr_5.active = true;
+
+	addDataToLightRenderable(lr_6, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+	lr_6.active = true;
+
 	COORD.AddComponentToEntity<c_Transform>(entities[3], tr_3);
 	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
 	COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], sle_3);
 	COORD.AddComponentToEntity<c_EntityInfo>(entities[3], ei_3);
+	COORD.AddComponentToEntity<c_LightRenderable>(entities[3], lr_3);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[4], tr_4);
 	COORD.AddComponentToEntity<c_Modified>(entities[4], md_4);
 	COORD.AddComponentToEntity<c_PointLightEmitter>(entities[4], ple_4);
 	COORD.AddComponentToEntity<c_EntityInfo>(entities[4], ei_4);
+	COORD.AddComponentToEntity<c_LightRenderable>(entities[4], lr_4);
 	
 	COORD.AddComponentToEntity<c_Transform>(entities[5], tr_5);
 	COORD.AddComponentToEntity<c_Modified>(entities[5], md_5);
 	COORD.AddComponentToEntity<c_PointLightEmitter>(entities[5], ple_5);
 	COORD.AddComponentToEntity<c_EntityInfo>(entities[5], ei_5);
+	COORD.AddComponentToEntity<c_LightRenderable>(entities[5], lr_5);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[6], tr_6);
 	COORD.AddComponentToEntity<c_Modified>(entities[6], md_6);
 	COORD.AddComponentToEntity<c_DirLightEmitter>(entities[6], dle_6);
+	COORD.AddComponentToEntity<c_LightRenderable>(entities[6], lr_6);
 	COORD.GenerateShadowMapForEntity(entities[6]);
 	COORD.AddComponentToEntity<c_EntityInfo>(entities[6], ei_6);
 
@@ -647,6 +667,27 @@ void addDataToRenderable(c_Renderable& rc, float* vertCubePosData, float* vertCu
 		vert.Position = pos;
 		vert.Normal = norm;
 		vert.TexCoords = texCoord;
+
+		rc.vertices.push_back(vert);
+	}
+
+	for (int i = 0; i < sizeofIndices; ++i)
+	{
+		rc.indices.push_back(indices[i]);
+	}
+}
+
+void addDataToLightRenderable(c_LightRenderable& rc, float* vertCubePosData, unsigned int* indices, size_t sizeofVertCubePosData, size_t sizeofIndices)
+{
+	for (int i = 0; i < sizeofVertCubePosData; i = i + 3)
+	{
+		LightweightVertex vert;
+		glm::vec3 pos;
+		pos.x = vertCubePosData[i];
+		pos.y = vertCubePosData[i + 1];
+		pos.z = vertCubePosData[i + 2];
+
+		vert.Position = pos;
 
 		rc.vertices.push_back(vert);
 	}

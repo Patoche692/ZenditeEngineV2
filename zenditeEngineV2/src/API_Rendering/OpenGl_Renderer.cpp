@@ -7,6 +7,7 @@
 
 OpenGL_Renderer::OpenGL_Renderer(std::shared_ptr<Camera> cam) : I_Renderer(cam)
 {
+	
 }
 
 void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECScoord, Entity EID)
@@ -176,6 +177,31 @@ void OpenGL_Renderer::RenderAABB(const R_DataHandle& DataHandle,
 
 	GLCALL(glDrawArrays(GL_LINES, 0, 24));
 
+}
+
+void OpenGL_Renderer::RenderLightSource(const R_DataHandle& DataHandle, ECSCoordinator& ECScoord, Entity EID, Shader& shader, glm::vec3 lightColor)
+{
+	c_Transform& trans = ECScoord.GetComponentDataFromEntity<c_Transform>(EID);
+	c_LightRenderable& rendData = ECScoord.GetComponentDataFromEntity<c_LightRenderable>(EID);
+
+	//std::shared_ptr<Shader> lightSourceShader = DataHandle.shader;
+
+	shader.bindProgram();
+	bindVao(DataHandle.Light_VAO);
+	glm::mat4 cubeProjection = glm::perspective(glm::radians(cam->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	glm::mat4 cubeView = cam->GetViewMatrix();
+	shader.setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
+	shader.setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
+	shader.setUniformMat4("model", GL_FALSE, glm::value_ptr(trans.modelMat[0]));
+ 
+	shader.setUniform3fv("lightRGB", lightColor.x, lightColor.y, lightColor.z);
+
+	for (int i = 0; i < trans.modelMat.size(); ++i)
+	{
+		shader.setUniformMat4("model", GL_FALSE, glm::value_ptr((trans.modelMat)[i]));
+
+		GLCALL(glDrawElements(GL_TRIANGLES, (rendData.indices).size(), GL_UNSIGNED_INT, 0));
+	}
 }
 
 void OpenGL_Renderer::RenderShadowMap(const R_DataHandle& DataHandle, ECSCoordinator& ECScoord, Shader& shader, Entity EID)

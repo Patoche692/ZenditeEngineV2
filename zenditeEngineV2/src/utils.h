@@ -67,8 +67,9 @@ struct R_DataHandle
 	unsigned AABB_VAO;
 	unsigned AABB_posVBO;
 
-	unsigned Primative_VAO;
-	unsigned Primative_VBO;
+	unsigned Light_VAO;
+	unsigned Light_VBO;
+	unsigned light_EBO;
 };
 
 struct transform

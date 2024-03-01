@@ -75,6 +75,51 @@ public:
 		GLCALL(glBindVertexArray(0)); //Unbind the VAO
 	}
 
+	void SetupLightSourceRenderData(Entity EID, std::shared_ptr<ECSCoordinator> ECScoord) override
+	{
+		R_DataHandle DH;
+
+		//std::vector<Vertex>& vertexData = 
+
+		c_LightRenderable& RData = ECScoord->GetComponentDataFromEntity<c_LightRenderable>(EID);
+
+		//#NOTE Use the DH.bitset value to determine what data to setup for the vertex data passed in
+		// (For this version do a simple set up for testing purposes.)
+
+		GLCALL(glGenVertexArrays(1, &(DH.Light_VAO)));
+		GLCALL(glBindVertexArray(DH.Light_VAO));
+
+		GLCALL(glGenBuffers(1, &(DH.Light_VBO)));
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.Light_VBO));
+
+		//Buffer VBO data (Which includes position, normal and texCoord data):
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, RData.vertices.size() * sizeof(Vertex), &(RData.vertices[0]), GL_STATIC_DRAW));
+
+		//Buffer EBO data:
+		GLCALL(glGenBuffers(1, &(DH.light_EBO)));
+		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, DH.light_EBO));
+		GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, RData.indices.size() * sizeof(unsigned int), &(RData.indices[0]), GL_STATIC_DRAW));
+
+		//setup position vertex attribute array
+		GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0));
+		GLCALL(glEnableVertexAttribArray(0));
+
+		
+		//Insert modified DH into the map:
+		if (m_Map_ENTITYtoHANDLE.find(EID) == m_Map_ENTITYtoHANDLE.end()) //If EID is not in the map
+		{
+			m_Map_ENTITYtoHANDLE[EID] = DH;
+		}
+		else
+		{
+			m_Map_ENTITYtoHANDLE[EID].Light_VAO = DH.Light_VAO;
+			m_Map_ENTITYtoHANDLE[EID].Light_VBO = DH.Light_VBO;
+			m_Map_ENTITYtoHANDLE[EID].light_EBO = DH.light_EBO;
+		}
+
+		GLCALL(glBindVertexArray(0)); //Unbind the VAO
+	}
+
 	void SetupAABBRenderData(Entity EID, std::shared_ptr<ECSCoordinator> ECScoord)
 	{
 		R_DataHandle DH;

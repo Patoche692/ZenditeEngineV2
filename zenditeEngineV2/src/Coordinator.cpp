@@ -37,6 +37,9 @@ void Coordinator::RegisterComponents()
 	m_ECSCoord->RegisterComponent<c_PointLightEmitter>();
 	m_ECSCoord->RegisterComponent<c_SpotLightEmitter>();
 	m_ECSCoord->RegisterComponent<c_DirLightEmitter>();
+
+	m_ECSCoord->RegisterComponent<c_LightRenderable>();
+
 	m_ECSCoord->RegisterComponent<c_Wall>();
 	m_ECSCoord->RegisterComponent<c_WallCollider>();
 	m_ECSCoord->RegisterComponent<c_EntityInfo>();
@@ -58,6 +61,10 @@ void Coordinator::RegisterSystems() //And add them to the system manager list
 	m_WallCollisionHandlingSystem = std::static_pointer_cast<WallCollisionHandlingSystem>(m_ECSCoord->RegisterSystem<WallCollisionHandlingSystem>());
 	m_PositionTrackerSystem = std::static_pointer_cast<PositionTrackerSystem>(m_ECSCoord->RegisterSystem<PositionTrackerSystem>());
 
+	m_RenderDirLightSourceSystem = std::static_pointer_cast<RenderDirLightSourceSystem>(m_ECSCoord->RegisterSystem<RenderDirLightSourceSystem>());
+	m_RenderPointLightSourceSystem = std::static_pointer_cast<RenderPointLightSourceSystem>(m_ECSCoord->RegisterSystem<RenderPointLightSourceSystem>());
+	m_RenderSpotLightSourceSystem = std::static_pointer_cast<RenderSpotLightSourceSystem>(m_ECSCoord->RegisterSystem<RenderSpotLightSourceSystem>());
+	
 	//Extra: (Prevent garbage memory being accessed if there are no entities will wall related AABB components)
 	m_SetUpWallAABBSystem->InitialSetup(m_ECSCoord); 
 	m_SetUpWallColliderAABBSystem->InitialSetup(m_ECSCoord);
@@ -65,7 +72,6 @@ void Coordinator::RegisterSystems() //And add them to the system manager list
 
 void Coordinator::SetUpSystemBitsets()
 {
-
 	Signature RenerableSysSig;
 	RenerableSysSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
 	RenerableSysSig.set(m_ECSCoord->GetComponentBitsetPos<c_Renderable>());
@@ -105,6 +111,31 @@ void Coordinator::SetUpSystemBitsets()
 	SetupDirLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_DirLightEmitter>());
 	SetupDirLightSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
 	m_ECSCoord->SetSystemBitsetSignature<SetupDirLightSystem>(SetupDirLightSystemSig);
+
+	//m_RenderDirLightSourceSystem
+	//m_RenderPointLightSourceSystem
+	//m_RenderSpotLightSourceSystem
+
+	Signature RenderDirLightSourceSystemSig;
+	RenderDirLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
+	RenderDirLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_LightRenderable>());
+	RenderDirLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_DirLightEmitter>());
+	RenderDirLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
+	m_ECSCoord->SetSystemBitsetSignature<RenderDirLightSourceSystem>(RenderDirLightSourceSystemSig);
+
+	Signature RenderPointLightSourceSystemSig;
+	RenderPointLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
+	RenderPointLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_LightRenderable>());
+	RenderPointLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_PointLightEmitter>());
+	RenderPointLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
+	m_ECSCoord->SetSystemBitsetSignature<RenderPointLightSourceSystem>(RenderPointLightSourceSystemSig);
+
+	Signature RenderSpotLightSourceSystemSig;
+	RenderSpotLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
+	RenderSpotLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_LightRenderable>());
+	RenderSpotLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_SpotLightEmitter>());
+	RenderSpotLightSourceSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Modified>());
+	m_ECSCoord->SetSystemBitsetSignature<RenderSpotLightSourceSystem>(RenderSpotLightSourceSystemSig);
 
 	Signature SetUpWallAABBSystemSig;
 	SetUpWallAABBSystemSig.set(m_ECSCoord->GetComponentBitsetPos<c_Transform>());
@@ -199,6 +230,10 @@ void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)
 	m_WallCollisionHandlingSystem->checkCollisions(m_ECSCoord);
 	
 	m_RenderAABBSystem->RenderAABBs(m_Renderer, m_APImanager, m_ECSCoord);
+
+	m_RenderPointLightSourceSystem->Render(m_Renderer, m_APImanager, m_ECSCoord);
+	m_RenderSpotLightSourceSystem->Render(m_Renderer, m_APImanager, m_ECSCoord);
+	m_RenderDirLightSourceSystem->Render(m_Renderer, m_APImanager, m_ECSCoord);
 
 	m_PositionTrackerSystem->UpdatePrePosData(m_ECSCoord);
 
