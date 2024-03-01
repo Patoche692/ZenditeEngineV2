@@ -46,9 +46,6 @@ bool toggle = true;
 bool wireframe = false;
 bool rotation = false;
 
-
-
-
 int main(void)
 {
 	GLFWwindow* window;
@@ -482,6 +479,20 @@ int main(void)
 	for (int i = 0; i < tmpEntStorage.size(); ++i)
 	{
 		entities.push_back(tmpEntStorage[i]);
+	}
+
+
+	glm::mat4 ES1_mm = glm::mat4(1.0f);
+	glm::vec3 ES1_pos(-4.0f, 0.0f, 0.0f);
+	glm::vec3 ES1_scale(0.4f, 2.0f, 0.4f);
+	ES1_mm = glm::translate(ES1_mm, ES1_pos);
+	ES1_mm = glm::scale(ES1_mm, ES1_scale);
+
+	EntityScene ES_1 = sceneFactory->CreateEntityScene("res/models/woodenTreeTrunk/", "woodenTreeTrunk.obj", ES1_mm, sh_shadows, 1);
+	std::vector<Entity> tmpEntStorage1 = ES_1.GetSceneEntities();
+	for (int i = 0; i < tmpEntStorage1.size(); ++i)
+	{
+		entities.push_back(tmpEntStorage1[i]);
 	}
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
