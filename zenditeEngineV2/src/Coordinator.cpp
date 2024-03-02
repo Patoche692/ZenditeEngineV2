@@ -208,8 +208,21 @@ unsigned short int Coordinator::GenerateTexUnit(std::string texFilePath, std::st
 }
 
 void Coordinator::GenerateShadowMapForEntity(Entity EID) {
-	c_DirLightEmitter& DirLightData = m_ECSCoord->GetComponentDataFromEntity<c_DirLightEmitter>(EID);
-	m_APImanager->GenerateDepthMap(DirLightData.depthMapFBO, DirLightData.depthMapUnit);
+
+	if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderDirLightSourceSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderDirLightSourceSystem>())
+	{
+		c_DirLightEmitter& DirLightData = m_ECSCoord->GetComponentDataFromEntity<c_DirLightEmitter>(EID);
+		m_APImanager->GenerateDepthMap(DirLightData.depthMapFBO, DirLightData.depthMapUnit);
+	}
+	else if ((m_ECSCoord->GetEntitySignature(EID) & m_ECSCoord->GetSystemBitsetSignature<RenderSpotLightSourceSystem>()) == m_ECSCoord->GetSystemBitsetSignature<RenderSpotLightSourceSystem>())
+	{
+		c_SpotLightEmitter& DirLightData = m_ECSCoord->GetComponentDataFromEntity<c_SpotLightEmitter>(EID);
+		m_APImanager->GenerateDepthMap(DirLightData.depthMapFBO, DirLightData.depthMapUnit);
+	}
+	else
+	{
+		std::cout << "NOTIFY: Attempting to generate shadowmap for EID: " << EID << " which is without a dirLight or spotLight component" << std::endl;
+	}
 }
 
 uint32_t Coordinator::GetActiveEntities() const

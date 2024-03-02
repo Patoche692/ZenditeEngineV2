@@ -53,7 +53,7 @@ in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
     vec2 TexCoords;
-    vec4 FragPosLightSpace[MAX_DIR_LIGHTS];
+    vec4 FragPosDirLightSpace[MAX_DIR_LIGHTS];
 } fs_in;
 
 uniform DirLight dirLights[MAX_DIR_LIGHTS];
@@ -76,7 +76,6 @@ void main()
 {
 	vec3 norm = normalize(fs_in.Normal);
     vec3 viewDir = normalize(viewPos - fs_in.FragPos);
-
 
     vec3 result = vec3(0.0, 0.0, 0.0);
 
@@ -159,7 +158,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir)
 
 float shadowCalculation(int dirLightIndex) {
 	// perform perspective divide
-    vec3 projCoords = fs_in.FragPosLightSpace[dirLightIndex].xyz / fs_in.FragPosLightSpace[dirLightIndex].w;
+    vec3 projCoords = fs_in.FragPosDirLightSpace[dirLightIndex].xyz / fs_in.FragPosDirLightSpace[dirLightIndex].w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)

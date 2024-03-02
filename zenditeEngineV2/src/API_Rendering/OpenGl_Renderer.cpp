@@ -24,9 +24,6 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	shader->setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
 	shader->setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
 
-	//glm::mat4 cubeModel = glm::mat4(1.0f);
-	//cubeModel = glm::translate(cubeModel, trans.pos);
-	//cubeModel = glm::scale(cubeModel, trans.scale);
 	shader->setUniformMat4("model", GL_FALSE, glm::value_ptr(trans.modelMat[0]));
 
 	std::set<Entity>* DirLightSet = ECScoord.GetDirLightEntitiesPtr();
@@ -49,7 +46,7 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 		lightView = glm::lookAt(dirLightTransform, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		lightSpaceMatrix = lightProjection * lightView;
 
-		shader->setUniformMat4(("lightSpaceMatrixes[" + std::to_string(i) + "]"), GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+		shader->setUniformMat4(("dirLightSpaceMatrixes[" + std::to_string(i) + "]"), GL_FALSE, glm::value_ptr(lightSpaceMatrix));
 		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].position"), dirLightTransform);
 		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].direction"), dirLightData.direction);
 		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].ambient"), dirLightData.ambient);
