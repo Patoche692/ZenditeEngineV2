@@ -21,6 +21,7 @@ uniform mat4 projection;
 uniform mat4 dirLightSpaceMatrixes[MAX_DIR_LIGHTS];
 uniform mat4 spotLightSpaceMatrixes[MAX_SPOT_LIGHTS];
 uniform int nrDirLights;
+uniform int nrSpotLights;
 
 void main()
 {
@@ -29,6 +30,8 @@ void main()
     vs_out.TexCoords = aTexCoords;
     for (int i = 0; i < nrDirLights; i++) {
 		vs_out.FragPosDirLightSpace[i] = dirLightSpaceMatrixes[i] * vec4(vs_out.FragPos, 1.0);
+    }
+    for (int i = 0; i < nrSpotLights; i++) {
 		vs_out.FragPosSpotLightSpace[i] = spotLightSpaceMatrixes[i] * vec4(vs_out.FragPos, 1.0);
     }
 

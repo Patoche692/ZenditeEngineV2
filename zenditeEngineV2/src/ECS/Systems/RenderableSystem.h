@@ -81,31 +81,31 @@ public:
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
-		//std::set<Entity>* SpotLightSet = ECScoord->GetSpotLightEntitiesPtr();
-		//for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it)
-		//{
-		//	c_Transform& spotLightMM = ECScoord->GetComponentDataFromEntity<c_Transform>(*it);
+		std::set<Entity>* SpotLightSet = ECScoord->GetSpotLightEntitiesPtr();
+		for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it)
+		{
+			c_Transform& spotLightMM = ECScoord->GetComponentDataFromEntity<c_Transform>(*it);
 
-		//	glm::vec3 spotLightTransform;
-		//	spotLightTransform.x = spotLightMM.modelMat[0][3][0];
-		//	spotLightTransform.y = spotLightMM.modelMat[0][3][1];
-		//	spotLightTransform.z = spotLightMM.modelMat[0][3][2];
+			glm::vec3 spotLightTransform;
+			spotLightTransform.x = spotLightMM.modelMat[0][3][0];
+			spotLightTransform.y = spotLightMM.modelMat[0][3][1];
+			spotLightTransform.z = spotLightMM.modelMat[0][3][2];
 
-		//	c_SpotLightEmitter& spotLightData = ECScoord->GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
-		//	lightProjection = glm::perspective(glm::radians(spotLightData.outerCutOff), 1.0f, 0.1f, 20.0f);
-		//	lightView = glm::lookAt(spotLightTransform, spotLightData.direction, glm::vec3(0.0f, 1.0f, 0.0f));
-		//	lightSpaceMatrix = lightProjection * lightView;
+			c_SpotLightEmitter& spotLightData = ECScoord->GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
+			lightProjection = glm::perspective((spotLightData.outerCutOff), 1.0f, 0.01f, 100.0f);
+			lightView = glm::lookAt(spotLightTransform, spotLightTransform + spotLightData.direction, glm::vec3(0.0f, 1.0f, 0.0f));
+			lightSpaceMatrix = lightProjection * lightView;
 
-		//	depthShader.setUniformMat4("lightSpaceMatrix", GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+			depthShader.setUniformMat4("lightSpaceMatrix", GL_FALSE, glm::value_ptr(lightSpaceMatrix));
 
-		//	glBindFramebuffer(GL_FRAMEBUFFER, spotLightData.depthMapFBO);
-		//	glClear(GL_DEPTH_BUFFER_BIT);
-		//	for (auto const& EID : m_EntitySet)
-		//	{
-		//		renderer->RenderShadowMap(apiManager->GetEntityDataHandle(EID), *ECScoord, depthShader, EID);
-		//	}
-		//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		//}
+			glBindFramebuffer(GL_FRAMEBUFFER, spotLightData.depthMapFBO);
+			glClear(GL_DEPTH_BUFFER_BIT);
+			for (auto const& EID : m_EntitySet)
+			{
+				renderer->RenderShadowMap(apiManager->GetEntityDataHandle(EID), *ECScoord, depthShader, EID);
+			}
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);

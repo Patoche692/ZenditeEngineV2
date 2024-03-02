@@ -413,7 +413,7 @@ int main(void)
 	c_WallCollider wallCollider_2;
 
 	c_SpotLightEmitter sle_3;
-	sle_3.ambient = glm::vec3(0.2f);
+	sle_3.ambient = glm::vec3(0.0f);
 	sle_3.diffuse = glm::vec3(0.8f);
 	sle_3.specular = glm::vec3(1.0f);
 	sle_3.direction = camera->Front;
@@ -486,18 +486,18 @@ int main(void)
 	}
 
 
-	//glm::mat4 ES1_mm = glm::mat4(1.0f);
-	//glm::vec3 ES1_pos(-4.0f, 0.0f, 0.0f);
-	//glm::vec3 ES1_scale(0.4f, 2.0f, 0.4f);
-	//ES1_mm = glm::translate(ES1_mm, ES1_pos);
-	//ES1_mm = glm::scale(ES1_mm, ES1_scale);
+	glm::mat4 ES1_mm = glm::mat4(1.0f);
+	glm::vec3 ES1_pos(-4.0f, 0.0f, 0.0f);
+	glm::vec3 ES1_scale(0.4f, 2.0f, 0.4f);
+	ES1_mm = glm::translate(ES1_mm, ES1_pos);
+	ES1_mm = glm::scale(ES1_mm, ES1_scale);
 
-	//EntityScene ES_1 = sceneFactory->CreateEntityScene("res/models/woodenTreeTrunk/", "woodenTreeTrunk.obj", ES1_mm, sh_shadows, 1);
-	//std::vector<Entity> tmpEntStorage1 = ES_1.GetSceneEntities();
-	//for (int i = 0; i < tmpEntStorage1.size(); ++i)
-	//{
-	//	entities.push_back(tmpEntStorage1[i]);
-	//}
+	EntityScene ES_1 = sceneFactory->CreateEntityScene("res/models/woodenTreeTrunk/", "woodenTreeTrunk.obj", ES1_mm, sh_shadows, 1);
+	std::vector<Entity> tmpEntStorage1 = ES_1.GetSceneEntities();
+	for (int i = 0; i < tmpEntStorage1.size(); ++i)
+	{
+		entities.push_back(tmpEntStorage1[i]);
+	}
 
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_Renderable>(entities[0], rc_0);
@@ -554,7 +554,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
 	COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], sle_3);
 	COORD.AddComponentToEntity<c_EntityInfo>(entities[3], ei_3);
-	//COORD.GenerateShadowMapForEntity(entities[3]);
+	COORD.GenerateShadowMapForEntity(entities[3]);
 	COORD.AddComponentToEntity<c_LightRenderable>(entities[3], lr_3);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[4], tr_4);
