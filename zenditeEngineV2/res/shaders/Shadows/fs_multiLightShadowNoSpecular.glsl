@@ -173,7 +173,7 @@ float dirLightShadowCalculation(int lightIndex) {
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(fs_in.Normal);
     vec3 lightDir = normalize(dirLights[lightIndex].position - fs_in.FragPos);
-    float bias = max(0.025 * (1.0 - dot(normal, lightDir)), 0.0005);
+    float bias = max(0.025 * (1.0 - dot(normal, lightDir)), 0.001);
     // PCF
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(dirLights[lightIndex].shadowMap, 0);
