@@ -93,7 +93,7 @@ public:
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, DH.Light_VBO));
 
 		//Buffer VBO data (Which includes position, normal and texCoord data):
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, RData.vertices.size() * sizeof(Vertex), &(RData.vertices[0]), GL_STATIC_DRAW));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, RData.vertices.size() * sizeof(LightweightVertex), &(RData.vertices[0]), GL_STATIC_DRAW));
 
 		//Buffer EBO data:
 		GLCALL(glGenBuffers(1, &(DH.light_EBO)));
@@ -101,7 +101,7 @@ public:
 		GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, RData.indices.size() * sizeof(unsigned int), &(RData.indices[0]), GL_STATIC_DRAW));
 
 		//setup position vertex attribute array
-		GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0));
+		GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(LightweightVertex), (void*)0));
 		GLCALL(glEnableVertexAttribArray(0));
 
 		

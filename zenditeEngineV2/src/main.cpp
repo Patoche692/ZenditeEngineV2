@@ -113,7 +113,7 @@ int main(void)
 
 	//#TODO Need to pass data read in from the model loader to the ECS system for rendering.
 	float vertCubePosData[] = {
-		// Positions        // Normals
+		// Positions        
 		// Front face
 		-1.0f, -1.0f,  1.0f,
 		 1.0f, -1.0f,  1.0f,
@@ -342,12 +342,17 @@ int main(void)
 	mm_tr6 = glm::scale(mm_tr6, scale_tr6);
 	tr_6.modelMat.push_back(mm_tr6);
 
+	size_t sizeOfVertCubePosData = sizeof(vertCubePosData) / sizeof(float);
+	size_t sizeOfIndices = sizeof(indices) / sizeof(unsigned int);
 
 	c_Renderable rc_0;
-	addDataToRenderable(rc_0, vertCubePosData, vertCubeNormData, vertCubeTexCoordData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+	addDataToRenderable(rc_0, vertCubePosData, vertCubeNormData, vertCubeTexCoordData, indices, sizeOfVertCubePosData, sizeOfIndices);
+
+	std::cout << "\nsize of vertCubePosData = " << sizeOfVertCubePosData << std::endl;
+	std::cout << "\nsize of Indices         = " << sizeOfIndices << std::endl;
 
 	c_Renderable rc_3;
-	addDataToRenderable(rc_3, vertCubePosData, vertCubeNormData, vertCubeTexCoordData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+	addDataToRenderable(rc_3, vertCubePosData, vertCubeNormData, vertCubeTexCoordData, indices, sizeOfVertCubePosData, sizeOfIndices);
 
 
 	c_Texture tx_0;
@@ -647,7 +652,7 @@ int main(void)
 
 void addDataToRenderable(c_Renderable& rc, float* vertCubePosData, float* vertCubeNormData, float* vertCubeTexCoordData, unsigned int* indices, size_t sizeofVertCubePosData, size_t sizeofIndices)
 {
-	for (int i = 0; i < sizeofVertCubePosData; i = i + 3)
+	for (size_t i = 0; i < sizeofVertCubePosData; i = i + 3)
 	{
 		Vertex vert;
 		glm::vec3 pos;
@@ -671,7 +676,7 @@ void addDataToRenderable(c_Renderable& rc, float* vertCubePosData, float* vertCu
 		rc.vertices.push_back(vert);
 	}
 
-	for (int i = 0; i < sizeofIndices; ++i)
+	for (size_t i = 0; i < sizeofIndices; ++i)
 	{
 		rc.indices.push_back(indices[i]);
 	}
@@ -679,7 +684,7 @@ void addDataToRenderable(c_Renderable& rc, float* vertCubePosData, float* vertCu
 
 void addDataToLightRenderable(c_LightRenderable& rc, float* vertCubePosData, unsigned int* indices, size_t sizeofVertCubePosData, size_t sizeofIndices)
 {
-	for (int i = 0; i < sizeofVertCubePosData; i = i + 3)
+	for (size_t i = 0; i < sizeofVertCubePosData; i = i + 3)
 	{
 		LightweightVertex vert;
 		glm::vec3 pos;
@@ -692,7 +697,7 @@ void addDataToLightRenderable(c_LightRenderable& rc, float* vertCubePosData, uns
 		rc.vertices.push_back(vert);
 	}
 
-	for (int i = 0; i < sizeofIndices; ++i)
+	for (size_t i = 0; i < sizeofIndices; ++i)
 	{
 		rc.indices.push_back(indices[i]);
 	}
