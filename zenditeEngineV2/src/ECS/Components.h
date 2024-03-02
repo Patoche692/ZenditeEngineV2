@@ -131,6 +131,8 @@ struct c_SpotLightEmitter
     glm::vec3 diffuse;
     glm::vec3 specular;       
 
+	unsigned int depthMapFBO;
+	unsigned int depthMapUnit;
 };
 
 struct c_EntityInfo

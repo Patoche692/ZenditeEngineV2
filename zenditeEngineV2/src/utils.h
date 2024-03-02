@@ -26,8 +26,8 @@ class TextureData;
 const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 800;
 
-#define SHADOWMAP_WIDTH 4096
-#define SHADOWMAP_HEIGHT 4096
+#define SHADOWMAP_WIDTH 1024
+#define SHADOWMAP_HEIGHT 1024
 
 static void GLClearError()
 {

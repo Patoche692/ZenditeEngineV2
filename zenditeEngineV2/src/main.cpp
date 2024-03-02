@@ -413,7 +413,7 @@ int main(void)
 	c_WallCollider wallCollider_2;
 
 	c_SpotLightEmitter sle_3;
-	sle_3.ambient = glm::vec3(0.2f);
+	sle_3.ambient = glm::vec3(0.0f);
 	sle_3.diffuse = glm::vec3(0.8f);
 	sle_3.specular = glm::vec3(1.0f);
 	sle_3.direction = camera->Front;
@@ -554,6 +554,7 @@ int main(void)
 	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
 	COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], sle_3);
 	COORD.AddComponentToEntity<c_EntityInfo>(entities[3], ei_3);
+	COORD.GenerateShadowMapForEntity(entities[3]);
 	COORD.AddComponentToEntity<c_LightRenderable>(entities[3], lr_3);
 
 	COORD.AddComponentToEntity<c_Transform>(entities[4], tr_4);
@@ -596,13 +597,12 @@ int main(void)
 
 		/* Render here */
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//moveEntityBackAndFourth(COORD.GetComponentDataFromEntity<c_Transform>(entities[0]), deltaTime);
 
 		c_Transform& flashLightMM = COORD.GetComponentDataFromEntity<c_Transform>(entities[3]);
 		flashLightMM.modelMat[0][3][0] = camera->getPosition().x;
-		flashLightMM.modelMat[0][3][1] = camera->getPosition().y;
+		flashLightMM.modelMat[0][3][1] = camera->getPosition().y - 0.5;
 		flashLightMM.modelMat[0][3][2] = camera->getPosition().z;
 		c_SpotLightEmitter& flashLightData = COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[3]);
 		flashLightData.direction = camera->Front;
