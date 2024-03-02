@@ -16,6 +16,7 @@ void MinimalSceneFactory::ProcessAssimpNode(std::string dir, aiNode* node, const
 		c_Transform c_tr;
 		c_Renderable c_rend;
 		c_Texture c_tx;
+		c_EntityInfo c_info;
 		c_Modified c_md;
 
 		for (int i = 0; i < NumRenderables; ++i)
@@ -23,7 +24,10 @@ void MinimalSceneFactory::ProcessAssimpNode(std::string dir, aiNode* node, const
 			c_tr.modelMat.push_back(glm::mat4(1.0f));
 		}
 
+
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+
+		c_info.name = mesh->mName.C_Str();
 
 		ProcessMesh(dir, mesh, scene, c_rend, c_tx);
 
@@ -32,6 +36,7 @@ void MinimalSceneFactory::ProcessAssimpNode(std::string dir, aiNode* node, const
 		COORD.AddComponentToEntity<c_Transform>(ent, c_tr);
 		COORD.AddComponentToEntity<c_Renderable>(ent, c_rend);
 		COORD.AddComponentToEntity<c_Texture>(ent, c_tx);
+		COORD.AddComponentToEntity<c_EntityInfo>(ent, c_info);
 		COORD.AddComponentToEntity<c_Modified>(ent, c_md);
 		COORD.SetUpRenderData(ent);
 	}
