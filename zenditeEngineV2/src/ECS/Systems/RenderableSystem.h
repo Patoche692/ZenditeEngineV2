@@ -50,13 +50,11 @@ public:
 
 	void RenderShadowMaps(std::shared_ptr<I_Renderer> renderer, std::shared_ptr<I_API_Manager> apiManager, std::shared_ptr<ECSCoordinator> ECScoord)
 	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT);
-
-		std::set<Entity>* DirLightSet = ECScoord->GetDirLightEntitiesPtr();
 
 		depthShader.bindProgram();
 
+		std::set<Entity>* DirLightSet = ECScoord->GetDirLightEntitiesPtr();
 		glm::mat4 lightProjection, lightView, lightSpaceMatrix;
 		for (std::set<std::uint32_t>::iterator it = (*DirLightSet).begin(); it != (*DirLightSet).end(); ++it)
 		{
@@ -75,6 +73,32 @@ public:
 			depthShader.setUniformMat4("lightSpaceMatrix", GL_FALSE, glm::value_ptr(lightSpaceMatrix));
 
 			glBindFramebuffer(GL_FRAMEBUFFER, dirLightData.depthMapFBO);
+			glClear(GL_DEPTH_BUFFER_BIT);
+			for (auto const& EID : m_EntitySet)
+			{
+				renderer->RenderShadowMap(apiManager->GetEntityDataHandle(EID), *ECScoord, depthShader, EID);
+			}
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
+
+		std::set<Entity>* SpotLightSet = ECScoord->GetSpotLightEntitiesPtr();
+		for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it)
+		{
+			c_Transform& spotLightMM = ECScoord->GetComponentDataFromEntity<c_Transform>(*it);
+
+			glm::vec3 spotLightTransform;
+			spotLightTransform.x = spotLightMM.modelMat[0][3][0];
+			spotLightTransform.y = spotLightMM.modelMat[0][3][1];
+			spotLightTransform.z = spotLightMM.modelMat[0][3][2];
+
+			c_SpotLightEmitter& spotLightData = ECScoord->GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
+			lightProjection = glm::perspective((spotLightData.outerCutOff), 1.0f, 0.01f, 100.0f);
+			lightView = glm::lookAt(spotLightTransform, spotLightTransform + spotLightData.direction, glm::vec3(0.0f, 1.0f, 0.0f));
+			lightSpaceMatrix = lightProjection * lightView;
+
+			depthShader.setUniformMat4("lightSpaceMatrix", GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+
+			glBindFramebuffer(GL_FRAMEBUFFER, spotLightData.depthMapFBO);
 			glClear(GL_DEPTH_BUFFER_BIT);
 			for (auto const& EID : m_EntitySet)
 			{
