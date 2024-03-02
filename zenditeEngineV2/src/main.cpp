@@ -313,7 +313,7 @@ int main(void)
 	//tr_3
 	glm::mat4 mm_tr3 = glm::mat4(1.0f);
 	glm::vec3 pos_tr3(camera->getPosition());
-	glm::vec3 scale_tr3(1.0f, 1.0f, 1.0f);
+	glm::vec3 scale_tr3(0.2f, 0.2f, 0.2f);
 	mm_tr3 = glm::translate(mm_tr3, pos_tr3);
 	mm_tr3 = glm::scale(mm_tr3, scale_tr3);
 	tr_3.modelMat.push_back(mm_tr3);
@@ -321,7 +321,7 @@ int main(void)
 	//tr_4
 	glm::mat4 mm_tr4 = glm::mat4(1.0f);
 	glm::vec3 pos_tr4(-0.2f, 1.5f, -5.0f);
-	glm::vec3 scale_tr4(1.0f, 1.0f, 1.0f);
+	glm::vec3 scale_tr4(0.2f, 0.2f, 0.2f);
 	mm_tr4 = glm::translate(mm_tr4, pos_tr4);
 	mm_tr4 = glm::scale(mm_tr4, scale_tr4);
 	tr_4.modelMat.push_back(mm_tr4);
@@ -329,15 +329,15 @@ int main(void)
 	//tr_5
 	glm::mat4 mm_tr5 = glm::mat4(1.0f);
 	glm::vec3 pos_tr5(-2.0f, 1.5f, 1.0f);
-	glm::vec3 scale_tr5(1.0f, 1.0f, 1.0f);
+	glm::vec3 scale_tr5(0.2f, 0.2f, 0.2f);
 	mm_tr5 = glm::translate(mm_tr5, pos_tr5);
 	mm_tr5 = glm::scale(mm_tr5, scale_tr5);
 	tr_5.modelMat.push_back(mm_tr5);
 
 	//tr_6
 	glm::mat4 mm_tr6 = glm::mat4(1.0f);
-	glm::vec3 pos_tr6(2.0f, 5.0f, 1.0f);
-	glm::vec3 scale_tr6(1.0f, 1.0f, 1.0f);
+	glm::vec3 pos_tr6(8.0f, 5.0f, 1.0f);
+	glm::vec3 scale_tr6(0.2f, 0.2f, 0.2f);
 	mm_tr6 = glm::translate(mm_tr6, pos_tr6);
 	mm_tr6 = glm::scale(mm_tr6, scale_tr6);
 	tr_6.modelMat.push_back(mm_tr6);
@@ -499,6 +499,24 @@ int main(void)
 		entities.push_back(tmpEntStorage1[i]);
 	}
 
+	c_LightRenderable lr_3;
+	c_LightRenderable lr_4;
+	c_LightRenderable lr_5;
+	c_LightRenderable lr_6;
+
+	addDataToLightRenderable(lr_3, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+	lr_3.active = false; //This light source is on the camera, so whole screen will be covered by a white box if this is set to true.
+
+	addDataToLightRenderable(lr_4, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+	lr_4.active = true;
+
+	addDataToLightRenderable(lr_5, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+	lr_5.active = true;
+
+	addDataToLightRenderable(lr_6, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
+	lr_6.active = true;
+
+
 	COORD.AddComponentToEntity<c_Transform>(entities[0], tr_0);
 	COORD.AddComponentToEntity<c_Renderable>(entities[0], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[0], tx_0);
@@ -510,7 +528,6 @@ int main(void)
 	COORD.setShaderForEntity(entities[0], sh_shadows); //#C_NOTE: Will need to set the map but not the DH, that needs to be done separatly by the renderer.
 	COORD.StoreShaderInEntityDataHandle(entities[0]);
 
-		
 	COORD.AddComponentToEntity<c_Transform>(entities[1], tr_1);
 	COORD.AddComponentToEntity<c_Renderable>(entities[1], rc_0);
 	COORD.AddComponentToEntity<c_Texture>(entities[1], tx_1);
@@ -533,23 +550,6 @@ int main(void)
 	COORD.setShaderForEntity(entities[2], sh_shadows);
 	COORD.StoreShaderInEntityDataHandle(entities[2]);
 
-	c_LightRenderable lr_3;
-	c_LightRenderable lr_4;
-	c_LightRenderable lr_5;
-	c_LightRenderable lr_6;
-
-	addDataToLightRenderable(lr_3, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
-	lr_3.active = true;
-
-	addDataToLightRenderable(lr_4, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
-	lr_4.active = true;
-
-	addDataToLightRenderable(lr_5, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
-	lr_5.active = true;
-
-	addDataToLightRenderable(lr_6, vertCubePosData, indices, sizeof(vertCubePosData) / sizeof(float), sizeof(indices) / sizeof(unsigned int));
-	lr_6.active = true;
-
 	COORD.AddComponentToEntity<c_Transform>(entities[3], tr_3);
 	COORD.AddComponentToEntity<c_Modified>(entities[3], md_3);
 	COORD.AddComponentToEntity<c_SpotLightEmitter>(entities[3], sle_3);
@@ -570,9 +570,9 @@ int main(void)
 
 	COORD.AddComponentToEntity<c_Transform>(entities[6], tr_6);
 	COORD.AddComponentToEntity<c_Modified>(entities[6], md_6);
-	COORD.AddComponentToEntity<c_DirLightEmitter>(entities[6], dle_6);
-	COORD.AddComponentToEntity<c_LightRenderable>(entities[6], lr_6);
-	COORD.GenerateShadowMapForEntity(entities[6]);
+	//COORD.AddComponentToEntity<c_DirLightEmitter>(entities[6], dle_6);
+	//COORD.AddComponentToEntity<c_LightRenderable>(entities[6], lr_6);
+	//COORD.GenerateShadowMapForEntity(entities[6]);
 	COORD.AddComponentToEntity<c_EntityInfo>(entities[6], ei_6);
 
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());

@@ -190,9 +190,9 @@ void OpenGL_Renderer::RenderLightSource(const R_DataHandle& DataHandle, ECSCoord
 	bindVao(DataHandle.Light_VAO);
 	glm::mat4 cubeProjection = glm::perspective(glm::radians(cam->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	glm::mat4 cubeView = cam->GetViewMatrix();
-	shader.setUniformMat4("projection", GL_FALSE, glm::value_ptr(cubeProjection));
-	shader.setUniformMat4("view", GL_FALSE, glm::value_ptr(cubeView));
-	shader.setUniformMat4("model", GL_FALSE, glm::value_ptr(trans.modelMat[0]));
+	shader.setUniformMat4("projMat", GL_FALSE, glm::value_ptr(cubeProjection));
+	shader.setUniformMat4("viewMat", GL_FALSE, glm::value_ptr(cubeView));
+	//shader.setUniformMat4("model", GL_FALSE, glm::value_ptr(trans.modelMat[0]));
  
 	shader.setUniform3fv("lightRGB", lightColor.x, lightColor.y, lightColor.z);
 
