@@ -43,3 +43,13 @@ Entity EntityScene::GetRootNodeRootEntity()
 {
 	return m_vec_SceneEntities[0];
 }
+
+std::string EntityScene::GetSceneName()
+{
+	return m_sceneName;
+}
+
+void EntityScene::SetSceneName(std::string sceneName)
+{
+	m_sceneName = sceneName;
+}

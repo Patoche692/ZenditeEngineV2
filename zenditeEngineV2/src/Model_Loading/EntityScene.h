@@ -10,6 +10,7 @@ private:
 	glm::mat4 m_EntitySceneModelMatrix;
 	std::vector<Entity> m_vec_SceneEntities;
 	EntityNode m_RootNode;
+	std::string m_sceneName;
 
 public:
 	EntityScene(EntityNode EN, glm::mat4 sceneMM);
@@ -22,5 +23,7 @@ public:
 	std::vector<Entity> GetSceneEntities() const;
 	Entity GetRootNodeRootEntity(); //The first entity in the root node.
 
+	std::string GetSceneName();
+	void SetSceneName(std::string sceneName);
 
 };

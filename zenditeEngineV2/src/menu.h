@@ -27,7 +27,7 @@ void imGuiSetup(GLFWwindow* window)
 	ImGui::StyleColorsDark();
 }
 
-void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int containerTexUnit, unsigned short int rockySurfaceTexUnit, unsigned short int grassTexUnit, unsigned short int waterTexUnit, unsigned short int lavaTexUnit)
+void genMenu_1(std::vector<Entity>& entities, std::vector<std::shared_ptr<EntityScene>> scenePtrs, Coordinator& COORD, short int containerTexUnit, unsigned short int rockySurfaceTexUnit, unsigned short int grassTexUnit, unsigned short int waterTexUnit, unsigned short int lavaTexUnit)
 {
 
 	// Start the Dear ImGui frame
@@ -45,15 +45,24 @@ void genMenu_1(std::vector<Entity>& entities, Coordinator& COORD, short int cont
 		static int selected = 0;
 		{
 			ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeX);
-			for (int i = 0; i < entities.size(); i++)
+			for (int i = 0; i < entities.size(); ++i)
 			{
 				// FIXME: Good candidate to use ImGuiSelectableFlags_SelectOnNav
-				char label[50];
+				char label[60];
 				std::string name = COORD.GetComponentDataFromEntity<c_EntityInfo>(entities[i]).name;
 
 				sprintf_s(label, " %s", name.c_str());
 				if (ImGui::Selectable(label, selected == i))
 					selected = i;
+			}
+			for(int ii = entities.size(); ii < scenePtrs.size() + entities.size(); ++ii)
+			{
+				char label[60];
+				std::string name = scenePtrs[ii - entities.size()]->GetSceneName();
+
+				sprintf_s(label, " %s", name.c_str());
+				if (ImGui::Selectable(label, selected == ii))
+					selected = ii;
 			}
 			ImGui::EndChild();
 
