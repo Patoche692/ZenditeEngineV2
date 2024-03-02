@@ -261,6 +261,7 @@ int main(void)
 	};
 
 	std::vector<Entity> entities;
+	std::vector<std::shared_ptr<EntityScene>> EntityScenes;
 	
 	entities.push_back(COORD.CreateEntity());
 	entities.push_back(COORD.CreateEntity());
@@ -478,13 +479,15 @@ int main(void)
 	ES0_mm = glm::translate(ES0_mm, ES0_pos);
 	ES0_mm = glm::scale(ES0_mm, ES0_scale);
 
-	EntityScene ES_0 = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_shadows, 1);
-	std::vector<Entity> tmpEntStorage = ES_0.GetSceneEntities();
+	std::shared_ptr<EntityScene> ES_0 = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_shadows, 1);
+	std::vector<Entity> tmpEntStorage = ES_0->GetSceneEntities();
+	
+	/*
 	for (int i = 0; i < tmpEntStorage.size(); ++i)
 	{
 		entities.push_back(tmpEntStorage[i]);
 	}
-
+	*/
 
 	glm::mat4 ES1_mm = glm::mat4(1.0f);
 	glm::vec3 ES1_pos(-4.0f, 0.0f, 0.0f);
@@ -492,12 +495,14 @@ int main(void)
 	ES1_mm = glm::translate(ES1_mm, ES1_pos);
 	ES1_mm = glm::scale(ES1_mm, ES1_scale);
 
-	EntityScene ES_1 = sceneFactory->CreateEntityScene("res/models/woodenTreeTrunk/", "woodenTreeTrunk.obj", ES1_mm, sh_shadows, 1);
-	std::vector<Entity> tmpEntStorage1 = ES_1.GetSceneEntities();
+	std::shared_ptr<EntityScene> ES_1 = sceneFactory->CreateEntityScene("res/models/woodenTreeTrunk/", "woodenTreeTrunk.obj", ES1_mm, sh_shadows, 1);
+	std::vector<Entity> tmpEntStorage1 = ES_1->GetSceneEntities();
+	/*
 	for (int i = 0; i < tmpEntStorage1.size(); ++i)
 	{
 		entities.push_back(tmpEntStorage1[i]);
 	}
+	*/
 
 	c_LightRenderable lr_3;
 	c_LightRenderable lr_4;
@@ -610,6 +615,7 @@ int main(void)
 		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
 
 		genMenu_1(entities,
+			EntityScenes,
 			COORD,
 			containerTexUnit,
 			rockySurfaceTexUnit,

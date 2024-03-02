@@ -144,7 +144,7 @@ MinimalSceneFactory::MinimalSceneFactory(Coordinator& coorinator) : I_SceneFacto
 
 }
 
-EntityScene MinimalSceneFactory::CreateEntityScene(std::string dir, std::string objFile, glm::mat4 worldModelMatrix, std::shared_ptr<Shader> shader, unsigned int NumRenderables)
+std::shared_ptr<EntityScene> MinimalSceneFactory::CreateEntityScene(std::string dir, std::string objFile, glm::mat4 worldModelMatrix, std::shared_ptr<Shader> shader, unsigned int NumRenderables)
 {
 	EntityNode RootNode;
 
@@ -161,9 +161,9 @@ EntityScene MinimalSceneFactory::CreateEntityScene(std::string dir, std::string 
 	ProcessAssimpNode(dir, scene->mRootNode, scene, RootNode, NumRenderables);
 	RootNode.SetAllTransformCompoennts(worldModelMatrix, COORD);
 
-	EntityScene SceneObj(RootNode, worldModelMatrix);
+	std::shared_ptr<EntityScene> SceneObj = std::make_shared<EntityScene>(RootNode, worldModelMatrix);
 
-	SceneObj.SetShaderForAllSceneEntities(COORD, shader);
+	SceneObj->SetShaderForAllSceneEntities(COORD, shader);
 
 	return SceneObj;
 

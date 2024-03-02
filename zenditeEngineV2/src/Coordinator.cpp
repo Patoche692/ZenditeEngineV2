@@ -250,7 +250,7 @@ void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)
 
 	m_PositionTrackerSystem->UpdatePrePosData(m_ECSCoord);
 
-	for (auto const& EID : *entities)
+	for (int i = 0; i < GetActiveEntities(); ++i) //#needs to be fixed
 	{
 		m_ECSCoord->GetComponentDataFromEntity<c_Modified>(EID).isModifed = false;
 	}

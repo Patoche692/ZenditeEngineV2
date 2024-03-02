@@ -22,7 +22,7 @@ protected:
 public:
 	I_SceneFactory(Coordinator& Coord);
 
-	virtual EntityScene CreateEntityScene(std::string dir, std::string objFile, glm::mat4 worldModelMatrix, std::shared_ptr<Shader> shader, unsigned int NumRenderables) = 0;
+	virtual std::shared_ptr<EntityScene> CreateEntityScene(std::string dir, std::string objFile, glm::mat4 worldModelMatrix, std::shared_ptr<Shader> shader, unsigned int NumRenderables) = 0;
 	virtual void DestroyEntityScene(EntityScene& ES) = 0;
 
 };

@@ -15,6 +15,6 @@ public:
 
 	MinimalSceneFactory(Coordinator& coorinator);
 
-	EntityScene CreateEntityScene(std::string dir, std::string objFile, glm::mat4 worldModelMatrix, std::shared_ptr<Shader> shader, unsigned int NumRenderables) override;
+	std::shared_ptr<EntityScene> CreateEntityScene(std::string dir, std::string objFile, glm::mat4 worldModelMatrix, std::shared_ptr<Shader> shader, unsigned int NumRenderables) override;
 	void DestroyEntityScene(EntityScene& ES) override;
 };
