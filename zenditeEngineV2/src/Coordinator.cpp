@@ -230,7 +230,7 @@ uint32_t Coordinator::GetActiveEntities() const
 	return m_ECSCoord->GetActiveEntities();
 }
 
-void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)
+void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>& entities)
 {
 	m_SetupPointLightSystem->Setup(m_APImanager, m_ECSCoord);
 	m_SetupSpotLightSystem->Setup(m_APImanager, m_ECSCoord);
@@ -250,9 +250,9 @@ void Coordinator::runAllSystems(float deltaTime, std::vector<Entity>* entities)
 
 	m_PositionTrackerSystem->UpdatePrePosData(m_ECSCoord);
 
-	for (int i = 0; i < GetActiveEntities(); ++i) //#needs to be fixed
+	for (int i = 0; i < entities.size(); ++i) //#needs to be fixed
 	{
-		m_ECSCoord->GetComponentDataFromEntity<c_Modified>(EID).isModifed = false;
+		m_ECSCoord->GetComponentDataFromEntity<c_Modified>(entities[i]).isModifed = false;
 	}
 	
 }

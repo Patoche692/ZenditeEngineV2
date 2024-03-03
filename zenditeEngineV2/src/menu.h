@@ -27,7 +27,7 @@ void imGuiSetup(GLFWwindow* window)
 	ImGui::StyleColorsDark();
 }
 
-void genMenu_1(std::vector<Entity>& entities, std::vector<std::shared_ptr<EntityScene>> scenePtrs, Coordinator& COORD, short int containerTexUnit, unsigned short int rockySurfaceTexUnit, unsigned short int grassTexUnit, unsigned short int waterTexUnit, unsigned short int lavaTexUnit)
+void genMenu_1(std::vector<Entity>& entities, std::vector<Entity>& nonSceneEntities, std::unordered_map<std::string, std::vector<Entity>> map_sceneNameToEntitiesVec, Coordinator& COORD, short int containerTexUnit, unsigned short int rockySurfaceTexUnit, unsigned short int grassTexUnit, unsigned short int waterTexUnit, unsigned short int lavaTexUnit)
 {
 
 	// Start the Dear ImGui frame
@@ -44,26 +44,43 @@ void genMenu_1(std::vector<Entity>& entities, std::vector<std::shared_ptr<Entity
 
 		static int selected = 0;
 		{
+			int i = 0;
 			ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeX);
-			for (int i = 0; i < entities.size(); ++i)
+			for (i = 0; i < nonSceneEntities.size(); ++i)
 			{
 				// FIXME: Good candidate to use ImGuiSelectableFlags_SelectOnNav
 				char label[60];
-				std::string name = COORD.GetComponentDataFromEntity<c_EntityInfo>(entities[i]).name;
+				std::string name = COORD.GetComponentDataFromEntity<c_EntityInfo>(nonSceneEntities[i]).name;
 
 				sprintf_s(label, " %s", name.c_str());
 				if (ImGui::Selectable(label, selected == i))
 					selected = i;
 			}
-			for(int ii = entities.size(); ii < scenePtrs.size() + entities.size(); ++ii)
+			for (const auto& pair : map_sceneNameToEntitiesVec)
 			{
-				char label[60];
-				std::string name = scenePtrs[ii - entities.size()]->GetSceneName();
+				if (ImGui::TreeNode(pair.first.c_str())) // The TreeNode function returns true if the node is open
+				{
+					for(int j = 0; j < pair.second.size(); ++j)
+					{
+						++i;
+						char label[60];
+						std::string name = COORD.GetComponentDataFromEntity<c_EntityInfo>(pair.second[j]).name;
 
-				sprintf_s(label, " %s", name.c_str());
-				if (ImGui::Selectable(label, selected == ii))
-					selected = ii;
+						sprintf_s(label, " %s", name.c_str());
+						if (ImGui::Selectable(label, selected == i))
+							selected = i;
+					}
+
+
+					ImGui::TreePop(); // Pop the parent node when done with it
+				}
+				else
+				{
+					i = i + pair.second.size() - 1;
+				}
+				
 			}
+			
 			ImGui::EndChild();
 
 		}

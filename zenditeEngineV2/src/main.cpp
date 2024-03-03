@@ -261,7 +261,8 @@ int main(void)
 	};
 
 	std::vector<Entity> entities;
-	std::vector<std::shared_ptr<EntityScene>> EntityScenes;
+	std::vector<Entity> allEntites;
+	std::unordered_map<std::string, std::vector<Entity>> map_SceneEntites;
 	
 	entities.push_back(COORD.CreateEntity());
 	entities.push_back(COORD.CreateEntity());
@@ -270,6 +271,11 @@ int main(void)
 	entities.push_back(COORD.CreateEntity());
 	entities.push_back(COORD.CreateEntity());
 	entities.push_back(COORD.CreateEntity());
+
+	for(int i = 0; i < entities.size(); ++i)
+	{
+		allEntites.push_back(entities[i]);
+	}
 
 	unsigned short int containerTexUnit = COORD.GenerateTexUnit("res/textures/container2.png", "png");		 // tx Unit = 0
 	unsigned short int rockySurfaceTexUnit = COORD.GenerateTexUnit("res/textures/rockySurface.png", "png");	 // tx Unit = 1
@@ -480,14 +486,7 @@ int main(void)
 	ES0_mm = glm::scale(ES0_mm, ES0_scale);
 
 	std::shared_ptr<EntityScene> ES_0 = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_shadows, 1);
-	std::vector<Entity> tmpEntStorage = ES_0->GetSceneEntities();
-	
-	/*
-	for (int i = 0; i < tmpEntStorage.size(); ++i)
-	{
-		entities.push_back(tmpEntStorage[i]);
-	}
-	*/
+	map_SceneEntites["Backpack_1"] = ES_0->GetSceneEntities();
 
 	glm::mat4 ES1_mm = glm::mat4(1.0f);
 	glm::vec3 ES1_pos(-4.0f, 0.0f, 0.0f);
@@ -496,13 +495,7 @@ int main(void)
 	ES1_mm = glm::scale(ES1_mm, ES1_scale);
 
 	std::shared_ptr<EntityScene> ES_1 = sceneFactory->CreateEntityScene("res/models/woodenTreeTrunk/", "woodenTreeTrunk.obj", ES1_mm, sh_shadows, 1);
-	std::vector<Entity> tmpEntStorage1 = ES_1->GetSceneEntities();
-	/*
-	for (int i = 0; i < tmpEntStorage1.size(); ++i)
-	{
-		entities.push_back(tmpEntStorage1[i]);
-	}
-	*/
+	map_SceneEntites["TreeTrunk_1"] = ES_1->GetSceneEntities();
 
 	c_LightRenderable lr_3;
 	c_LightRenderable lr_4;
@@ -592,6 +585,16 @@ int main(void)
 
 	std::cout << "GLFW Version: " << major << "." << minor << "." << revision << std::endl;
 
+
+	//Fill AllEntities Vector:
+	for(const auto& pair :  map_SceneEntites)
+	{
+		for(int i = 0; i < pair.second.size(); ++i)
+		{
+			allEntites.push_back(pair.second[i]);
+		}
+	}
+
 	while (!glfwWindowShouldClose(window))
 	{
 		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -612,10 +615,11 @@ int main(void)
 		c_SpotLightEmitter& flashLightData = COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[3]);
 		flashLightData.direction = camera->Front;
 
-		COORD.runAllSystems(2.0f, &entities); //#ECS_RENDERING
+		COORD.runAllSystems(2.0f, allEntites); //#ECS_RENDERING
 
-		genMenu_1(entities,
-			EntityScenes,
+		genMenu_1(allEntites,
+			entities,
+			map_SceneEntites,
 			COORD,
 			containerTexUnit,
 			rockySurfaceTexUnit,
