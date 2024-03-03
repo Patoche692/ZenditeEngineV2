@@ -138,7 +138,7 @@ void genMenu_1(std::vector<Entity>& entities, std::vector<Entity>& nonSceneEntit
 						angles = glm::eulerAngles(q);
 						angles = glm::degrees(angles);
 
-						if (ImGui::InputFloat3("Position XYZ", &pos[0]))  //Position
+						if (ImGui::DragFloat3("Position XYZ", &pos[0]))  //Position
 						{
 							float angleXRadians = glm::radians(angles.x);
 							float angleYRadians = glm::radians(angles.y);
@@ -155,7 +155,7 @@ void genMenu_1(std::vector<Entity>& entities, std::vector<Entity>& nonSceneEntit
 
 						}
 
-						if (ImGui::InputFloat3("Rotation XYZ", &angles[0]))  //Rotation
+						if (ImGui::DragFloat3("Rotation XYZ", &angles[0]))  //Rotation
 						{
 							float angleXRadians = glm::radians(angles.x);
 							float angleYRadians = glm::radians(angles.y);
@@ -171,7 +171,7 @@ void genMenu_1(std::vector<Entity>& entities, std::vector<Entity>& nonSceneEntit
 							posData.modelMat[0] = MM;
 						}
 
-						if (ImGui::InputFloat3("Scale XYZ", &scale[0]))  //Scale
+						if (ImGui::DragFloat3("Scale XYZ", &scale[0]))  //Scale
 						{
 							float angleXRadians = glm::radians(angles.x);
 							float angleYRadians = glm::radians(angles.y);
