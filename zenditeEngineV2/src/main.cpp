@@ -16,7 +16,7 @@
 #include "Coordinator.h"
 #include "ECS/Components.h"
 
-#include "Model_Loading/MinimalSceneFactory.h"
+
 
 //ECS implementation ver 3.0
 namespace fs = std::filesystem;
@@ -262,6 +262,7 @@ int main(void)
 
 	std::vector<Entity> entities;
 	std::vector<Entity> allEntites;
+	std::unordered_map<std::string, std::shared_ptr<EntityScene>> map_SceneNameToEntitiyScene;
 	std::unordered_map<std::string, std::vector<Entity>> map_SceneEntites;
 	
 	entities.push_back(COORD.CreateEntity());
@@ -485,8 +486,10 @@ int main(void)
 	ES0_mm = glm::translate(ES0_mm, ES0_pos);
 	ES0_mm = glm::scale(ES0_mm, ES0_scale);
 
-	std::shared_ptr<EntityScene> ES_0 = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_shadows, 1);
-	map_SceneEntites["Backpack_1"] = ES_0->GetSceneEntities();
+	map_SceneNameToEntitiyScene["Backpack_1"] = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_shadows, 1);
+	//std::shared_ptr<EntityScene> ES_0 = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_shadows, 1);
+	map_SceneEntites["Backpack_1"] = map_SceneNameToEntitiyScene["Backpack_1"]->GetSceneEntities();
+	
 
 	glm::mat4 ES1_mm = glm::mat4(1.0f);
 	glm::vec3 ES1_pos(-4.0f, 0.0f, 0.0f);
@@ -494,8 +497,10 @@ int main(void)
 	ES1_mm = glm::translate(ES1_mm, ES1_pos);
 	ES1_mm = glm::scale(ES1_mm, ES1_scale);
 
-	std::shared_ptr<EntityScene> ES_1 = sceneFactory->CreateEntityScene("res/models/woodenTreeTrunk/", "woodenTreeTrunk.obj", ES1_mm, sh_shadows, 1);
-	map_SceneEntites["TreeTrunk_1"] = ES_1->GetSceneEntities();
+	map_SceneNameToEntitiyScene["TreeTrunk_1"] = sceneFactory->CreateEntityScene("res/models/woodenTreeTrunk/", "woodenTreeTrunk.obj", ES1_mm, sh_shadows, 1);
+	map_SceneEntites["TreeTrunk_1"] = map_SceneNameToEntitiyScene["TreeTrunk_1"]->GetSceneEntities();
+
+	
 
 	c_LightRenderable lr_3;
 	c_LightRenderable lr_4;
@@ -620,6 +625,7 @@ int main(void)
 		genMenu_1(allEntites,
 			entities,
 			map_SceneEntites,
+			map_SceneNameToEntitiyScene,
 			COORD,
 			containerTexUnit,
 			rockySurfaceTexUnit,

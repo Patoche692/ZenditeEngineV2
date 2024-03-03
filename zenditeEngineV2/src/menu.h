@@ -8,6 +8,7 @@
 
 #include <cstdlib>
 
+#include "Model_Loading/MinimalSceneFactory.h"
 
 int selectedOption = 0; // You can assign default selection here, 0 for Option A, 1 for Option B, etc.
 int lastSelectedOption = selectedOption;
@@ -27,7 +28,16 @@ void imGuiSetup(GLFWwindow* window)
 	ImGui::StyleColorsDark();
 }
 
-void genMenu_1(std::vector<Entity>& entities, std::vector<Entity>& nonSceneEntities, std::unordered_map<std::string, std::vector<Entity>> map_sceneNameToEntitiesVec, Coordinator& COORD, short int containerTexUnit, unsigned short int rockySurfaceTexUnit, unsigned short int grassTexUnit, unsigned short int waterTexUnit, unsigned short int lavaTexUnit)
+void genMenu_1(std::vector<Entity>& entities, 
+	std::vector<Entity>& nonSceneEntities, 
+	std::unordered_map<std::string, std::vector<Entity>> map_sceneNameToEntitiesVec, 
+	std::unordered_map<std::string, std::shared_ptr<EntityScene>>& map_SceneNameToEntitiyScene,
+	Coordinator& COORD, 
+	short int containerTexUnit, 
+	unsigned short int rockySurfaceTexUnit, 
+	unsigned short int grassTexUnit, 
+	unsigned short int waterTexUnit, 
+	unsigned short int lavaTexUnit)
 {
 
 	// Start the Dear ImGui frame
@@ -61,6 +71,37 @@ void genMenu_1(std::vector<Entity>& entities, std::vector<Entity>& nonSceneEntit
 			{
 				if (ImGui::TreeNode(pair.first.c_str())) // The TreeNode function returns true if the node is open
 				{
+					if (ImGui::BeginChild("MyBoxedSection", ImVec2(200, 110), true)) {
+						
+						static glm::vec3 scenePos;
+						static glm::vec3 sceneRot;
+						static glm::vec3 sceneScl(1.0f);
+						ImGui::InputFloat3("pos", &scenePos[0]);
+						ImGui::InputFloat3("rot", &sceneRot[0]);
+						ImGui::InputFloat3("scl", &sceneScl[0]);
+						//ImGui::SameLine();
+						if (ImGui::Button("Update All"))
+						{
+							glm::mat4 MM(1.0f);
+
+							float angleXRadians = glm::radians(sceneRot.x);
+							float angleYRadians = glm::radians(sceneRot.y);
+							float angleZRadians = glm::radians(sceneRot.z);
+
+							MM = glm::translate(MM, scenePos);
+							MM = glm::rotate(MM, angleZRadians, glm::vec3(0, 0, 1)); //  Z
+							MM = glm::rotate(MM, angleYRadians, glm::vec3(0, 1, 0)); //  Y
+							MM = glm::rotate(MM, angleXRadians, glm::vec3(1, 0, 0)); //  X
+							MM = glm::scale(MM, sceneScl);
+
+							MM = glm::translate(MM, scenePos);
+
+							map_SceneNameToEntitiyScene[pair.first]->SetSceneModelMat(MM, COORD);
+						}
+						
+					}
+					ImGui::EndChild();
+
 					for(int j = 0; j < pair.second.size(); ++j)
 					{
 						++i;

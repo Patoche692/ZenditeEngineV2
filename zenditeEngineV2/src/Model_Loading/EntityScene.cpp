@@ -13,11 +13,12 @@ void EntityScene::SetSceneModelMat(glm::mat4 ModelMat, Coordinator& COORD)
 	m_RootNode.SetAllTransformCompoennts(m_EntitySceneModelMatrix, COORD);
 }
 
-void EntityScene::SetScenePos(glm::vec3 pos)
+void EntityScene::SetScenePos(glm::vec3 pos, Coordinator& COORD)
 {
 	m_EntitySceneModelMatrix[3][0] = pos.x;
 	m_EntitySceneModelMatrix[3][1] = pos.y;
 	m_EntitySceneModelMatrix[3][2] = pos.z;
+	//m_RootNode.SetAllTransformCompoennts(m_EntitySceneModelMatrix, COORD);
 }
 
 void EntityScene::SetShaderForAllSceneEntities(Coordinator& COORD, std::shared_ptr<Shader> shaderPtr)
