@@ -56,6 +56,7 @@ void genMenu_1(std::vector<Entity>& entities, std::vector<Entity>& nonSceneEntit
 				if (ImGui::Selectable(label, selected == i))
 					selected = i;
 			}
+			i = i - 1;
 			for (const auto& pair : map_sceneNameToEntitiesVec)
 			{
 				if (ImGui::TreeNode(pair.first.c_str())) // The TreeNode function returns true if the node is open
