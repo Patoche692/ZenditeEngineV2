@@ -344,7 +344,7 @@ int main(void)
 
 	//tr_6
 	glm::mat4 mm_tr6 = glm::mat4(1.0f);
-	glm::vec3 pos_tr6(8.0f, 5.0f, 1.0f);
+	glm::vec3 pos_tr6(5.0f, 5.0f, -2.0f);
 	glm::vec3 scale_tr6(0.2f, 0.2f, 0.2f);
 	mm_tr6 = glm::translate(mm_tr6, pos_tr6);
 	mm_tr6 = glm::scale(mm_tr6, scale_tr6);
@@ -464,10 +464,10 @@ int main(void)
 	dle_6.active = true;
 
 	c_EntityInfo ei_0;
-	ei_0.name = "Moving cube";
+	ei_0.name = "Wall Col Cube";
 
 	c_EntityInfo ei_1;
-	ei_1.name = "Long cube";
+	ei_1.name = "Floor";
 
 	c_EntityInfo ei_2;
 	ei_2.name = "Wall cube";
@@ -497,14 +497,23 @@ int main(void)
 
 	glm::mat4 ES1_mm = glm::mat4(1.0f);
 	glm::vec3 ES1_pos(-4.0f, 0.0f, 0.0f);
-	glm::vec3 ES1_scale(0.4f, 2.0f, 0.4f);
+	glm::vec3 ES1_scale(0.1f, 0.1f, 0.1f);
 	ES1_mm = glm::translate(ES1_mm, ES1_pos);
 	ES1_mm = glm::scale(ES1_mm, ES1_scale);
 
-	map_SceneNameToEntitiyScene["TreeTrunk_1"] = sceneFactory->CreateEntityScene("res/models/woodenTreeTrunk/", "woodenTreeTrunk.obj", ES1_mm, sh_shadows, 1);
-	map_SceneEntites["TreeTrunk_1"] = map_SceneNameToEntitiyScene["TreeTrunk_1"]->GetSceneEntities();
+	map_SceneNameToEntitiyScene["House_1"] = sceneFactory->CreateEntityScene("res/models/House/", "House.obj", ES1_mm, sh_shadows, 1);
+	map_SceneEntites["House_1"] = map_SceneNameToEntitiyScene["House_1"]->GetSceneEntities();
 
-	
+	//C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/models/OakTree/OakTree.obj
+
+	glm::mat4 ES2_mm = glm::mat4(1.0f);
+	glm::vec3 ES2_pos(-5.6f, -2.0f, -5.0f);
+	glm::vec3 ES2_scale(0.3f, 0.3f, 0.3f);
+	ES2_mm = glm::translate(ES2_mm, ES2_pos);
+	ES2_mm = glm::scale(ES2_mm, ES2_scale);
+
+	map_SceneNameToEntitiyScene["OakTree_1"] = sceneFactory->CreateEntityScene("res/models/OakTree/", "OakTree.obj", ES2_mm, sh_shadows, 1);
+	map_SceneEntites["OakTree_1"] = map_SceneNameToEntitiyScene["OakTree_1"]->GetSceneEntities();
 
 	c_LightRenderable lr_3;
 	c_LightRenderable lr_4;

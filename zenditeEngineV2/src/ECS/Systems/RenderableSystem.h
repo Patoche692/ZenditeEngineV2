@@ -66,7 +66,7 @@ public:
 			dirLightTransform.z = dirLightMM.modelMat[0][3][2];
 
 			c_DirLightEmitter& dirLightData = ECScoord->GetComponentDataFromEntity<c_DirLightEmitter>(*it);
-			lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 20.0f);
+			lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 40.0f);
 			lightView = glm::lookAt(dirLightTransform, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			lightSpaceMatrix = lightProjection * lightView;
 

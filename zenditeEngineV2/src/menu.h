@@ -143,7 +143,7 @@ void genMenu_1(std::vector<Entity>& entities,
 			if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
 
 			{
-				if (ImGui::BeginTabItem("Description"))
+				if (ImGui::BeginTabItem("Components"))
 				{
 					short int bitSetPos = COORD.GetComponentBitsetPos<c_Transform>();
 					std::bitset<32> transBitset; // Create a bitset of size 32
@@ -237,20 +237,40 @@ void genMenu_1(std::vector<Entity>& entities,
 						ImGui::Separator;
 					}
 
-
-					ImGui::SeparatorText("Collider box:");
-
-					//if (ImGui::InputFloat3("AABB scale", &aabb.scale[0]))
-					//{
-					//    // The slider was used; myVec3 has been updated.
-					//    // You can handle the change here if needed.
-					//}
-
-					//ImGui::EndTabItem();
-
 					ImGui::NewLine();
 
-					// We were trying to add custom texture here via openLocalRepository() but it didn't work
+					short int bitSetPos_AABB = COORD.GetComponentBitsetPos<c_AABB>();
+					std::bitset<32> AABB_Bitset; // Create a bitset of size 32
+					AABB_Bitset.set(bitSetPos_AABB);
+
+					if ((entitySig & AABB_Bitset) == AABB_Bitset) 
+					{
+						ImGui::SeparatorText("AABB:");
+
+						ImGui::Separator;
+
+						auto& AABB_Data = COORD.GetComponentDataFromEntity<c_AABB>(entities[selected]);
+						
+						glm::vec3 AABB_scale;
+						AABB_scale = AABB_Data.scale;
+
+						if (ImGui::DragFloat3("Scale", &AABB_scale[0]))  //Rotation
+						{
+
+							AABB_Data.scale = AABB_scale;
+							
+						}
+
+					}
+					else
+					{
+						ImGui::SeparatorText("AABB: NA");
+
+						ImGui::Separator;
+					}
+
+
+					ImGui::NewLine();
 
 
 					short int bitSetPos2 = COORD.GetComponentBitsetPos<c_Texture>();
@@ -311,8 +331,6 @@ void genMenu_1(std::vector<Entity>& entities,
 										break;
 									}
 								}
-
-								std::cout << selectedOption << std::endl;
 
 							}
 
@@ -379,9 +397,9 @@ void genMenu_1(std::vector<Entity>& entities,
 					ImGui::EndTabItem();
 				}
 
-				if (ImGui::BeginTabItem("Details"))
+				if (ImGui::BeginTabItem("EID"))
 				{
-					ImGui::Text("ID: !! Show EID here !!");
+					ImGui::Text("EID: %d", entities[selected]);
 					ImGui::EndTabItem();
 				}
 				ImGui::EndTabBar();

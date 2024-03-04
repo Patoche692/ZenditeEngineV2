@@ -36,7 +36,7 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	{
 			c_DirLightEmitter& dirLightData = ECScoord.GetComponentDataFromEntity<c_DirLightEmitter>(*it);
 			c_Transform& dirLightMM = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
-			lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 20.0f);
+			lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 40.0f);
 
 			glm::vec3 dirLightTransform;
 			dirLightTransform.y = dirLightMM.modelMat[0][3][1];
