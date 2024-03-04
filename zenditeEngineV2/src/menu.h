@@ -345,12 +345,12 @@ void genMenu_1(std::vector<Entity>& entities,
 
 						if (active == true)
 						{
-							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 1.0f, 0.0f, 1.0f)); // Green for enabled
+							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.9f, 0.3f, 1.0f)); // Green for enabled
 							toggle = "enabled";
 						}
 						else
 						{
-							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f)); // Red for disabled
+							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.9f, 0.3f, 0.3f, 1.0f)); // Red for disabled
 							toggle = "disabled";
 						}
 
