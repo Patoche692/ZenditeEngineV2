@@ -339,7 +339,7 @@ void genMenu_1(std::vector<Entity>& entities,
 					
 					if ((entitySig & lr_Bitset) == lr_Bitset) 
 					{
-						static bool active = COORD.GetComponentDataFromEntity<c_LightRenderable>(entities[selected]).active;
+						bool active = COORD.GetComponentDataFromEntity<c_LightRenderable>(entities[selected]).active;
 
 						static std::string toggle;
 

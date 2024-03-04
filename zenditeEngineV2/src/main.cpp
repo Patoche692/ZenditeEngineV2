@@ -578,9 +578,9 @@ int main(void)
 
 	COORD.AddComponentToEntity<c_Transform>(entities[6], tr_6);
 	COORD.AddComponentToEntity<c_Modified>(entities[6], md_6);
-	//COORD.AddComponentToEntity<c_DirLightEmitter>(entities[6], dle_6);
-	//COORD.AddComponentToEntity<c_LightRenderable>(entities[6], lr_6);
-	//COORD.GenerateShadowMapForEntity(entities[6]);
+	COORD.AddComponentToEntity<c_DirLightEmitter>(entities[6], dle_6);
+	COORD.AddComponentToEntity<c_LightRenderable>(entities[6], lr_6);
+	COORD.GenerateShadowMapForEntity(entities[6]);
 	COORD.AddComponentToEntity<c_EntityInfo>(entities[6], ei_6);
 
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
