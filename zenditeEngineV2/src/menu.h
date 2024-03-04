@@ -257,9 +257,7 @@ void genMenu_1(std::vector<Entity>& entities,
 					std::bitset<32> texBitset; // Create a bitset of size 32
 					texBitset.set(bitSetPos2);
 
-					std::bitset<32> entitySig2 = COORD.GetEntitySignature(entities[selected]);
-
-					if ((entitySig2 & texBitset) == texBitset) // If this entity has a texture component
+					if ((entitySig & texBitset) == texBitset) // If this entity has a texture component
 					{
 						auto& texData = COORD.GetComponentDataFromEntity<c_Texture>(entities[selected]);
 						ImGui::SeparatorText("Texture:");
@@ -321,6 +319,62 @@ void genMenu_1(std::vector<Entity>& entities,
 							ImGui::EndPopup();
 						}
 					}
+					
+
+					
+					short int bitSetPos3 = COORD.GetComponentBitsetPos<c_LightRenderable>();
+					std::bitset<32> lr_Bitset; // Create a bitset of size 32
+					lr_Bitset.set(bitSetPos3);
+
+					short int bitSetPos4 = COORD.GetComponentBitsetPos<c_SpotLightEmitter>();
+					std::bitset<32> spotl_Bitset; // Create a bitset of size 32
+					spotl_Bitset.set(bitSetPos4);
+					short int bitSetPos5 = COORD.GetComponentBitsetPos<c_PointLightEmitter>();
+					std::bitset<32> pointl_Bitset; // Create a bitset of size 32
+					pointl_Bitset.set(bitSetPos5);
+					short int bitSetPos6 = COORD.GetComponentBitsetPos<c_DirLightEmitter>();
+					std::bitset<32> dirl_Bitset; // Create a bitset of size 32
+					dirl_Bitset.set(bitSetPos6);
+
+					
+					
+					if ((entitySig & lr_Bitset) == lr_Bitset) 
+					{
+						bool active = COORD.GetComponentDataFromEntity<c_LightRenderable>(entities[selected]).active;
+
+						std::string toggle;
+						if (active == true)
+						{
+							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 1.0f, 0.0f, 1.0f)); // Green for enabled
+							toggle = "enabled";
+						}
+						else
+						{
+							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f)); // Red for disabled
+							toggle = "disabled";
+						}
+
+						if(ImGui::Button(toggle.c_str()))
+						{
+							COORD.GetComponentDataFromEntity<c_LightRenderable>(entities[selected]).active = !(COORD.GetComponentDataFromEntity<c_LightRenderable>(entities[selected]).active);
+							
+							if ((entitySig & spotl_Bitset) == spotl_Bitset)
+							{
+								(COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[selected])).active = active;
+							}
+							if((entitySig & pointl_Bitset) == pointl_Bitset)
+							{
+								(COORD.GetComponentDataFromEntity<c_PointLightEmitter>(entities[selected])).active = active;
+							}
+							if((entitySig & dirl_Bitset) == dirl_Bitset)
+							{
+								COORD.GetComponentDataFromEntity<c_DirLightEmitter>(entities[selected]).active = active;
+							}
+						
+						}
+						ImGui::PopStyleColor();
+					}
+
 					ImGui::EndTabItem();
 				}
 

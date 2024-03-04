@@ -430,6 +430,7 @@ int main(void)
 	sle_3.constant = 0.3f;
 	sle_3.linear = 0.02f;
 	sle_3.quadratic = 0.0019f;
+	sle_3.active = true;
 
 	c_PointLightEmitter ple_4;
 	ple_4.ambient = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -438,6 +439,7 @@ int main(void)
 	ple_4.constant = 0.5f;
 	ple_4.linear = 0.09f;
 	ple_4.quadratic = 0.032f;
+	ple_4.active = false;
 
 	c_PointLightEmitter ple_5;
 	ple_5.ambient = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -446,6 +448,7 @@ int main(void)
 	ple_5.constant = 0.2f;
 	ple_5.linear = 0.09f;
 	ple_5.quadratic = 0.032f;
+	ple_5.active = true;
 
 	c_DirLightEmitter dle_6;
 
@@ -458,6 +461,7 @@ int main(void)
 	dle_6.ambient = glm::vec3(0.4f, 0.4f, 0.4f);
 	dle_6.diffuse = glm::vec3(0.7f, 0.7f, 0.7f);
 	dle_6.specular = glm::vec3(0.5f, 0.5f, 0.5f);
+	dle_6.active = true;
 
 	c_EntityInfo ei_0;
 	ei_0.name = "Moving cube";

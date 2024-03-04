@@ -63,6 +63,8 @@ struct c_AABB
 	float *vertices; //Data to go in the VBO that stores the vertices of the AABB
 	bool isColliding;
 	bool isWallColliding;
+
+	bool active;
 };
 
 struct c_Wall
@@ -79,6 +81,8 @@ struct c_Renderable
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
+
+	bool active;
 };
 
 struct c_Texture
@@ -104,6 +108,8 @@ struct c_DirLightEmitter
 
 	unsigned int depthMapFBO;
 	unsigned int depthMapUnit;
+
+	bool active;
 };
 
 struct c_PointLightEmitter
@@ -115,6 +121,8 @@ struct c_PointLightEmitter
     glm::vec3 ambient;
     glm::vec3 diffuse;
     glm::vec3 specular;
+
+	bool active;
 };
 
 struct c_SpotLightEmitter
@@ -133,6 +141,8 @@ struct c_SpotLightEmitter
 
 	unsigned int depthMapFBO;
 	unsigned int depthMapUnit;
+
+	bool active;
 };
 
 struct c_EntityInfo

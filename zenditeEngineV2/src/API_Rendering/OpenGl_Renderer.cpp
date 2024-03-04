@@ -34,27 +34,31 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	glm::mat4 lightProjection, lightView, lightSpaceMatrix;
 	for (std::set<std::uint32_t>::iterator it = (*DirLightSet).begin(); it != (*DirLightSet).end(); ++it, i++)
 	{
-		c_DirLightEmitter& dirLightData = ECScoord.GetComponentDataFromEntity<c_DirLightEmitter>(*it);
-		c_Transform& dirLightMM = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
-		lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 20.0f);
+		if (ECScoord.GetComponentDataFromEntity<c_DirLightEmitter>(*it).active == true)
+		{
 
-		glm::vec3 dirLightTransform;
-		dirLightTransform.y = dirLightMM.modelMat[0][3][1];
-		dirLightTransform.x = dirLightMM.modelMat[0][3][0];
-		dirLightTransform.z = dirLightMM.modelMat[0][3][2];
+			c_DirLightEmitter& dirLightData = ECScoord.GetComponentDataFromEntity<c_DirLightEmitter>(*it);
+			c_Transform& dirLightMM = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
+			lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 20.0f);
 
-		lightView = glm::lookAt(dirLightTransform, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		lightSpaceMatrix = lightProjection * lightView;
+			glm::vec3 dirLightTransform;
+			dirLightTransform.y = dirLightMM.modelMat[0][3][1];
+			dirLightTransform.x = dirLightMM.modelMat[0][3][0];
+			dirLightTransform.z = dirLightMM.modelMat[0][3][2];
 
-		shader->setUniformMat4(("dirLightSpaceMatrixes[" + std::to_string(i) + "]"), GL_FALSE, glm::value_ptr(lightSpaceMatrix));
-		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].position"), dirLightTransform);
-		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].direction"), dirLightData.direction);
-		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].ambient"), dirLightData.ambient);
-		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].diffuse"), dirLightData.diffuse);
-		shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].specular"), dirLightData.specular);
-		shader->setUniformTextureUnit(("dirLights[" + std::to_string(i) + "].shadowMap"), 8 + i);
-		glActiveTexture(GL_TEXTURE8 + i);
-		glBindTexture(GL_TEXTURE_2D, dirLightData.depthMapUnit);
+			lightView = glm::lookAt(dirLightTransform, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			lightSpaceMatrix = lightProjection * lightView;
+
+			shader->setUniformMat4(("dirLightSpaceMatrixes[" + std::to_string(i) + "]"), GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+			shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].position"), dirLightTransform);
+			shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].direction"), dirLightData.direction);
+			shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].ambient"), dirLightData.ambient);
+			shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].diffuse"), dirLightData.diffuse);
+			shader->setUniform3fv(("dirLights[" + std::to_string(i) + "].specular"), dirLightData.specular);
+			shader->setUniformTextureUnit(("dirLights[" + std::to_string(i) + "].shadowMap"), 8 + i);
+			glActiveTexture(GL_TEXTURE8 + i);
+			glBindTexture(GL_TEXTURE_2D, dirLightData.depthMapUnit);
+		}
 	}
 	
 	std::set<Entity>* SpotLightSet = ECScoord.GetSpotLightEntitiesPtr();
@@ -64,32 +68,35 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	i = 0;
 	for (std::set<std::uint32_t>::iterator it = (*SpotLightSet).begin(); it != (*SpotLightSet).end(); ++it, i++)
 	{
-		c_SpotLightEmitter& spotLightData = ECScoord.GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
-		c_Transform& spotLightMM = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
+		if (ECScoord.GetComponentDataFromEntity<c_SpotLightEmitter>(*it).active == true)
+		{
+			c_SpotLightEmitter& spotLightData = ECScoord.GetComponentDataFromEntity<c_SpotLightEmitter>(*it);
+			c_Transform& spotLightMM = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
 
-		glm::vec3 spotLightTransform;
-		spotLightTransform.x = spotLightMM.modelMat[0][3][0];
-		spotLightTransform.y = spotLightMM.modelMat[0][3][1];
-		spotLightTransform.z = spotLightMM.modelMat[0][3][2];
+			glm::vec3 spotLightTransform;
+			spotLightTransform.x = spotLightMM.modelMat[0][3][0];
+			spotLightTransform.y = spotLightMM.modelMat[0][3][1];
+			spotLightTransform.z = spotLightMM.modelMat[0][3][2];
 
-		lightProjection = glm::perspective((spotLightData.outerCutOff), 1.0f, 0.01f, 100.0f);
-		lightView = glm::lookAt(spotLightTransform, spotLightTransform + spotLightData.direction, glm::vec3(0.0f, 1.0f, 0.0f));
-		lightSpaceMatrix = lightProjection * lightView;
+			lightProjection = glm::perspective((spotLightData.outerCutOff), 1.0f, 0.01f, 100.0f);
+			lightView = glm::lookAt(spotLightTransform, spotLightTransform + spotLightData.direction, glm::vec3(0.0f, 1.0f, 0.0f));
+			lightSpaceMatrix = lightProjection * lightView;
 
-		shader->setUniformMat4(("spotLightSpaceMatrixes[" + std::to_string(i) + "]"), GL_FALSE, glm::value_ptr(lightSpaceMatrix));
-		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].position"), spotLightTransform);
-		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].direction"), spotLightData.direction);
-		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].cutOff"), spotLightData.cutOff);
-		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].outerCutOff"), spotLightData.outerCutOff);
-		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].constant"), spotLightData.constant);
-		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].linear"), spotLightData.linear);
-		shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].quadratic"), spotLightData.quadratic);
-		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].ambient"), spotLightData.ambient);
-		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].diffuse"), spotLightData.diffuse);
-		shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].specular"), spotLightData.specular);
-		shader->setUniformTextureUnit(("spotLights[" + std::to_string(i) + "].shadowMap"), 16 + i);
-		glActiveTexture(GL_TEXTURE16 + i);
-		glBindTexture(GL_TEXTURE_2D, spotLightData.depthMapUnit);
+			shader->setUniformMat4(("spotLightSpaceMatrixes[" + std::to_string(i) + "]"), GL_FALSE, glm::value_ptr(lightSpaceMatrix));
+			shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].position"), spotLightTransform);
+			shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].direction"), spotLightData.direction);
+			shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].cutOff"), spotLightData.cutOff);
+			shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].outerCutOff"), spotLightData.outerCutOff);
+			shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].constant"), spotLightData.constant);
+			shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].linear"), spotLightData.linear);
+			shader->setUniformFloat(("spotLights[" + std::to_string(i) + "].quadratic"), spotLightData.quadratic);
+			shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].ambient"), spotLightData.ambient);
+			shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].diffuse"), spotLightData.diffuse);
+			shader->setUniform3fv(("spotLights[" + std::to_string(i) + "].specular"), spotLightData.specular);
+			shader->setUniformTextureUnit(("spotLights[" + std::to_string(i) + "].shadowMap"), 16 + i);
+			glActiveTexture(GL_TEXTURE16 + i);
+			glBindTexture(GL_TEXTURE_2D, spotLightData.depthMapUnit);
+		}
 	}
 
 	std::set<Entity>* PointLightSet = ECScoord.GetPointLightEntitiesPtr();
@@ -99,21 +106,24 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 	i = 0;
 	for (std::set<std::uint32_t>::iterator it = (*PointLightSet).begin(); it != (*PointLightSet).end(); ++it, ++i)
 	{
-		c_PointLightEmitter& pointLightData = ECScoord.GetComponentDataFromEntity<c_PointLightEmitter>(*it);
-		c_Transform& pointLightMM = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
+		if (ECScoord.GetComponentDataFromEntity<c_PointLightEmitter>(*it).active == true)
+		{
+			c_PointLightEmitter& pointLightData = ECScoord.GetComponentDataFromEntity<c_PointLightEmitter>(*it);
+			c_Transform& pointLightMM = ECScoord.GetComponentDataFromEntity<c_Transform>(*it);
 
-		glm::vec3 pointLightTransform;
-		pointLightTransform.x = pointLightMM.modelMat[0][3][0];
-		pointLightTransform.y = pointLightMM.modelMat[0][3][1];
-		pointLightTransform.z = pointLightMM.modelMat[0][3][2];
+			glm::vec3 pointLightTransform;
+			pointLightTransform.x = pointLightMM.modelMat[0][3][0];
+			pointLightTransform.y = pointLightMM.modelMat[0][3][1];
+			pointLightTransform.z = pointLightMM.modelMat[0][3][2];
 
-		shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].position"), pointLightTransform);
-		shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].constant"), pointLightData.constant);
-		shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].linear"), pointLightData.linear);
-		shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].quadratic"), pointLightData.quadratic);
-		shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].ambient"), pointLightData.ambient);
-		shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].diffuse"), pointLightData.diffuse);
-		shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].specular"), pointLightData.specular);
+			shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].position"), pointLightTransform);
+			shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].constant"), pointLightData.constant);
+			shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].linear"), pointLightData.linear);
+			shader->setUniformFloat(("pointLights[" + std::to_string(i) + "].quadratic"), pointLightData.quadratic);
+			shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].ambient"), pointLightData.ambient);
+			shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].diffuse"), pointLightData.diffuse);
+			shader->setUniform3fv(("pointLights[" + std::to_string(i) + "].specular"), pointLightData.specular);
+		}
 	}
 
 	//(DataHandle.texture)->changeTexUnit(DataHandle.texUnit); //#unnecessary. Each texture is saved to a texture unit and is not changed throught the programs lifespan
@@ -121,7 +131,6 @@ void OpenGL_Renderer::Render(const R_DataHandle& DataHandle, ECSCoordinator& ECS
 															   //			   Although, all this does is take a texture and assign it to a texture unit.
 	glm::vec3 camPosition = cam->getPosition();
 	shader->setUniform3fv("viewPos", camPosition);
-
 
 	shader->setUniformTextureUnit("colorTexture", 0);
 	shader->setUniformTextureUnit("material.diffuse", 0);
