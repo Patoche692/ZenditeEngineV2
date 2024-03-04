@@ -337,12 +337,12 @@ void genMenu_1(std::vector<Entity>& entities,
 					dirl_Bitset.set(bitSetPos6);
 
 					
-					
 					if ((entitySig & lr_Bitset) == lr_Bitset) 
 					{
-						bool active = COORD.GetComponentDataFromEntity<c_LightRenderable>(entities[selected]).active;
+						static bool active = COORD.GetComponentDataFromEntity<c_LightRenderable>(entities[selected]).active;
 
-						std::string toggle;
+						static std::string toggle;
+
 						if (active == true)
 						{
 							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 1.0f, 0.0f, 1.0f)); // Green for enabled
@@ -356,7 +356,8 @@ void genMenu_1(std::vector<Entity>& entities,
 
 						if(ImGui::Button(toggle.c_str()))
 						{
-							COORD.GetComponentDataFromEntity<c_LightRenderable>(entities[selected]).active = !(COORD.GetComponentDataFromEntity<c_LightRenderable>(entities[selected]).active);
+							active = !active;
+							COORD.GetComponentDataFromEntity<c_LightRenderable>(entities[selected]).active = active;
 							
 							if ((entitySig & spotl_Bitset) == spotl_Bitset)
 							{

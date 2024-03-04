@@ -439,7 +439,7 @@ int main(void)
 	ple_4.constant = 0.5f;
 	ple_4.linear = 0.09f;
 	ple_4.quadratic = 0.032f;
-	ple_4.active = false;
+	ple_4.active = true;
 
 	c_PointLightEmitter ple_5;
 	ple_5.ambient = glm::vec3(0.0f, 0.0f, 0.0f);
