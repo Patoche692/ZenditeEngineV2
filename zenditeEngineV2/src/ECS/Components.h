@@ -64,7 +64,7 @@ struct c_AABB
 	bool isColliding;
 	bool isWallColliding;
 
-	bool active;
+	bool active = true;
 };
 
 struct c_Wall

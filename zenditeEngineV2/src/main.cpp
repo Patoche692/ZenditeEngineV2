@@ -517,34 +517,42 @@ int main(void)
 	c_AABB aabb_7;
 	aabb_7.scale = glm::vec3(4.0f, 1.2f, 0.4f);
 	aabb_7.vertices = AABBvertices;
+	aabb_7.active = true;
 
 	c_AABB aabb_8;
 	aabb_8.scale = glm::vec3(4.0f, 1.2f, 0.4f);
 	aabb_8.vertices = AABBvertices;
+	aabb_8.active = true;
 
 	c_AABB aabb_9;
 	aabb_9.scale = glm::vec3(0.4f, 1.2f, 4.0f);
 	aabb_9.vertices = AABBvertices;
+	aabb_9.active = true;
 
 	c_AABB aabb_10;
 	aabb_10.scale = glm::vec3(0.4f, 1.2f, 4.0f);
 	aabb_10.vertices = AABBvertices;
+	aabb_10.active = true;
 
 	c_AABB aabb_11;
 	aabb_11.scale = glm::vec3(4.0f, 1.2f, 0.4f);
 	aabb_11.vertices = AABBvertices;
+	aabb_11.active = true;
 
 	c_AABB aabb_12;
 	aabb_12.scale = glm::vec3(4.0f, 1.2f, 0.4f);
 	aabb_12.vertices = AABBvertices;
-
+	aabb_12.active = true;
+	
 	c_AABB aabb_13;
 	aabb_13.scale = glm::vec3(0.4f, 1.2f, 4.0f);
 	aabb_13.vertices = AABBvertices;
+	aabb_13.active = true;
 
 	c_AABB aabb_14;
 	aabb_14.scale = glm::vec3(0.4f, 1.2f, 4.0f);
 	aabb_14.vertices = AABBvertices;
+	aabb_14.active = true;
 
 
 	c_Wall wall_0;

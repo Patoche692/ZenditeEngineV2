@@ -254,6 +254,16 @@ void genMenu_1(std::vector<Entity>& entities,
 						ImGui::Separator;
 
 						auto& AABB_Data = COORD.GetComponentDataFromEntity<c_AABB>(entities[selected]);
+
+						bool& AABBactive = COORD.GetComponentDataFromEntity<c_AABB>(entities[selected]).active;
+
+						if (ImGui::RadioButton("Visible", AABBactive == true)) {
+							AABBactive = true;
+						}
+						ImGui::SameLine();
+						if (ImGui::RadioButton("Invisible", AABBactive == false)) {
+							AABBactive = false;
+						}
 						
 						glm::vec3 AABB_scale;
 						AABB_scale = AABB_Data.scale;
