@@ -130,6 +130,10 @@ void genMenu_1(std::vector<Entity>& entities,
 
 		// Right
 		{
+			float v_speed = 0.05f;
+			//float v_min = 0.0f;
+			//float v_max = 1.0f;
+			const char* format = "%.03f";
 
 			auto& modified = COORD.GetComponentDataFromEntity<c_Modified>(entities[selected]);
 			auto& infoData = COORD.GetComponentDataFromEntity<c_EntityInfo>(entities[selected]);
@@ -180,7 +184,7 @@ void genMenu_1(std::vector<Entity>& entities,
 						angles = glm::eulerAngles(q);
 						angles = glm::degrees(angles);
 
-						if (ImGui::DragFloat3("Position XYZ", &pos[0]))  //Position
+						if (ImGui::DragFloat3("Position XYZ", &pos[0], v_speed))  //Position
 						{
 							float angleXRadians = glm::radians(angles.x);
 							float angleYRadians = glm::radians(angles.y);
@@ -197,7 +201,7 @@ void genMenu_1(std::vector<Entity>& entities,
 
 						}
 
-						if (ImGui::DragFloat3("Rotation XYZ", &angles[0]))  //Rotation
+						if (ImGui::DragFloat3("Rotation XYZ", &angles[0], v_speed))  //Rotation
 						{
 							float angleXRadians = glm::radians(angles.x);
 							float angleYRadians = glm::radians(angles.y);
@@ -213,7 +217,7 @@ void genMenu_1(std::vector<Entity>& entities,
 							posData.modelMat[0] = MM;
 						}
 
-						if (ImGui::DragFloat3("Scale XYZ", &scale[0]))  //Scale
+						if (ImGui::DragFloat3("Scale XYZ", &scale[0], v_speed))  //Scale
 						{
 							float angleXRadians = glm::radians(angles.x);
 							float angleYRadians = glm::radians(angles.y);
@@ -254,7 +258,7 @@ void genMenu_1(std::vector<Entity>& entities,
 						glm::vec3 AABB_scale;
 						AABB_scale = AABB_Data.scale;
 
-						if (ImGui::DragFloat3("Scale", &AABB_scale[0]))  //Rotation
+						if (ImGui::DragFloat3("Scale", &AABB_scale[0], v_speed))
 						{
 
 							AABB_Data.scale = AABB_scale;
@@ -268,7 +272,6 @@ void genMenu_1(std::vector<Entity>& entities,
 
 						ImGui::Separator;
 					}
-
 
 					ImGui::NewLine();
 
@@ -357,6 +360,11 @@ void genMenu_1(std::vector<Entity>& entities,
 					
 					if ((entitySig & lr_Bitset) == lr_Bitset) 
 					{
+						float v_speed = 0.01f; 
+						float v_min = 0.0f; 
+						float v_max = 1.0f; 
+						const char* format = "%.03f";
+
 						bool active = COORD.GetComponentDataFromEntity<c_LightRenderable>(entities[selected]).active;
 
 						static std::string toggle;
@@ -392,6 +400,99 @@ void genMenu_1(std::vector<Entity>& entities,
 						
 						}
 						ImGui::PopStyleColor();
+
+						ImGui::NewLine();
+
+						ImGui::SeparatorText("Light Settings");
+
+						ImGui::NewLine();
+
+						glm::vec3* ambient_Data = nullptr;
+						glm::vec3* diffuse_Data = nullptr;
+						glm::vec3* specular_Data = nullptr;
+
+						float* constant = nullptr;
+						float* linear = nullptr;
+						float* quadratic = nullptr;
+
+						if ((entitySig & spotl_Bitset) == spotl_Bitset)
+						{
+							ambient_Data = &COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[selected]).ambient;
+							diffuse_Data = &COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[selected]).diffuse;
+							specular_Data = &COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[selected]).specular;
+							
+							constant = &COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[selected]).constant;
+							linear = &COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[selected]).linear;
+							quadratic = &COORD.GetComponentDataFromEntity<c_SpotLightEmitter>(entities[selected]).quadratic;
+						}
+						if ((entitySig & pointl_Bitset) == pointl_Bitset)
+						{
+							ambient_Data = &COORD.GetComponentDataFromEntity<c_PointLightEmitter>(entities[selected]).ambient;
+							diffuse_Data = &COORD.GetComponentDataFromEntity<c_PointLightEmitter>(entities[selected]).diffuse;
+							specular_Data = &COORD.GetComponentDataFromEntity<c_PointLightEmitter>(entities[selected]).specular;
+						
+							constant = &COORD.GetComponentDataFromEntity<c_PointLightEmitter>(entities[selected]).constant;
+							linear = &COORD.GetComponentDataFromEntity<c_PointLightEmitter>(entities[selected]).linear;
+							quadratic = &COORD.GetComponentDataFromEntity<c_PointLightEmitter>(entities[selected]).quadratic;
+						}
+						if ((entitySig & dirl_Bitset) == dirl_Bitset)
+						{
+							ambient_Data = &COORD.GetComponentDataFromEntity<c_DirLightEmitter>(entities[selected]).ambient;
+							diffuse_Data = &COORD.GetComponentDataFromEntity<c_DirLightEmitter>(entities[selected]).diffuse;
+							specular_Data = &COORD.GetComponentDataFromEntity<c_DirLightEmitter>(entities[selected]).specular;
+						}
+
+						ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Intensity");
+						ImGui::Separator();
+
+						glm::vec3 amVec3 = *ambient_Data;
+						glm::vec3 spVec3 = *specular_Data;
+						glm::vec3 dfVec3 = *diffuse_Data;
+
+						if (ImGui::DragFloat3("Ambient", &amVec3[0], v_speed, v_min, v_max, format))
+						{
+							ambient_Data->x = amVec3.x;
+							ambient_Data->y = amVec3.y;
+							ambient_Data->z = amVec3.z;
+						}
+						if (ImGui::DragFloat3("diffuse", &dfVec3[0], v_speed, v_min, v_max, format))
+						{
+							diffuse_Data->x = dfVec3.x;
+							diffuse_Data->y = dfVec3.y;
+							diffuse_Data->z = dfVec3.z;
+						}
+						if (ImGui::DragFloat3("specular", &spVec3[0], v_speed, v_min, v_max, format))
+						{
+							specular_Data->x = spVec3.x;
+							specular_Data->y = spVec3.y;
+							specular_Data->z = spVec3.z;
+						}
+
+						ImGui::NewLine();
+						ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Color");
+						ImGui::Separator();
+
+						
+						if ((entitySig & dirl_Bitset) != dirl_Bitset)
+						{
+							float con = *constant;
+							float lin = *linear;
+							float quad = *quadratic;
+
+							if (ImGui::DragFloat("constant", &con, v_speed))
+							{
+								*constant = con;
+							}
+							if (ImGui::DragFloat("linear", &lin, v_speed))
+							{
+								*linear = lin;
+							}
+							if (ImGui::DragFloat("quadratic", &quad, v_speed))
+							{
+								*quadratic = quad;
+							}
+						}
+
 					}
 
 					ImGui::EndTabItem();
