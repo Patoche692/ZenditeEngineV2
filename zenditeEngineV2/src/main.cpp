@@ -16,8 +16,6 @@
 #include "Coordinator.h"
 #include "ECS/Components.h"
 
-
-
 //ECS implementation ver 3.0
 namespace fs = std::filesystem;
 
@@ -28,6 +26,13 @@ void processInput(GLFWwindow* window);
 
 void addDataToRenderable(c_Renderable& rc, float* vertCubePosData, float* vertCubeNormData, float* vertCubeTexCoordData, unsigned int* indices, size_t sizeofVertCubePosData, size_t sizeofIndices);
 void addDataToLightRenderable(c_LightRenderable& rc, float* vertCubePosData, unsigned int* indices, size_t sizeofVertCubePosData, size_t sizeofIndices);
+
+void setUpBasicModelMatrix(glm::mat4& MM, glm::vec3 pos, glm::vec3 scale)
+{	
+	MM = glm::mat4(1.0f);
+	MM = glm::translate(MM, pos);
+	MM = glm::scale(MM, scale);
+}
 
 // camera
 std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -273,6 +278,17 @@ int main(void)
 	entities.push_back(COORD.CreateEntity());
 	entities.push_back(COORD.CreateEntity());
 
+	//Walls:
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+	entities.push_back(COORD.CreateEntity());
+
 	for(int i = 0; i < entities.size(); ++i)
 	{
 		allEntites.push_back(entities[i]);
@@ -283,6 +299,7 @@ int main(void)
 	unsigned short int waterTexUnit = COORD.GenerateTexUnit("res/textures/water.jpg", "jpg");				 // tx Unit = 2
 	unsigned short int grassTexUnit = COORD.GenerateTexUnit("res/textures/grass.jpg", "jpg");				 // tx Unit = 3
 	unsigned short int lavaTexUnit = COORD.GenerateTexUnit("res/textures/lava.jpg", "jpg");					 // tx Unit = 4
+	unsigned short int brickWallTexUnit = COORD.GenerateTexUnit("res/textures/wall.jpg", "jpg");			 // tx Unit = 5
 
 	//unsigned short int heightMapTex = COORD.GenerateTexUnit("res/textures/heightmap.png", "PNG");
 
@@ -294,9 +311,19 @@ int main(void)
 	c_Transform tr_5;
 	c_Transform tr_6;
 
+	c_Transform tr_7;
+	c_Transform tr_8;
+	c_Transform tr_9;
+	c_Transform tr_10;
+
+	c_Transform tr_11;
+	c_Transform tr_12;
+	c_Transform tr_13;
+	c_Transform tr_14;
+
 	//tr_0
 	glm::mat4 mm_tr0 = glm::mat4(1.0f);
-	glm::vec3 pos_tr0(0.0f, 0.0f, 0.0f);
+	glm::vec3 pos_tr0(0.0f, -2.3f, 0.0f);
 	glm::vec3 scale_tr0(1.0f, 1.0f, 1.0f);
 	mm_tr0 = glm::translate(mm_tr0, pos_tr0);
 	mm_tr0 = glm::scale(mm_tr0, scale_tr0);
@@ -304,15 +331,15 @@ int main(void)
 
 	//tr_1
 	glm::mat4 mm_tr1 = glm::mat4(1.0f);
-	glm::vec3 pos_tr1(-5.0f, -2.5f, -5.0f);
-	glm::vec3 scale_tr1(10.0f, 0.2f, 10.0f);
+	glm::vec3 pos_tr1(-5.0f, -3.5f, -5.0f);
+	glm::vec3 scale_tr1(15.0f, 0.2f, 15.0f);
 	mm_tr1 = glm::translate(mm_tr1, pos_tr1);
 	mm_tr1 = glm::scale(mm_tr1, scale_tr1);
 	tr_1.modelMat.push_back(mm_tr1);
 
 	//tr_2
 	glm::mat4 mm_tr2 = glm::mat4(1.0f);
-	glm::vec3 pos_tr2(-0.2f, 0.0f, -4.5f);
+	glm::vec3 pos_tr2(-1.2f, -2.3f, -6.0f);
 	glm::vec3 scale_tr2(1.0f, 1.0f, 1.0f);
 	mm_tr2 = glm::translate(mm_tr2, pos_tr2);
 	mm_tr2 = glm::scale(mm_tr2, scale_tr2);
@@ -328,7 +355,7 @@ int main(void)
 
 	//tr_4
 	glm::mat4 mm_tr4 = glm::mat4(1.0f);
-	glm::vec3 pos_tr4(-0.2f, 1.5f, -5.0f);
+	glm::vec3 pos_tr4(-2.1f, 0.5f, -3.05f);
 	glm::vec3 scale_tr4(0.2f, 0.2f, 0.2f);
 	mm_tr4 = glm::translate(mm_tr4, pos_tr4);
 	mm_tr4 = glm::scale(mm_tr4, scale_tr4);
@@ -336,7 +363,7 @@ int main(void)
 
 	//tr_5
 	glm::mat4 mm_tr5 = glm::mat4(1.0f);
-	glm::vec3 pos_tr5(-2.0f, 1.5f, 1.0f);
+	glm::vec3 pos_tr5(-9.35f, -2.4f, -2.85f);
 	glm::vec3 scale_tr5(0.2f, 0.2f, 0.2f);
 	mm_tr5 = glm::translate(mm_tr5, pos_tr5);
 	mm_tr5 = glm::scale(mm_tr5, scale_tr5);
@@ -349,6 +376,49 @@ int main(void)
 	mm_tr6 = glm::translate(mm_tr6, pos_tr6);
 	mm_tr6 = glm::scale(mm_tr6, scale_tr6);
 	tr_6.modelMat.push_back(mm_tr6);
+
+	//tr_7
+	glm::mat4 mm_tr7;
+	setUpBasicModelMatrix(mm_tr7, glm::vec3(-2.7f, -2.3f, 8.5f), glm::vec3(4.0f, 1.2f, 0.4f));
+	tr_7.modelMat.push_back(mm_tr7);
+
+	//tr_8
+	glm::mat4 mm_tr8;
+	setUpBasicModelMatrix(mm_tr8, glm::vec3(-10.6f, -2.3f, -8.3f), glm::vec3(4.0f, 1.2f, 0.4f));
+	tr_8.modelMat.push_back(mm_tr8);
+
+	//tr_9
+	glm::mat4 mm_tr9;
+	setUpBasicModelMatrix(mm_tr9, glm::vec3(-15.0f, -2.3f, 4.1f), glm::vec3(0.4f, 1.2f, 4.0f));
+	tr_9.modelMat.push_back(mm_tr9);
+
+	//tr_10
+	glm::mat4 mm_tr10;
+	setUpBasicModelMatrix(mm_tr10, glm::vec3(1.65f, -2.3f, 4.1f), glm::vec3(0.4f, 1.2f, 4.0f));
+	tr_10.modelMat.push_back(mm_tr10);
+
+
+
+	//tr_11
+	glm::mat4 mm_tr11;
+	setUpBasicModelMatrix(mm_tr11, glm::vec3(-10.7f, -2.3f, 8.5f), glm::vec3(4.0f, 1.2f, 0.4f));
+	tr_11.modelMat.push_back(mm_tr11);
+
+	//tr_12
+	glm::mat4 mm_tr12;
+	setUpBasicModelMatrix(mm_tr12, glm::vec3(-2.6f, -2.3f, -8.3f), glm::vec3(4.0f, 1.2f, 0.4f));
+	tr_12.modelMat.push_back(mm_tr12);
+
+	//tr_13
+	glm::mat4 mm_tr13;
+	setUpBasicModelMatrix(mm_tr13, glm::vec3(-15.0f, -2.3f, -3.9f), glm::vec3(0.4f, 1.2f, 4.0f));
+	tr_13.modelMat.push_back(mm_tr13);
+
+	//tr_14
+	glm::mat4 mm_tr14;
+	setUpBasicModelMatrix(mm_tr14, glm::vec3(1.65f, -2.3f, -3.9f), glm::vec3(0.4f, 1.2f, 4.0f));
+	tr_14.modelMat.push_back(mm_tr14);
+
 
 	size_t sizeOfVertCubePosData = sizeof(vertCubePosData) / sizeof(float);
 	size_t sizeOfIndices = sizeof(indices) / sizeof(unsigned int);
@@ -381,11 +451,13 @@ int main(void)
 	c_Texture tx_5;
 	tx_5.texUnit = lavaTexUnit;
 
+	c_Texture tx_6;
+	tx_6.texUnit = brickWallTexUnit;
+
 
 	//c_Texture tex_3;
 	//tex_3.setTexCoordsVertexArray(oddShapedTexCoordData, sizeof(oddShapedTexCoordData));
 	//tex_3.texUnit = heightMapTex;
-
 
 	c_Modified md_0;
 	md_0.isModifed = true;
@@ -408,14 +480,72 @@ int main(void)
 	c_Modified md_6;
 	md_6.isModifed = true;
 
+	c_Modified md_7;
+	md_7.isModifed = true;
+
+	c_Modified md_8;
+	md_8.isModifed = true;
+
+	c_Modified md_9;
+	md_9.isModifed = true;
+
+	c_Modified md_10;
+	md_10.isModifed = true;
+
+	c_Modified md_11;
+	md_11.isModifed = true;
+
+	c_Modified md_12;
+	md_12.isModifed = true;
+
+	c_Modified md_13;
+	md_13.isModifed = true;
+
+	c_Modified md_14;
+	md_14.isModifed = true;
+
 	c_AABB aabb_0;
 	aabb_0.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	aabb_0.vertices = AABBvertices;
 
-
 	c_AABB aabb_2;
 	aabb_2.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	aabb_2.vertices = AABBvertices;
+
+
+
+	c_AABB aabb_7;
+	aabb_7.scale = glm::vec3(4.0f, 1.2f, 0.4f);
+	aabb_7.vertices = AABBvertices;
+
+	c_AABB aabb_8;
+	aabb_8.scale = glm::vec3(4.0f, 1.2f, 0.4f);
+	aabb_8.vertices = AABBvertices;
+
+	c_AABB aabb_9;
+	aabb_9.scale = glm::vec3(0.4f, 1.2f, 4.0f);
+	aabb_9.vertices = AABBvertices;
+
+	c_AABB aabb_10;
+	aabb_10.scale = glm::vec3(0.4f, 1.2f, 4.0f);
+	aabb_10.vertices = AABBvertices;
+
+	c_AABB aabb_11;
+	aabb_11.scale = glm::vec3(4.0f, 1.2f, 0.4f);
+	aabb_11.vertices = AABBvertices;
+
+	c_AABB aabb_12;
+	aabb_12.scale = glm::vec3(4.0f, 1.2f, 0.4f);
+	aabb_12.vertices = AABBvertices;
+
+	c_AABB aabb_13;
+	aabb_13.scale = glm::vec3(0.4f, 1.2f, 4.0f);
+	aabb_13.vertices = AABBvertices;
+
+	c_AABB aabb_14;
+	aabb_14.scale = glm::vec3(0.4f, 1.2f, 4.0f);
+	aabb_14.vertices = AABBvertices;
+
 
 	c_Wall wall_0;
 	c_WallCollider wallCollider_2;
@@ -484,10 +614,38 @@ int main(void)
 	c_EntityInfo ei_6;
 	ei_6.name = "Directional light";
 
+	c_EntityInfo ei_7;
+	ei_7.name = "Wall_1";
+
+	c_EntityInfo ei_8;
+	ei_8.name = "Wall_2";
+
+	c_EntityInfo ei_9;
+	ei_9.name = "Wall_3";
+
+	c_EntityInfo ei_10;
+	ei_10.name = "Wall_4";
+
+	c_EntityInfo ei_11;
+	ei_11.name = "Wall_5";
+
+	c_EntityInfo ei_12;
+	ei_12.name = "Wall_6";
+
+	c_EntityInfo ei_13;
+	ei_13.name = "Wall_7";
+
+	c_EntityInfo ei_14;
+	ei_14.name = "Wall_8";
+
 	glm::mat4 ES0_mm = glm::mat4(1.0f);
-	glm::vec3 ES0_pos(3.0f, 0.0f, 0.0f);
-	glm::vec3 ES0_scale(1.0f, 1.0f, 1.0f);
+	glm::vec3 ES0_pos(-3.0f, -2.8f, 7.7f);
+	glm::vec3 ES0_scale(0.3f, 0.3f, 0.3f);
 	ES0_mm = glm::translate(ES0_mm, ES0_pos);
+	float angleY = glm::radians(180.0f);
+	float angleX = glm::radians(-13.0f);
+	ES0_mm = glm::rotate(ES0_mm, angleY, glm::vec3(0, 1, 0));
+	ES0_mm = glm::rotate(ES0_mm, angleX, glm::vec3(1, 0, 0));
 	ES0_mm = glm::scale(ES0_mm, ES0_scale);
 
 	map_SceneNameToEntitiyScene["Backpack_1"] = sceneFactory->CreateEntityScene("res/models/backpack/", "backpack.obj", ES0_mm, sh_shadows, 1);
@@ -496,9 +654,11 @@ int main(void)
 	
 
 	glm::mat4 ES1_mm = glm::mat4(1.0f);
-	glm::vec3 ES1_pos(-4.0f, 0.0f, 0.0f);
-	glm::vec3 ES1_scale(0.1f, 0.1f, 0.1f);
+	glm::vec3 ES1_pos(-6.0f, -2.3f, 3.0f);
+	glm::vec3 ES1_scale(0.3f, 0.3f, 0.3f);
 	ES1_mm = glm::translate(ES1_mm, ES1_pos);
+	float angleYRadians = glm::radians(180.0f);
+	ES1_mm = glm::rotate(ES1_mm, angleYRadians, glm::vec3(0, 1, 0)); //  Y
 	ES1_mm = glm::scale(ES1_mm, ES1_scale);
 
 	map_SceneNameToEntitiyScene["House_1"] = sceneFactory->CreateEntityScene("res/models/House/", "House.obj", ES1_mm, sh_shadows, 1);
@@ -507,7 +667,7 @@ int main(void)
 	//C:/Code/Chalmers/myGraphicsCode/zenditeEngineV2/zenditeEngineV2/res/models/OakTree/OakTree.obj
 
 	glm::mat4 ES2_mm = glm::mat4(1.0f);
-	glm::vec3 ES2_pos(-5.6f, -2.0f, -5.0f);
+	glm::vec3 ES2_pos(-8.6f, -3.1f, -4.0f);
 	glm::vec3 ES2_scale(0.3f, 0.3f, 0.3f);
 	ES2_mm = glm::translate(ES2_mm, ES2_pos);
 	ES2_mm = glm::scale(ES2_mm, ES2_scale);
@@ -592,6 +752,102 @@ int main(void)
 	COORD.GenerateShadowMapForEntity(entities[6]);
 	COORD.AddComponentToEntity<c_EntityInfo>(entities[6], ei_6);
 
+	//e 7
+	COORD.AddComponentToEntity<c_Transform>(entities[7], tr_7);
+	COORD.AddComponentToEntity<c_Renderable>(entities[7], rc_0);
+	COORD.AddComponentToEntity<c_AABB>(entities[7], aabb_7);
+	COORD.AddComponentToEntity<c_Wall>(entities[7], wall_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[7], tx_6);
+	COORD.AddComponentToEntity<c_Modified>(entities[7], md_7);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[7], ei_7);
+	COORD.SetUpRenderData(entities[7]);
+	COORD.setShaderForEntity(entities[7], sh_shadows);
+	COORD.StoreShaderInEntityDataHandle(entities[7]);
+
+	//e 8
+	COORD.AddComponentToEntity<c_Transform>(entities[8], tr_8);
+	COORD.AddComponentToEntity<c_Renderable>(entities[8], rc_0);
+	COORD.AddComponentToEntity<c_AABB>(entities[8], aabb_8);
+	COORD.AddComponentToEntity<c_Wall>(entities[8], wall_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[8], tx_6);
+	COORD.AddComponentToEntity<c_Modified>(entities[8], md_8);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[8], ei_8);
+	COORD.SetUpRenderData(entities[8]);
+	COORD.setShaderForEntity(entities[8], sh_shadows);
+	COORD.StoreShaderInEntityDataHandle(entities[8]);
+
+	//e 9
+	COORD.AddComponentToEntity<c_Transform>(entities[9], tr_9);
+	COORD.AddComponentToEntity<c_Renderable>(entities[9], rc_0);
+	COORD.AddComponentToEntity<c_AABB>(entities[9], aabb_9);
+	COORD.AddComponentToEntity<c_Wall>(entities[9], wall_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[9], tx_6);
+	COORD.AddComponentToEntity<c_Modified>(entities[9], md_9);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[9], ei_9);
+	COORD.SetUpRenderData(entities[9]);
+	COORD.setShaderForEntity(entities[9], sh_shadows);
+	COORD.StoreShaderInEntityDataHandle(entities[9]);
+
+	//e 10
+	COORD.AddComponentToEntity<c_Transform>(entities[10], tr_10);
+	COORD.AddComponentToEntity<c_Renderable>(entities[10], rc_0);
+	COORD.AddComponentToEntity<c_AABB>(entities[10], aabb_10);
+	COORD.AddComponentToEntity<c_Wall>(entities[10], wall_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[10], tx_6);
+	COORD.AddComponentToEntity<c_Modified>(entities[10], md_10);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[10], ei_10);
+	COORD.SetUpRenderData(entities[10]);
+	COORD.setShaderForEntity(entities[10], sh_shadows);
+	COORD.StoreShaderInEntityDataHandle(entities[10]);
+
+	//e 11
+	COORD.AddComponentToEntity<c_Transform>(entities[11], tr_11);
+	COORD.AddComponentToEntity<c_Renderable>(entities[11], rc_0);
+	COORD.AddComponentToEntity<c_AABB>(entities[11], aabb_11);
+	COORD.AddComponentToEntity<c_Wall>(entities[11], wall_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[11], tx_6);
+	COORD.AddComponentToEntity<c_Modified>(entities[11], md_11);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[11], ei_11);
+	COORD.SetUpRenderData(entities[11]);
+	COORD.setShaderForEntity(entities[11], sh_shadows);
+	COORD.StoreShaderInEntityDataHandle(entities[11]);
+
+	//e 12
+	COORD.AddComponentToEntity<c_Transform>(entities[12], tr_12);
+	COORD.AddComponentToEntity<c_Renderable>(entities[12], rc_0);
+	COORD.AddComponentToEntity<c_AABB>(entities[12], aabb_12);
+	COORD.AddComponentToEntity<c_Wall>(entities[12], wall_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[12], tx_6);
+	COORD.AddComponentToEntity<c_Modified>(entities[12], md_12);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[12], ei_12);
+	COORD.SetUpRenderData(entities[12]);
+	COORD.setShaderForEntity(entities[12], sh_shadows);
+	COORD.StoreShaderInEntityDataHandle(entities[12]);
+
+	//e 13
+	COORD.AddComponentToEntity<c_Transform>(entities[13], tr_13);
+	COORD.AddComponentToEntity<c_Renderable>(entities[13], rc_0);
+	COORD.AddComponentToEntity<c_AABB>(entities[13], aabb_13);
+	COORD.AddComponentToEntity<c_Wall>(entities[13], wall_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[13], tx_6);
+	COORD.AddComponentToEntity<c_Modified>(entities[13], md_13);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[13], ei_13);
+	COORD.SetUpRenderData(entities[13]);
+	COORD.setShaderForEntity(entities[13], sh_shadows);
+	COORD.StoreShaderInEntityDataHandle(entities[13]);
+
+	//e 14
+	COORD.AddComponentToEntity<c_Transform>(entities[14], tr_14);
+	COORD.AddComponentToEntity<c_Renderable>(entities[14], rc_0);
+	COORD.AddComponentToEntity<c_AABB>(entities[14], aabb_14);
+	COORD.AddComponentToEntity<c_Wall>(entities[14], wall_0);
+	COORD.AddComponentToEntity<c_Texture>(entities[14], tx_6);
+	COORD.AddComponentToEntity<c_Modified>(entities[14], md_14);
+	COORD.AddComponentToEntity<c_EntityInfo>(entities[14], ei_14);
+	COORD.SetUpRenderData(entities[14]);
+	COORD.setShaderForEntity(entities[14], sh_shadows);
+	COORD.StoreShaderInEntityDataHandle(entities[14]);
+
 	//std::cout << "\nc_AABB bitset position: " << static_cast<unsigned int>(COORD.GetComponentBitsetPos<c_AABB>());
 	//std::cout << "\nentities[2] bitset: " << COORD.GetEntitySignature(entities[2]) << std::endl;
 
@@ -613,9 +869,22 @@ int main(void)
 		}
 	}
 
+	//bool wireframe = false;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+		if(wireframe == true)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+		else
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+
+		
 
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
@@ -644,7 +913,8 @@ int main(void)
 			rockySurfaceTexUnit,
 			waterTexUnit,
 			grassTexUnit,
-			lavaTexUnit
+			lavaTexUnit,
+			brickWallTexUnit
 		);
 
 		//#Removed_1: 206 - 314
@@ -778,6 +1048,16 @@ void processInput(GLFWwindow* window)
 		glfwSetCursorPos(window, currentX, currentY);
 
 		trackMouseMovement = true;
+
+	}
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+	{
+		wireframe = true;
+		
+	}
+	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+	{
+		wireframe = false;
 
 	}
 

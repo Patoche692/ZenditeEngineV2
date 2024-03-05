@@ -37,7 +37,9 @@ void genMenu_1(std::vector<Entity>& entities,
 	unsigned short int rockySurfaceTexUnit, 
 	unsigned short int grassTexUnit, 
 	unsigned short int waterTexUnit, 
-	unsigned short int lavaTexUnit)
+	unsigned short int lavaTexUnit,
+	unsigned short int brickWallTexUnit
+	)
 {
 
 	// Start the Dear ImGui frame
@@ -145,7 +147,6 @@ void genMenu_1(std::vector<Entity>& entities,
 			ImGui::Text("%s", infoData.name.c_str());
 			ImGui::Separator();
 			if (ImGui::BeginTabBar("##Tabs", ImGuiTabBarFlags_None))
-
 			{
 				if (ImGui::BeginTabItem("Components"))
 				{
@@ -198,7 +199,6 @@ void genMenu_1(std::vector<Entity>& entities,
 							MM = glm::scale(MM, scale);
 
 							posData.modelMat[0] = MM;
-
 						}
 
 						if (ImGui::DragFloat3("Rotation XYZ", &angles[0], v_speed))  //Rotation
@@ -288,14 +288,14 @@ void genMenu_1(std::vector<Entity>& entities,
 						// Simple selection popup (if you want to show the current selection inside the Button itself,
 						// you may want to build a string using the "###" operator to preserve a constant ID with a variable label)
 
-						static int selected_fish = -1;
-						const char* names[] = { "Wooden planks", "Rock" , "water", "grass", "lava" };
+						static int selected_tex = -1;
+						const char* names[] = { "Wooden planks", "Rock" , "water", "grass", "lava", "wood brown" };
 						static bool toggles[] = { true, false };
 
 						if (ImGui::Button("Select texture"))
 							ImGui::OpenPopup("my_select_popup");
 						ImGui::SameLine();
-						ImGui::TextUnformatted(selected_fish == -1 ? "<None>" : names[selected_fish]);
+						ImGui::TextUnformatted(selected_tex == -1 ? "<None>" : names[selected_tex]);
 						if (ImGui::BeginPopup("my_select_popup"))
 						{
 
@@ -303,7 +303,7 @@ void genMenu_1(std::vector<Entity>& entities,
 							for (int i = 0, j = 0; i < IM_ARRAYSIZE(names); i++)
 							{
 								if (ImGui::Selectable(names[i])) {
-									selected_fish = i;
+									selected_tex = i;
 									switch (i) {
 									case 0:
 										texData.texUnit = containerTexUnit;
@@ -327,6 +327,11 @@ void genMenu_1(std::vector<Entity>& entities,
 
 									case 4:
 										texData.texUnit = lavaTexUnit;
+										modified.isModifed = true;
+										break;
+									
+									case 5:
+										texData.texUnit = brickWallTexUnit;
 										modified.isModifed = true;
 										break;
 
