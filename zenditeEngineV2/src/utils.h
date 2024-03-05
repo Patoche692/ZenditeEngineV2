@@ -23,8 +23,8 @@ class TextureData;
 	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 
 // settings
-const unsigned int SCR_WIDTH = 1200;
-const unsigned int SCR_HEIGHT = 800;
+const unsigned int SCR_WIDTH = 1600;
+const unsigned int SCR_HEIGHT = 1000;
 
 #define SHADOWMAP_WIDTH 1024
 #define SHADOWMAP_HEIGHT 1024

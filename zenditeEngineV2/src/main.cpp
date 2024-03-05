@@ -599,7 +599,7 @@ int main(void)
 	dle_6.ambient = glm::vec3(0.4f, 0.4f, 0.4f);
 	dle_6.diffuse = glm::vec3(0.7f, 0.7f, 0.7f);
 	dle_6.specular = glm::vec3(0.5f, 0.5f, 0.5f);
-	dle_6.active = true;
+	dle_6.active = false;
 
 	c_EntityInfo ei_0;
 	ei_0.name = "Wall Col Cube";
