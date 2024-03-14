@@ -11,8 +11,5 @@ If the above are all as stated, perform the following steps:
 2.	In the Solution Directory, navigate to dep/assimp
 3.	In the “assimp” directory, open a bash terminal and type “cmake CMakeLists.txt” an push enter.
 4.	Then type “cmake --build .” and push enter again. This will set up the assimp submodule.
-5.	Currently, there is an issue where the lib files do not appear in the dependencies after cloning and building.
-6.	The current remedy is to return to the solution directory and open the “extra” directory. In there, you will find a directory called “lib”
-7.	Copy the whole folder and paste it into the dep/assimp directory.
-8.	Now double-click the visual studio solution file in the solution directory “zenditeEngineV2.sln” to open it in Visual Studio 2022.
-9.	Press F5 to build and run.
+5.	Now double-click the visual studio solution file in the solution directory “zenditeEngineV2.sln” to open it in Visual Studio 2022.
+6.	Press F5 to build and run.
