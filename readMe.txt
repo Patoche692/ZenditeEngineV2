@@ -1,3 +1,5 @@
+# Zendite Engine
+
 To run the project, do the following:
 
 1.	Be using the Windows 10 operating system (Windows 11 might work, but I have not tested it)
