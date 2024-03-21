@@ -17,6 +17,7 @@ class TextureData;
 //Not a class file. Only add useful functions that can be used generally throughout the code.
 
 //Basic Error Checking
+//REF: Lines 21 - 25 where taken from the Churno's YouTube video on OpenGl: https://www.youtube.com/watch?v=FBbPWSOQ0-w
 #define ASSERT(x) if (!(x)) __debugbreak();
 #define GLCALL(x) GLClearError();\
 	x;\

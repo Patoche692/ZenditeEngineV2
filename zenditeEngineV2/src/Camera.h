@@ -1,6 +1,9 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+//REF: This class was taken from https://learnopengl.com/Getting-started/Camera camera implementation
+//	   The source code can be found at https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h 
+
 #include "utils.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
