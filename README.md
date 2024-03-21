@@ -1,11 +1,14 @@
 # Zendite Engine
 
-To run the project, do the following:
+A small scale 3D game engine written in C++ using OpenGL.
 
-1.	Be using the Windows 10 operating system (Windows 11 might work, but I have not tested it)
+## Prerequisites
+
+1.	Use the Windows 10/11 operating system
 2.	Ensure you have CMAKE installed and added to the system path on your computer.
 3.	Ensure you have Visual Studio 2022 installed with the C++ workload.
 
+## Build
 
 If the above are all as stated, perform the following steps:
 
@@ -16,7 +19,7 @@ If the above are all as stated, perform the following steps:
 5.	Now double-click the visual studio solution file in the solution directory “zenditeEngineV2.sln” to open it in Visual Studio 2022.
 6.	Press F5 to build and run.
 
-
+## Usage
 
 Controls:
 
