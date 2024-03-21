@@ -30,11 +30,11 @@ If the above are all as stated, perform the following steps:
 
 Controls:
 
-W, A, S and D => Move flycam around the scene.\
-Q and E => Hover Up and Down.\
-C => Unlock mouse pointer (Which enables the user to use the mouse on the GUI)\
-V => Lock mouse pointer to game window (Nouse will now control camera view direction)\
-L and K => Toggle wireframe mode on and off.
+- W, A, S and D => Move flycam around the scene.
+- Q and E => Hover Up and Down.
+- C => Unlock mouse pointer (Which enables the user to use the mouse on the GUI).
+- V => Lock mouse pointer to game window (Nouse will now control camera view direction).
+- L and K => Toggle wireframe mode on and off.
 
 ## Dependencies
 
