@@ -2,6 +2,13 @@
 
 A small scale 3D game engine written in C++ using OpenGL.
 
+![Capture d'écran 2024-03-21 171205](https://github.com/Patoche692/ZenditeEngineV2/assets/54531293/74387bf7-57b1-49c6-b833-251babb627d5)
+
+![Capture d'écran 2024-03-21 171250](https://github.com/Patoche692/ZenditeEngineV2/assets/54531293/a75cc06a-baca-4fa8-ad0f-0d52ad7b2d70)
+
+![Capture d'écran 2024-03-21 171415](https://github.com/Patoche692/ZenditeEngineV2/assets/54531293/13326740-9506-479d-941b-115fbdc64f01)
+
+
 ## Prerequisites
 
 1.	Use the Windows 10/11 operating system
