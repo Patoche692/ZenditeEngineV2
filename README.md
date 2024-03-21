@@ -11,10 +11,12 @@ A small scale 3D game engine written in C++ using OpenGL.
 ## Features
 
 - Entity component system (ECS)
+- Model loading system
 - Lighting system
   - Point, spot and directional light components
   - Shadow mapping
-- UI to change the properties of every entity
+- UI to let the user manipulate the properties of every entity
+- AABB collision detection
 
 ## Prerequisites
 
