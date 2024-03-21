@@ -8,6 +8,13 @@ A small scale 3D game engine written in C++ using OpenGL.
 
 ![Capture d'écran 2024-03-21 171415](https://github.com/Patoche692/ZenditeEngineV2/assets/54531293/13326740-9506-479d-941b-115fbdc64f01)
 
+## Features
+
+- Entity component system (ECS)
+- Lighting system
+  - Point, spot and directional light components
+  - Shadow mapping
+- UI to change the properties of every entity
 
 ## Prerequisites
 
