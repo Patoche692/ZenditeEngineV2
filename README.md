@@ -30,7 +30,7 @@ V => Lock mouse pointer to game window (Nouse will now control camera view direc
 
 L and K => Toggle wireframe mode on and off.
 
-
+## Dependencies
 
 The following 3rd Party Libs were used in this project:
 
