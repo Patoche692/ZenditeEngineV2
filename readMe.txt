@@ -50,7 +50,9 @@ The following 3rd Party Libs were used in this project:
 - imgui => for the GUI implementation (implemented in menu.h)
 	Link: https://github.com/ocornut/imgui
 
-Other 3rd Party Code Contributions:
+
+
+Other 3rd Party Contributions:
 
 - LearnOpengl.com's camera class implementation. (Implemented as Camera.h)
 	Links: https://learnopengl.com/Getting-started/Camera and https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
@@ -60,3 +62,13 @@ Other 3rd Party Code Contributions:
 
 - Austin Morlan's C++ entity component system blog. I used this design for the overall ECS design. With some modifications, such as having a higher level Coordinator on top of ECSCoordinator.h. (Implemented: All .h files within the src/ECS directory of this repo)
 	Link: https://austinmorlan.com/posts/entity_component_system/
+
+- Learnopengl textures => The following textures in the res/textures dir were taken from learnopengl.com: (awesomeface.png, container2.png, container2_specular.png, wall.png)
+
+- res/textures/lava.jpg texture => taken from Maiomi on Pintrest: https://www.pinterest.com/pin/306737424617953515/
+
+- res/textures/water.jpg texture => taken from pintrest PublicDomainPictures.net: https://www.pinterest.com/pin/306737424617953515/
+
+- res/textures/rockySurface.png texture => taken from pintrest Medialoot: https://www.pinterest.com/pin/22-beautiful-and-seamless-rock-textures-medialoot--570127634082430201/
+
+- Heightmap textures taken from: https://tangrams.github.io/heightmapper/
