@@ -68,7 +68,7 @@ Other 3rd Party Contributions:
 
 - LearnOpengl.com's camera class implementation. (Implemented as Camera.h)
 	Links: https://learnopengl.com/Getting-started/Camera and https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
-- The Churno's Basic OpenGl error checking macro from his OpenGl error checking YouTube video. (Implemented on lines 21 - 24 of utils.h)
+- The Cherno's Basic OpenGl error checking macro from his OpenGl error checking YouTube video. (Implemented on lines 21 - 24 of utils.h)
 	Link: https://www.youtube.com/watch?v=FBbPWSOQ0-w
 - Austin Morlan's C++ entity component system blog. I used this design for the overall ECS design. With some modifications, such as having a higher level Coordinator on top of ECSCoordinator.h. (Implemented: All .h files within the src/ECS directory of this repo)
 	Link: https://austinmorlan.com/posts/entity_component_system/
